@@ -1,0 +1,74 @@
+﻿// Original source file (modified by kabii) Copyright (c) ppy Pty Ltd <contact@ppy.sh>. Licensed under the MIT Licence.
+using Realms;
+using System.Text;
+
+namespace LazerExporter.OsuDB.Schema
+{
+    public class BeatmapSet : RealmObject
+    {
+        [PrimaryKey]
+        public Guid ID { get; set; } = Guid.NewGuid();
+        [Indexed]
+        public int OnlineID { get; set; } = -1;
+        public DateTimeOffset DateAdded { get; set; }
+        public IList<Beatmap> Beatmaps { get; } = null!;
+        public IList<RealmNamedFileUsage> Files { get; } = null!;
+        public bool DeletePending { get; set; }
+        public string Hash { get; set; } = string.Empty;
+        public bool Protected { get; set; }
+
+        IList<Beatmap>? selected = null;
+
+        [Ignored]
+        public IList<Beatmap> SelectedBeatmaps
+        {
+            get
+            {
+                return selected switch
+                {
+                    not null => selected,
+                    null => Beatmaps
+                };
+            }
+            set { selected = value; }
+        }
+
+        public string Display()
+        {
+            BeatmapMetadata metadata = Beatmaps.First().Metadata;
+            var difficulties = SelectedBeatmaps.Select(b => b.StarRating).OrderBy(r => r).Select(r => r.ToString("0.00"));
+            string difficultySpread = string.Join(", ", difficulties);
+
+            var output = new StringBuilder();
+            output
+                .Append(OnlineID)
+                .Append(": ")
+                .Append(metadata.Artist)
+                .Append(" - ")
+                .Append(metadata.Title)
+                .Append(" (")
+                .Append(metadata.Author.Username)
+                .Append(" - ")
+                .Append(difficultySpread)
+                .Append(" stars)");
+            return output.ToString();
+        }
+
+        public string ArchiveFilename()
+        {
+            BeatmapMetadata metadata = SelectedBeatmaps.First().Metadata;
+            string beatmapId = OnlineID != -1 ? $"{OnlineID} " : "";
+            return
+                $"{beatmapId}{metadata.Artist.Trunc(30)} - {metadata.Title.Trunc(40)} ({metadata.Author.Username.Trunc(30)}).osz"
+                .Replace("\"", "")
+                .Replace("*", "")
+                .Replace("<", "")
+                .Replace(">", "")
+                .Replace(":", "")
+                .Replace("/", "")
+                .Replace("\\", "")
+                .Replace("|", "")
+                .Replace("?", "");
+        }
+    }
+}

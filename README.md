@@ -25,3 +25,7 @@ If you are on a Windows system and your osu! database is in the default location
 If you are not on Windows, I included default directories for OSX and Linux and it should automatically work, but it is untested.
 
 You can also launch the program with the database folder as the launch argument if you already know it will be in an unusual location. The database folder needed contains a "files" folder. This folder can also be opened from in-game if you moved it and are unsure where it is located. If you did not move it, it should just automatically work.
+
+# Basic Export Task Screenshot (Exporting Beatmaps with a Tag)
+
+![](https://i.imgur.com/zooqemk.png)

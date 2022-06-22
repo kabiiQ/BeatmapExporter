@@ -1,14 +1,14 @@
-﻿using LazerExporter.OsuDB.Schema;
+﻿using BeatmapExporter.Exporters.Lazer.LazerDB.Schema;
 
-namespace LazerExporter
+namespace BeatmapExporter
 {
     public class BeatmapFilter
     {
         public delegate bool Filter(Beatmap beatmap);
 
         public string Description { get; }
-        Filter filter;
-        bool negated;
+        readonly Filter filter;
+        readonly bool negated;
         public BeatmapFilter(string description, bool negated, Filter filter)
         {
             this.Description = description;
@@ -25,9 +25,9 @@ namespace LazerExporter
 
     public class FilterParser
     {
-        bool negate;
-        string input;
-        string[] args;
+        readonly bool negate;
+        readonly string input;
+        readonly string[] args;
 
         public FilterParser(string input)
         {
@@ -62,10 +62,12 @@ namespace LazerExporter
                 "artist" => ArtistFilter(),
                 "tag" => TagFilter(),
                 "mode" => GamemodeFilter(),
+                "status" => OnlineStatusFilter(),
                 _ => null
             };
         }
 
+        // get the "remainder" of the input past the command arg and parse as comma-separated arguments
         string[] CommaSeparatedArg(int commandLength) => input.Substring(commandLength + 1 /* include space */).Split(",").Select(s => s.Trim()).ToArray();
 
         BeatmapFilter? StarsFilter()
@@ -158,6 +160,27 @@ namespace LazerExporter
                 return null;
             }
             return new BeatmapFilter(input, negate, b => b.Ruleset.OnlineID == gamemodeId);
+        }
+
+        BeatmapFilter? OnlineStatusFilter()
+        {
+            // status graveyard/leaderboard/ranked/approved/qualified/loved
+            int[]? statusId = args[1] switch
+            {
+                var s when s.StartsWith("graveyard") || s == "unknown" => new[] { -3 },
+                var s when s.StartsWith("leaderboard") => new[] { 1, 2, 3, 4 },
+                var s when s.StartsWith("rank") => new[] { 1 },
+                var s when s.StartsWith("approve") => new[] { 2 },
+                var s when s.StartsWith("qualif") => new[] { 3 },
+                var s when s.StartsWith("love") => new[] { 4 },
+                _ => null
+            };
+            if(statusId is null)
+            {
+                Console.WriteLine($"Unknown beatmap status: {args[1]}. Use graveyard, ranked, approved, qualified, or loved.");
+                return null;
+            }
+            return new BeatmapFilter(input, negate, b => statusId.Contains(b.Status));
         }
     }
 }

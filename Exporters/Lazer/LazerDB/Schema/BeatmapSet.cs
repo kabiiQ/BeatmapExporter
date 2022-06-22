@@ -2,7 +2,7 @@
 using Realms;
 using System.Text;
 
-namespace LazerExporter.OsuDB.Schema
+namespace BeatmapExporter.Exporters.Lazer.LazerDB.Schema
 {
     public class BeatmapSet : RealmObject
     {
@@ -17,6 +17,7 @@ namespace LazerExporter.OsuDB.Schema
         public string Hash { get; set; } = string.Empty;
         public bool Protected { get; set; }
 
+        // Author kabii
         IList<Beatmap>? selected = null;
 
         [Ignored]

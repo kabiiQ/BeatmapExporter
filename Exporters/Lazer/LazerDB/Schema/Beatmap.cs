@@ -1,7 +1,7 @@
 ﻿// Original source file (modified by kabii) Copyright (c) ppy Pty Ltd <contact@ppy.sh>. Licensed under the MIT Licence.
 using Realms;
 
-namespace LazerExporter.OsuDB.Schema
+namespace BeatmapExporter.Exporters.Lazer.LazerDB.Schema
 {
     public class Beatmap : RealmObject
     {
@@ -57,9 +57,10 @@ namespace LazerExporter.OsuDB.Schema
 
         public double TimelineZoom { get; set; }
 
+        // Author kabii
         public override bool Equals(object obj)
         {
-            if((obj == null) || !this.GetType().Equals(obj.GetType()))
+            if (obj == null || !GetType().Equals(obj.GetType()))
             {
                 return false;
             }
@@ -68,6 +69,11 @@ namespace LazerExporter.OsuDB.Schema
                 Beatmap map = (Beatmap)obj;
                 return ID == map.ID;
             }
+        }
+
+        public override int GetHashCode()
+        {
+            return HashCode.Combine(base.GetHashCode(), ID);
         }
     }
 }

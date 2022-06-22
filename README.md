@@ -1,10 +1,10 @@
-# LazerExporter
+# BeatmapExporter (for osu!lazer)
 
 ### Support the Developer
 
 [![ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/E1E5AF13X)
 
-LazerExporter is a command-line program/tool that can mass-export beatmaps from the modern osu!lazer storage format.
+BeatmapExporter is a command-line program/tool that can mass-export your osu! beatmap library from the modern osu!lazer storage format.
 
 osu!lazer does not have a "Songs/" folder as "stable" osu! does. Lazer's files are stored under hashed filenames and other information about the beatmap is contained in a local "Realm" database on your PC.
 
@@ -18,7 +18,7 @@ There is a beatmap filter system allowing you to select a portion of your librar
 
 # Download/Usage
 
-Executables are available from the [Releases](https://github.com/kabiiQ/LazerExporter/releases) section on GitHub. 
+Executables are available from the [Releases](https://github.com/kabiiQ/BeatmapExporter/releases) section on GitHub. 
 
 If you are on a Windows system and your osu! database is in the default location (%appdata%\osu), you should be able to simply run the application. If you changed the database location when install osu!lazer, the program will be unable to locate it and will prompt you to enter it. 
 
@@ -28,4 +28,4 @@ You can also launch the program with the database folder as the launch argument 
 
 # Basic Export Task Screenshot (Exporting Beatmaps with a Tag)
 
-![](https://i.imgur.com/zooqemk.png)
+![](https://i.imgur.com/bbM1D5Z.png)

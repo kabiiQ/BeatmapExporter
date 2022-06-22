@@ -1,7 +1,7 @@
-﻿using LazerExporter.OsuDB.Schema;
+﻿using BeatmapExporter.Exporters.Lazer.LazerDB.Schema;
 using Realms;
 
-namespace LazerExporter.OsuDB
+namespace BeatmapExporter.Exporters.Lazer.LazerDB
 {
     public class LazerDatabase
     {
@@ -12,7 +12,7 @@ namespace LazerExporter.OsuDB
         private LazerDatabase(string database)
         {
             this.database = database;
-            this.filesDirectory = Path.Combine(Path.GetDirectoryName(database)!, "files");
+            filesDirectory = Path.Combine(Path.GetDirectoryName(database)!, "files");
         }
 
         static string? GetDatabaseFile(string directory)
@@ -28,11 +28,11 @@ namespace LazerExporter.OsuDB
             {
                 Console.Write("osu! song database not found. Please find and provide your osu! data folder.\nThe folder should contain a \"client.realm\" file and can be opened from in-game.\n\nFolder path: ");
                 string? input = Console.ReadLine();
-                if(input is not null)
+                if (input is not null)
                 {
                     dbFile = GetDatabaseFile(input);
                 }
-            } 
+            }
             return dbFile is not null ? new LazerDatabase(dbFile) : null;
         }
 
@@ -43,7 +43,7 @@ namespace LazerExporter.OsuDB
                 IsReadOnly = true,
                 SchemaVersion = LazerSchemaVersion,
             };
-            config.Schema = new[] { 
+            config.Schema = new[] {
                 typeof(Beatmap),
                 typeof(BeatmapDifficulty),
                 typeof(BeatmapMetadata),
@@ -57,7 +57,7 @@ namespace LazerExporter.OsuDB
             try
             {
                 return Realm.GetInstance(config);
-            } 
+            }
             catch (IOException ex)
             {
                 Console.WriteLine($"Error opening database: {ex.Message}");
@@ -71,7 +71,8 @@ namespace LazerExporter.OsuDB
             try
             {
                 return File.Open(path, FileMode.Open);
-            } catch (IOException ioe)
+            }
+            catch (IOException ioe)
             {
                 Console.WriteLine($"Unable to open file: {hash} :: {ioe.Message}");
                 return null;

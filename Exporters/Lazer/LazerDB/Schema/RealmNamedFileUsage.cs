@@ -1,7 +1,7 @@
 ﻿// Original source file (modified by kabii) Copyright (c) ppy Pty Ltd <contact@ppy.sh>. Licensed under the MIT Licence.
 using Realms;
 
-namespace LazerExporter.OsuDB.Schema
+namespace BeatmapExporter.Exporters.Lazer.LazerDB.Schema
 {
     public class RealmNamedFileUsage : EmbeddedObject
     {

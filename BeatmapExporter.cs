@@ -30,7 +30,7 @@ namespace BeatmapExporter
         void ApplicationLoop()
         {
             // output main application menu
-            Console.Write($"\n1. Export selected beatmaps ({exporter.SelectedBeatmapSetCount} beatmap sets, {exporter.SelectedBeatmapCount} beatmaps)\n2. Display selected beatmap sets ({exporter.SelectedBeatmapSetCount}/{exporter.BeatmapSetCount} beatmap sets)\n3. Advanced export settings (compression, export location)\n4. Edit beatmap selection/filters\n\n0. Exit\nSelect operation: ");
+            Console.Write($"\n1. Export selected beatmaps ({exporter.SelectedBeatmapSetCount} beatmap sets, {exporter.SelectedBeatmapCount} beatmaps)\n2. Display selected beatmap sets ({exporter.SelectedBeatmapSetCount}/{exporter.BeatmapSetCount} beatmap sets)\n3. Advanced export settings (compression, export as zip, export location)\n4. Edit beatmap selection/filters\n\n0. Exit\nSelect operation: ");
 
             string? input = Console.ReadLine();
             if (input is null)

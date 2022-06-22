@@ -16,6 +16,8 @@ This utility allows you to export beatmaps back into `.osz` files.
 
 There is a beatmap filter system allowing you to select a portion of your library to only export certain maps (for example, above a certain star rating, specific artists/mappers, specific gamemodes, etc). You can also simply export your **entire library** at once.
 
+You can also export directly into a .zip for more easily transferring your library.
+
 # Download/Usage
 
 Executables are available from the [Releases](https://github.com/kabiiQ/BeatmapExporter/releases) section on GitHub. 

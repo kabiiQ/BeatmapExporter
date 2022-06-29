@@ -10,6 +10,8 @@ osu!lazer does not have a "Songs/" folder as "stable" osu! does. Lazer's files a
 
 # Purpose/Functionality
 
+## Beatmap Export
+
 This new storage format results in a better experience while playing the game. However, a result of this system is that you can not easily export all or part of your songs library for sharing or moving back to osu! stable. 
 
 This utility allows you to export beatmaps back into `.osz` files. 
@@ -17,6 +19,14 @@ This utility allows you to export beatmaps back into `.osz` files.
 There is a beatmap filter system allowing you to select a portion of your library to only export certain maps (for example, above a certain star rating, specific artists/mappers, specific gamemodes, etc). You can also simply export your **entire library** at once.
 
 You can also export directly into a .zip for more easily transferring your library.
+
+## Audio Export
+
+As of version 1.2, there is an option to export only audio files. Rather than entire beatmap archives, only .mp3 audio files will be exported. 
+
+The .mp3 files are tagged with basic artist/song information, and the background file from osu! is embedded where possible. 
+
+If a beatmap uses a non-mp3 audio format, [FFmpeg](https://ffmpeg.org/download.html) is required to transcode into mp3. ffmpeg.exe (for Windows) can be placed on your system PATH or simply alongside BeatmapExporter.exe before launching BeatmapExporter.
 
 # Download/Usage
 

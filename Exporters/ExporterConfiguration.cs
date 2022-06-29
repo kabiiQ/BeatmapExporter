@@ -4,6 +4,8 @@ namespace BeatmapExporter.Exporters
 {
     public class ExporterConfiguration
     {
+        public enum Format { Audio, Beatmap };  
+
         private readonly string defaultExportPath;
         private string? exportPath = null;
 
@@ -38,5 +40,16 @@ namespace BeatmapExporter.Exporters
         {
             get => defaultArchivePath;
         }
+
+        public string AudioExportPath = "mp3";
+
+        public Format ExportFormat { get; set; } = Format.Beatmap;
+
+        public string ExportFormatUnitName => ExportFormat switch
+        {
+            Format.Audio => "audio (.mp3)",
+            Format.Beatmap => "osu! beatmaps (.osz)",
+            _ => throw new NotImplementedException()
+        };
     }
 }

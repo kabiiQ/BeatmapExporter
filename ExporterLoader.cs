@@ -24,6 +24,7 @@ namespace BeatmapExporter
 
             // currently only load lazer, can add interface for selecting osu stable here later
             BeatmapExporter exporter = LazerLoader.Load(args.FirstOrDefault());
+
             exporter.StartApplicationLoop();
 
             Exit();

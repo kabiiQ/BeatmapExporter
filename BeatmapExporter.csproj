@@ -13,7 +13,9 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="FFMpegCore" Version="4.8.0" />
     <PackageReference Include="Realm" Version="10.14.0" />
+    <PackageReference Include="TagLibSharp" Version="2.2.0" />
   </ItemGroup>
 
 </Project>

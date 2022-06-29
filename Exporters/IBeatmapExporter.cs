@@ -12,5 +12,6 @@
         void UpdateSelectedBeatmaps();
         void DisplaySelectedBeatmaps();
         void ExportBeatmaps();
+        void ExportAudioFiles();
     }
 }

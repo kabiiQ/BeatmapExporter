@@ -65,16 +65,39 @@ namespace BeatmapExporter.Exporters.Lazer.LazerDB
             }
         }
 
+        string HashedFilePath(string hash) => Path.Combine(filesDirectory, hash.Substring(0, 1), hash.Substring(0, 2), hash);
+
         public FileStream? OpenHashedFile(string hash)
         {
-            string path = Path.Combine(filesDirectory, hash.Substring(0, 1), hash.Substring(0, 2), hash);
             try
             {
+                string path = HashedFilePath(hash);
                 return File.Open(path, FileMode.Open);
             }
             catch (IOException ioe)
             {
                 Console.WriteLine($"Unable to open file: {hash} :: {ioe.Message}");
+                return null;
+            }
+        }
+
+        public FileStream? OpenNamedFile(BeatmapSet set, string filename)
+        {
+            // get named file from specific beatmap - check if it exists in this beatmap
+            string? fileHash = set.Files.FirstOrDefault(f => f.Filename == filename)?.File?.Hash;
+            if(fileHash is null)
+            {
+                Console.WriteLine($"File {filename} not found in beatmap {set.ArchiveFilename()}");
+                return null;
+            }
+            try
+            {
+                string path = HashedFilePath(fileHash);
+                return File.Open(path, FileMode.Open);
+            }
+            catch (IOException ioe)
+            {
+                Console.WriteLine($"Unable to open file: {filename} from beatmap {set.ArchiveFilename()} :: {ioe.Message}");
                 return null;
             }
         }

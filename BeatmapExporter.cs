@@ -1,13 +1,10 @@
 ﻿using BeatmapExporter.Exporters;
+using System.Diagnostics;
+using System.Runtime.InteropServices;
 using System.Text;
 
 namespace BeatmapExporter
 {
-    public static class StringExt
-    {
-        public static string Trunc(this string str, int len) => string.IsNullOrEmpty(str) ? str : str.Length <= len ? str : str[..len];
-    }
-
     public class BeatmapExporter
     {
         readonly IBeatmapExporter exporter;
@@ -30,7 +27,7 @@ namespace BeatmapExporter
         void ApplicationLoop()
         {
             // output main application menu
-            Console.Write($"\n1. Export selected beatmaps ({exporter.SelectedBeatmapSetCount} beatmap sets, {exporter.SelectedBeatmapCount} beatmaps)\n2. Display selected beatmap sets ({exporter.SelectedBeatmapSetCount}/{exporter.BeatmapSetCount} beatmap sets)\n3. Advanced export settings (compression, export as zip, export location)\n4. Edit beatmap selection/filters\n\n0. Exit\nSelect operation: ");
+            Console.Write($"\n1. Export selected {config.ExportFormatUnitName} ({exporter.SelectedBeatmapSetCount} beatmap sets, {exporter.SelectedBeatmapCount} beatmaps)\n2. Display selected beatmap sets ({exporter.SelectedBeatmapSetCount}/{exporter.BeatmapSetCount} beatmap sets)\n3. Advanced export settings (.mp3 export, compression, export as zip, export location)\n4. Edit beatmap selection/filters\n\n0. Exit\nSelect operation: ");
 
             string? input = Console.ReadLine();
             if (input is null)
@@ -50,7 +47,15 @@ namespace BeatmapExporter
                     Environment.Exit(0);
                     break;
                 case 1:
-                    exporter.ExportBeatmaps();
+                    switch(config.ExportFormat)
+                    {
+                        case ExporterConfiguration.Format.Beatmap:
+                            exporter.ExportBeatmaps();
+                            break;
+                        case ExporterConfiguration.Format.Audio:
+                            exporter.ExportAudioFiles();
+                            break;
+                    }
                     break;
                 case 2:
                     exporter.DisplaySelectedBeatmaps();
@@ -71,33 +76,50 @@ namespace BeatmapExporter
                 StringBuilder settings = new();
                 settings
                     .Append("\n--- Advanced export settings ---\n* indicates a setting that has been changed.\n")
-                    .Append("\n1. Export path: ")
+                    .Append("\n1. ");
+
+                bool exportBeatmaps = config.ExportFormat == ExporterConfiguration.Format.Beatmap;
+                switch(config.ExportFormat)
+                {
+                    case ExporterConfiguration.Format.Audio:
+                        settings.Append("Beatmap audio files will be renamed, tagged and exported (.mp3 format)*");
+                        break;
+                    case ExporterConfiguration.Format.Beatmap:
+                        settings.Append("Beatmaps will be exported in osu! archive format (.osz)");
+                        break;
+                }
+
+                settings
+                    .Append("\n2. Export path: ")
                     .Append(Path.GetFullPath(config.ExportPath));
                 if (config.ExportPath != config.DefaultExportPath)
                     settings.Append('*');
 
-                settings.Append("\n2. ");
-                if (config.CompressionEnabled)
-                    settings.Append(".osz compression is enabled (slow export, smaller file sizes)*");
-                else
-                    settings.Append(".osz compression is disabled (fastest export)");
+                if(exportBeatmaps)
+                {
+                    settings.Append("\n3. ");
+                    if (config.CompressionEnabled)
+                        settings.Append(".osz compression is enabled (slow export, smaller file sizes)*");
+                    else
+                        settings.Append(".osz compression is disabled (fastest export)");
 
-                settings.Append("\n3. ");
-                if (config.ExportSingleArchive)
-                {
-                    string compressed = config.CompressionEnabled ? "compressed*" : "uncompressed";
-                    settings.Append($"Exporting as a single {compressed}(#2) .zip archive.*");
-                }
-                else
-                {
-                    settings.Append("Exporting as individual .osz files.");
+                    settings.Append("\n4. ");
+                    if (config.ExportSingleArchive)
+                    {
+                        string compressed = config.CompressionEnabled ? "compressed*" : "uncompressed";
+                        settings.Append($"Exporting as a single {compressed}(#3) .zip archive.*");
+                    }
+                    else
+                    {
+                        settings.Append("Exporting as individual .osz files.");
+                    }
                 }
 
                 settings.Append("\n\nEdit setting # (Blank to save settings): ");
 
                 Console.Write(settings.ToString());
                 string? input = Console.ReadLine();
-                if(string.IsNullOrEmpty(input) || !int.TryParse(input, out int op) || op is < 1 or > 3)
+                if (string.IsNullOrEmpty(input) || !int.TryParse(input, out int op) || op < 1 || op > (exportBeatmaps ? 4 : 2))
                 {
                     Console.Write("\nInvalid operation selected.\n");
                     return;
@@ -106,34 +128,46 @@ namespace BeatmapExporter
                 switch(op)
                 {
                     case 1:
+                        if(exportBeatmaps)
+                        {
+                            Console.WriteLine("- CHANGED: Beatmap audio files will be renamed, tagged and exported (.mp3 format).");
+                            config.ExportFormat = ExporterConfiguration.Format.Audio;
+                        }
+                        else
+                        {
+                            Console.WriteLine("- CHANGED: Beatmaps will be exported in osu! archive format (.osz).");
+                            config.ExportFormat = ExporterConfiguration.Format.Beatmap;
+                        }
+                        break;
+                    case 2:
                         Console.Write($"\nPath selected must be valid for your platform or export will fail! Be careful of invalid filename characters on Windows.\nDefault export path: {config.DefaultExportPath}\nCurrent export path: {config.ExportPath}\nNew export path: ");
                         string? pathInput = Console.ReadLine();
                         if (string.IsNullOrEmpty(pathInput))
                             continue;
                         config.ExportPath = pathInput;
-                        Console.WriteLine($"Export location set to {Path.GetFullPath(config.ExportPath)}");
+                        Console.WriteLine($"- CHANGED: Export location set to {Path.GetFullPath(config.ExportPath)}");
                         break;
-                    case 2:
+                    case 3:
                         if(config.CompressionEnabled)
                         {
-                            Console.WriteLine(".osz and .zip output compression has been disabled.");
+                            Console.WriteLine("- CHANGED: .osz and .zip output compression has been disabled.");
                             config.CompressionEnabled = false;
                         }
                         else
                         {
-                            Console.WriteLine(".osz and .zip output compression has been enabled.");
+                            Console.WriteLine("- CHANGED: .osz and .zip output compression has been enabled.");
                             config.CompressionEnabled = true;
                         }
                         break;
-                    case 3:
+                    case 4:
                         if(config.ExportSingleArchive)
                         {
-                            Console.WriteLine("Beatmaps will be exported as individual .osz files.");
+                            Console.WriteLine("- CHANGED: Beatmaps will be exported as individual .osz files.");
                             config.ExportSingleArchive = false;
-                        } 
+                        }
                         else
                         {
-                            Console.WriteLine("Beatmaps will be exported as a single .zip archive.");
+                            Console.WriteLine("- CHANGED: Beatmaps will be exported as a single .zip archive.");
                             config.ExportSingleArchive = true;
                         }
                         break;
@@ -238,6 +272,14 @@ Back to export menu: exit"
         {
             config.Filters.Clear();
             exporter.UpdateSelectedBeatmaps();
+        }
+
+        public static void OpenExportDirectory(string directory)
+        {
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+            {
+                Process.Start("explorer.exe", directory);
+            }
         }
     }
 }

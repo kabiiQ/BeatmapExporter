@@ -15,5 +15,10 @@ namespace BeatmapExporter.Exporters.Lazer.LazerDB.Schema
         public int PreviewTime { get; set; }
         public string AudioFile { get; set; } = string.Empty;
         public string BackgroundFile { get; set; } = string.Empty;
+
+        // Author kabii
+        public string OutputAudioFilename(int beatmapId) =>
+            $"{Artist.Trunc(30)} - {Title.Trunc(60)} ({beatmapId}).mp3"
+            .RemoveFilenameCharacters();
     }
 }

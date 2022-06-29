@@ -61,15 +61,7 @@ namespace BeatmapExporter.Exporters.Lazer.LazerDB.Schema
             string beatmapId = OnlineID != -1 ? $"{OnlineID} " : "";
             return
                 $"{beatmapId}{metadata.Artist.Trunc(30)} - {metadata.Title.Trunc(40)} ({metadata.Author.Username.Trunc(30)}).osz"
-                .Replace("\"", "")
-                .Replace("*", "")
-                .Replace("<", "")
-                .Replace(">", "")
-                .Replace(":", "")
-                .Replace("/", "")
-                .Replace("\\", "")
-                .Replace("|", "")
-                .Replace("?", "");
+                .RemoveFilenameCharacters();
         }
     }
 }

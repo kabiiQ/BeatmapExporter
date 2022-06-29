@@ -1,8 +1,6 @@
 ﻿using BeatmapExporter.Exporters.Lazer.LazerDB;
 using BeatmapExporter.Exporters.Lazer.LazerDB.Schema;
-using System.Diagnostics;
 using System.IO.Compression;
-using System.Runtime.InteropServices;
 
 namespace BeatmapExporter.Exporters.Lazer
 {
@@ -17,6 +15,8 @@ namespace BeatmapExporter.Exporters.Lazer
         int selectedBeatmapCount; // internally maintained count of selected beatmaps
         List<BeatmapSet> selectedBeatmapSets;
 
+        readonly Transcoder transcoder;
+
         public LazerExporter(LazerDatabase lazerDb, List<BeatmapSet> beatmapSets)
         {
             this.lazerDb = lazerDb;
@@ -30,6 +30,8 @@ namespace BeatmapExporter.Exporters.Lazer
             this.selectedBeatmapCount = count;
 
             this.config = new ExporterConfiguration("lazerexport", "lazerexport.zip");
+
+            this.transcoder = new Transcoder();
         }
 
 
@@ -58,13 +60,13 @@ namespace BeatmapExporter.Exporters.Lazer
             get => config;
         }
 
-        IEnumerable<String> filterInfo() => config.Filters.Select((f, i) =>
+        IEnumerable<String> FilterInfo() => config.Filters.Select((f, i) =>
         {
             int includedCount = beatmapSets.SelectMany(set => set.Beatmaps).Count(b => f.Includes(b));
             return $"{i + 1}. {f.Description} ({includedCount} beatmaps)";
         });
 
-        public string FilterDetail() => string.Join("\n", filterInfo());
+        public string FilterDetail() => string.Join("\n", FilterInfo());
 
         public void DisplaySelectedBeatmaps()
         {
@@ -78,7 +80,6 @@ namespace BeatmapExporter.Exporters.Lazer
         public void ExportBeatmaps()
         {
             // perform export operation for currently selected beatmaps 
-            int selectedSetCount = selectedBeatmapSets.Count;
             // produce set of excluded file hashes of difficulty files that should be skipped
             // these are difficulties in original beatmap but not 'selected'
             // when doing file export, we do not want to care about what difficulty file, audio file, etc we are exporting 
@@ -89,14 +90,11 @@ namespace BeatmapExporter.Exporters.Lazer
                 select map.Hash;
             var excluded = excludedHashes.ToList();
 
-            string exportDir = "lazerexport";
+            string exportDir = config.ExportPath;
             Directory.CreateDirectory(exportDir);
-            Console.WriteLine($"Selected {selectedSetCount} beatmap sets for export.");
+            Console.WriteLine($"Selected {SelectedBeatmapSetCount} beatmap sets for export.");
 
-            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
-            {
-                Process.Start("explorer.exe", exportDir);
-            }
+            BeatmapExporter.OpenExportDirectory(exportDir);
 
             // if requested, produce a single .zip archive of the export
             FileStream? exportZip = null;
@@ -122,7 +120,7 @@ namespace BeatmapExporter.Exporters.Lazer
             {
                 attempted++;
                 string filename = mapset.ArchiveFilename();
-                Console.WriteLine($"Exporting beatmap set ({attempted}/{selectedSetCount}): {filename}");
+                Console.WriteLine($"Exporting beatmap set ({attempted}/{SelectedBeatmapSetCount}): {filename}");
 
                 MemoryStream? memStream = null;
                 Stream? export = null;
@@ -176,7 +174,123 @@ namespace BeatmapExporter.Exporters.Lazer
             exportZip?.Dispose();
 
             string location = exportArchive is not null ? Path.GetFullPath(config.ExportArchivePath) : Path.GetFullPath(exportDir);
-            Console.WriteLine($"Exported {exported}/{selectedSetCount} beatmaps to {location}.");
+            Console.WriteLine($"Exported {exported}/{SelectedBeatmapSetCount} beatmaps to {location}.");
+        }
+
+        public void ExportAudioFiles()
+        {
+            // perform export of songs as .mp3 files
+            string exportDir = config.AudioExportPath;
+            Directory.CreateDirectory(exportDir);
+
+            Console.WriteLine($"Exporting audio from {selectedBeatmapSets.Count} beatmap sets to as .mp3 files.");
+            if (transcoder.Available)
+                Console.WriteLine("This operation will take longer if many selected beatmaps are not in .mp3 format.");
+            else
+                Console.WriteLine("FFmpeg runtime not found. Beatmaps that use other audio formats than .mp3 will be skipped.\nMake sure ffmpeg.exe is located on the system PATH or placed in the directory with this BeatmapExporter.exe to enable transcoding.");
+
+            BeatmapExporter.OpenExportDirectory(exportDir);
+
+            int exportedAudioFiles = 0;
+            int attempted = 0;
+            foreach (var mapset in selectedBeatmapSets)
+            {
+                // get any beatmap diffs from this set with different audio files
+                // typically 1 'audio.mp3' only by convention. could also be multiple across different difficulties
+                var uniqueMetadata = mapset
+                    .SelectedBeatmaps
+                    .Select(b => b.Metadata)
+                    .GroupBy(m => m.AudioFile)
+                    .Select(g => g.First())
+                    .ToList();
+
+                foreach (var metadata in uniqueMetadata)
+                {
+                    try
+                    {
+                        // transcode if audio is not in .mp3 format
+                        string extension = Path.GetExtension(metadata.AudioFile);
+                        bool transcode = extension.ToLower() != ".mp3";
+                        string transcodeNotice = transcode ? $" (transcode required from {extension})" : "";
+
+                        // produce more meaningful filename than 'audio.mp3' 
+                        string outputFilename = metadata.OutputAudioFilename(mapset.OnlineID);
+                        string outputFile = Path.Combine(exportDir, outputFilename);
+
+                        attempted++;
+                        Console.WriteLine($"({attempted}/?) Exporting {outputFilename}{transcodeNotice}");
+
+                        using FileStream? audio = lazerDb.OpenNamedFile(mapset, metadata.AudioFile);
+                        if (audio is null)
+                            continue;
+
+                        if (transcode)
+                        {
+                            // transcoder (FFmpeg) not available, skipping. 
+                            if (!transcoder.Available)
+                            {
+                                Console.WriteLine($"Beatmap has non-mp3 audio: {metadata.AudioFile}. FFmpeg not loaded, skipping.");
+                                continue;
+                            }
+                            try
+                            {
+                                transcoder.TranscodeMP3(audio, outputFile);
+                            }
+                            catch (Exception e)
+                            {
+                                Console.WriteLine($"Unable to transcode audio: {metadata.AudioFile}. An error occured :: {e.Message}");
+                                continue;
+                            }
+                        }
+                        else
+                        {
+                            using FileStream output = File.Open(outputFile, FileMode.CreateNew);
+                            audio.CopyTo(output);
+                        }
+
+                        // set mp3 tags 
+                        var mp3 = TagLib.File.Create(outputFile);
+                        if (string.IsNullOrEmpty(mp3.Tag.Title))
+                            mp3.Tag.Title = metadata.TitleUnicode;
+                        if(mp3.Tag.Performers.Count() == 0) 
+                            mp3.Tag.Performers = new[] { metadata.ArtistUnicode };
+                        if(string.IsNullOrEmpty(mp3.Tag.Description))
+                            mp3.Tag.Description = metadata.Tags;
+                        mp3.Tag.Comment = $"{mapset.OnlineID} {metadata.Tags}";
+
+                        // set beatmap background as album cover 
+                        if(mp3.Tag.Pictures.Count() == 0 && metadata.BackgroundFile is not null)
+                        {
+                            using FileStream? bg = lazerDb.OpenNamedFile(mapset, metadata.BackgroundFile);
+                            if(bg is not null)
+                            {
+                                using MemoryStream ms = new();
+                                bg.CopyTo(ms);
+                                byte[] image = ms.ToArray();
+
+                                var cover = new TagLib.Id3v2.AttachmentFrame
+                                {
+                                    Type = TagLib.PictureType.FrontCover,
+                                    Description = "Background",
+                                    MimeType = System.Net.Mime.MediaTypeNames.Image.Jpeg,
+                                    Data = image,
+                                };
+                                mp3.Tag.Pictures = new[] { cover };
+                            }
+                        }
+
+                        mp3.Save();
+                        exportedAudioFiles++;
+                    } 
+                    catch (IOException e)
+                    {
+                        Console.WriteLine($"Unable to export beatmap :: {e.Message}");
+                    }
+                }
+            }
+
+            string location = Path.GetFullPath(exportDir);
+            Console.WriteLine($"Exported {exportedAudioFiles}/{attempted} audio files from {SelectedBeatmapCount} beatmaps to {location}.");
         }
 
         public void UpdateSelectedBeatmaps()

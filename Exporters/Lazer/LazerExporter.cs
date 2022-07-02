@@ -1,5 +1,6 @@
 ﻿using BeatmapExporter.Exporters.Lazer.LazerDB;
 using BeatmapExporter.Exporters.Lazer.LazerDB.Schema;
+using osu_database_reader.Components.Beatmaps;
 using System.IO.Compression;
 
 namespace BeatmapExporter.Exporters.Lazer
@@ -14,10 +15,13 @@ namespace BeatmapExporter.Exporters.Lazer
 
         int selectedBeatmapCount; // internally maintained count of selected beatmaps
         List<BeatmapSet> selectedBeatmapSets;
-
+            
         readonly Transcoder transcoder;
 
-        public LazerExporter(LazerDatabase lazerDb, List<BeatmapSet> beatmapSets)
+        readonly Dictionary<string, List<Beatmap>>? collections;
+        List<string> selectedFromCollections;
+
+        public LazerExporter(LazerDatabase lazerDb, List<BeatmapSet> beatmapSets, List<Collection>? lazerCollections)
         {
             this.lazerDb = lazerDb;
 
@@ -25,11 +29,32 @@ namespace BeatmapExporter.Exporters.Lazer
             this.beatmapSets = nonEmpty;
             this.selectedBeatmapSets = nonEmpty;
 
-            int count = nonEmpty.Select(b => b.Beatmaps.Count).Sum();
+            var allBeatmaps = nonEmpty.SelectMany(s => s.Beatmaps).ToList();
+
+            int count = allBeatmaps.Count;
             this.beatmapCount = count;
             this.selectedBeatmapCount = count;
 
+            this.selectedFromCollections = new();
+
             this.config = new ExporterConfiguration("lazerexport", "lazerexport.zip");
+
+            if(lazerCollections != null)
+            {
+                collections = new();
+                foreach (var coll in lazerCollections)
+                {
+                    var collMaps = allBeatmaps
+                        .Where(b => coll.BeatmapHashes.Contains(b.MD5Hash))
+                        .ToList();
+                    collections[coll.Name] = collMaps;
+                }
+            } 
+            else
+            {
+                Console.WriteLine("Collection filtering and information will not be available.");
+                collections = null;
+            }
 
             this.transcoder = new Transcoder();
         }
@@ -55,9 +80,19 @@ namespace BeatmapExporter.Exporters.Lazer
             get => selectedBeatmapCount;
         }
 
+        public int CollectionCount
+        {
+            get => collections?.Count ?? 0;
+        }
+
         public ExporterConfiguration Configuration
         {
             get => config;
+        }
+
+        public List<string> SelectedFromCollections
+        {
+            get => selectedFromCollections;
         }
 
         IEnumerable<String> FilterInfo() => config.Filters.Select((f, i) =>
@@ -293,8 +328,65 @@ namespace BeatmapExporter.Exporters.Lazer
             Console.WriteLine($"Exported {exportedAudioFiles}/{attempted} audio files from {SelectedBeatmapCount} beatmaps to {location}.");
         }
 
+        public void DisplayCollections()
+        {
+            if(collections is not null)
+            {
+                Console.Write("osu! collections:\n\n");
+                foreach (var (name, maps) in collections)
+                {
+                    Console.WriteLine($"{name} ({maps.Count} beatmaps)");
+                }
+            } 
+            else
+            {
+                Console.WriteLine("Your osu!lazer collection database was not able to be loaded. Collection information and filtering is not available.");
+            }
+            Console.Write("\nThe collection names as shown here can be used with the \"collection\" beatmap filter.\n");
+        }
+
         public void UpdateSelectedBeatmaps()
         {
+            List<string> collFilters = new();
+            List<BeatmapFilter> beatmapFilters = new();
+            bool negateColl = false;
+            foreach (var filter in config.Filters)
+            {
+                if (filter.Collections is not null)
+                {
+                    collFilters.AddRange(filter.Collections);
+                    negateColl = filter.Negate;
+                }
+                else
+                    beatmapFilters.Add(filter);
+            }
+
+            Console.WriteLine($"collection filters: {collFilters.Count}");
+            // re-build 'collection' filters to optimize/cache iteration of beatmaps/collections for these
+            if (collections is not null && collFilters.Count > 0)
+            {
+                // build list of beatmap hashes from selected filters
+                var includedHashes = collections
+                    .Where(c => collFilters.Any(c => c == "-all") switch
+                    {
+                        true => true,
+                        false => collFilters.Any(selected => string.Equals(selected, c.Key, StringComparison.OrdinalIgnoreCase))
+                    })
+                    .SelectMany(c => c.Value.Select(b => b.MD5Hash))
+                    .ToList();
+
+                string desc = string.Join(", ", collFilters);
+                BeatmapFilter collFilter = new($"Collection filter: {(negateColl ? "NOT " : "")}{desc}", negateColl,
+                    b => includedHashes.Contains(b.MD5Hash));
+
+                // with placeholder collection filters removed, add re-built filter 
+                beatmapFilters.Add(collFilter);
+            }
+
+            // collection filter will either be rebuilt above or removed (if collections are not available)
+            config.Filters = beatmapFilters;
+
+            // compute and cache 'selected' beatmaps based on current filters
             int selectedCount = 0;
             List<BeatmapSet> selectedSets = new();
             foreach (var set in beatmapSets)

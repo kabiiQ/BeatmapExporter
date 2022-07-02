@@ -1,5 +1,6 @@
 ﻿using BeatmapExporter.Exporters.Lazer.LazerDB;
 using BeatmapExporter.Exporters.Lazer.LazerDB.Schema;
+using osu_database_reader.Components.Beatmaps;
 using Realms;
 using System.Runtime.InteropServices;
 
@@ -53,8 +54,11 @@ namespace BeatmapExporter.Exporters.Lazer
             // load beatmaps into memory for filtering/export later
             List<BeatmapSet> beatmaps = realm!.All<BeatmapSet>().ToList();
 
+            Console.WriteLine("Loading osu!lazer collections...");
+            List<Collection>? collections = CollectionsLoader.Load(directory);
+
             // start console i/o loop
-            LazerExporter lazerExporter = new(database, beatmaps);
+            LazerExporter lazerExporter = new(database, beatmaps, collections);
             return new BeatmapExporter(lazerExporter);
         }
     }

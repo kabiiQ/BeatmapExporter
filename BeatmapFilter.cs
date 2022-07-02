@@ -4,22 +4,37 @@ namespace BeatmapExporter
 {
     public class BeatmapFilter
     {
-        public delegate bool Filter(Beatmap beatmap);
+        public delegate bool LazerFilter(Beatmap beatmap);
+
+        readonly bool negated;
+        readonly LazerFilter lazerFilter;
 
         public string Description { get; }
-        readonly Filter filter;
-        readonly bool negated;
-        public BeatmapFilter(string description, bool negated, Filter filter)
+        public string[]? Collections { get; }
+        public bool Negate
+        {
+            get => negated;
+        }
+
+        public BeatmapFilter(string description, bool negated, LazerFilter lazerFilter)
         {
             this.Description = description;
             this.negated = negated;
-            this.filter = filter;
+            this.lazerFilter = lazerFilter;
+            this.Collections = null;
         }
+        
+        // creates a placeholder filter for collections that will be re-built if collections are available 
+        public BeatmapFilter(string description, bool negated, string[] collections) : this(description, negated, b => true)
+        {
+            this.Collections = collections;
+        }
+
 
         public bool Includes(Beatmap beatmap) => negated switch
         {
-            true => !filter(beatmap),
-            false => filter(beatmap)
+            true => !lazerFilter(beatmap),
+            false => lazerFilter(beatmap)
         };
     }
 
@@ -63,6 +78,7 @@ namespace BeatmapExporter
                 "tag" => TagFilter(),
                 "mode" => GamemodeFilter(),
                 "status" => OnlineStatusFilter(),
+                "collection" => CollectionFilter(),
                 _ => null
             };
         }
@@ -79,7 +95,8 @@ namespace BeatmapExporter
                 Console.WriteLine($"Invalid star rating: {args[1]}");
                 return null;
             }
-            return new BeatmapFilter(input, negate, b => b.StarRating >= starRating);
+            return new(input, negate,
+                b => b.StarRating >= starRating);
         }
 
         BeatmapFilter? LengthFilter()
@@ -92,25 +109,28 @@ namespace BeatmapExporter
                 return null;
             }
             int millis = duration * 1000;
-            return new BeatmapFilter(input, negate, b => b.Length >= millis);
+            return new(input, negate,
+                b => b.Length >= millis);
         }
 
         BeatmapFilter? AuthorFilter()
         {
             // author RLC, Nathan
             string[] authors = CommaSeparatedArg(6);
-            return new BeatmapFilter(input, negate, b => authors.Contains(b.Metadata.Author.Username.ToLower()));
+            return new(input, negate,
+                b => authors.Contains(b.Metadata.Author.Username.ToLower()));
         }
 
         BeatmapFilter? IDFilter()
         {
             // id 1, 2, 3
             var beatmapIds = CommaSeparatedArg(2).Select(a => Int32.Parse(a));
-            return new BeatmapFilter(input, negate, b =>
-            {
-                var beatmapSet = b.BeatmapSet;
-                return beatmapSet is not null && beatmapIds.Contains(beatmapSet.OnlineID);
-            });
+            return new(input, negate,
+                b =>
+                {
+                    var beatmapSet = b.BeatmapSet;
+                    return beatmapSet is not null && beatmapIds.Contains(beatmapSet.OnlineID);
+                });
         }
 
         BeatmapFilter? BPMFilter()
@@ -122,25 +142,28 @@ namespace BeatmapExporter
                 Console.WriteLine($"Invalid BPM: {args[1]}");
                 return null;
             }
-            return new BeatmapFilter(input, negate, b => b.BPM >= bpm);
+            return new(input, negate,
+                b => b.BPM >= bpm);
         }
 
         BeatmapFilter? ArtistFilter()
         {
             // artist Camellia, Nanahira
             string[] artists = CommaSeparatedArg(6);
-            return new BeatmapFilter(input, negate, b => artists.Contains(b.Metadata.Artist.ToLower()));
+            return new(input, negate,
+                b => artists.Contains(b.Metadata.Artist.ToLower()));
         }
 
         BeatmapFilter? TagFilter()
         {
             // tag touhou
             string[] tags = CommaSeparatedArg(3);
-            return new BeatmapFilter(input, negate, b =>
-            {
-                string? beatmapTags = b.Metadata.Tags?.ToLower();
-                return beatmapTags is not null && tags.Any(t => beatmapTags.Contains(t));
-            });
+            return new(input, negate,
+                b =>
+                {
+                    string? beatmapTags = b.Metadata.Tags?.ToLower();
+                    return beatmapTags is not null && tags.Any(t => beatmapTags.Contains(t));
+                });
         }
 
         BeatmapFilter? GamemodeFilter()
@@ -159,7 +182,8 @@ namespace BeatmapExporter
                 Console.WriteLine($"Unknown osu! game mode: {args[1]}. Use osu, mania, ctb, or taiko.");
                 return null;
             }
-            return new BeatmapFilter(input, negate, b => b.Ruleset.OnlineID == gamemodeId);
+            return new(input, negate,
+                b => b.Ruleset.OnlineID == gamemodeId);
         }
 
         BeatmapFilter? OnlineStatusFilter()
@@ -180,7 +204,16 @@ namespace BeatmapExporter
                 Console.WriteLine($"Unknown beatmap status: {args[1]}. Use graveyard, ranked, approved, qualified, or loved.");
                 return null;
             }
-            return new BeatmapFilter(input, negate, b => statusId.Contains(b.Status));
+            return new(input, negate,
+                b => statusId.Contains(b.Status));
+        }
+
+        BeatmapFilter? CollectionFilter()
+        {
+            // collection name
+            string[] collections = CommaSeparatedArg(10);
+            // builds a placeholder filter that will be re-built if/where the user's collections are available
+            return new(input, negate, collections);
         }
     }
 }

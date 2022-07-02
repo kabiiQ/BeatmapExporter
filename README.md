@@ -16,7 +16,7 @@ This new storage format results in a better experience while playing the game. H
 
 This utility allows you to export beatmaps back into `.osz` files. 
 
-There is a beatmap filter system allowing you to select a portion of your library to only export certain maps (for example, above a certain star rating, specific artists/mappers, specific gamemodes, etc). You can also simply export your **entire library** at once.
+There is a beatmap filter system allowing you to select a portion of your library to only export certain maps (for example, above a certain star rating, specific artists/mappers, specific gamemodes, specific collections, etc). You can also simply export your **entire library** at once.
 
 You can also export directly into a .zip for more easily transferring your library.
 

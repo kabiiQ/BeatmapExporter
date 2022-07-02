@@ -27,7 +27,7 @@ namespace BeatmapExporter
         void ApplicationLoop()
         {
             // output main application menu
-            Console.Write($"\n1. Export selected {config.ExportFormatUnitName} ({exporter.SelectedBeatmapSetCount} beatmap sets, {exporter.SelectedBeatmapCount} beatmaps)\n2. Display selected beatmap sets ({exporter.SelectedBeatmapSetCount}/{exporter.BeatmapSetCount} beatmap sets)\n3. Advanced export settings (.mp3 export, compression, export as zip, export location)\n4. Edit beatmap selection/filters\n\n0. Exit\nSelect operation: ");
+            Console.Write($"\n1. Export selected {config.ExportFormatUnitName} ({exporter.SelectedBeatmapSetCount} beatmap sets, {exporter.SelectedBeatmapCount} beatmaps)\n2. Display selected beatmap sets ({exporter.SelectedBeatmapSetCount}/{exporter.BeatmapSetCount} beatmap sets)\n3. Display {exporter.CollectionCount} beatmap collections\n4. Advanced export settings (.mp3 export, compression, export as zip, export location)\n5. Edit beatmap selection/filters\n\n0. Exit\nSelect operation: ");
 
             string? input = Console.ReadLine();
             if (input is null)
@@ -35,7 +35,7 @@ namespace BeatmapExporter
                 ExporterLoader.Exit();
             }
 
-            if (!int.TryParse(input, out int op) || op is < 0 or > 4)
+            if (!int.TryParse(input, out int op) || op is < 0 or > 5)
             {
                 Console.WriteLine("\nInvalid operation selected.");
                 return;
@@ -61,9 +61,12 @@ namespace BeatmapExporter
                     exporter.DisplaySelectedBeatmaps();
                     break;
                 case 3:
-                    ExportConfiguration();
+                    exporter.DisplayCollections();
                     break;
                 case 4:
+                    ExportConfiguration();
+                    break;
+                case 5:
                     BeatmapFilterSelection();
                     break;
             }
@@ -181,7 +184,7 @@ namespace BeatmapExporter
 
             Console.Write(
     @"Only beatmaps which match ALL ACTIVE FILTERS will be exported.
-Prefixing the filter with ""!"" will negate the filter, if you want to use a ""less than"" filter. ""!"" can be used with all filters, though an example is only shown for star rating.
+Prefixing the filter with ""!"" will negate the filter, if you want to use a ""less than"" filter. ""!"" can be used with most filters, though an example is only shown for star rating.
 
 Examples:
 - To only export beatmaps 6.3 stars and above: stars 6.3
@@ -194,14 +197,17 @@ Examples:
 - Tags include ""touhou"": tag touhou
 - Specific gamemodes: mode osu/mania/ctb/taiko
 - Beatmap status: graveyard/leaderboard/ranked/approved/qualified/loved
+- Contained in a specific collection called ""songs"": collection songs
+- Contained in ANY collection: collection -all 
 - Remove a specific filter (using line number from list above): remove 1
 - Remove all filters: reset
-Back to export menu: exit"
+Back to export menu: exit
+"
 );
 
-            var filters = config.Filters;
             while (true)
             {
+                var filters = config.Filters;
                 if (filters.Count > 0)
                 {
                     Console.Write("----------------------\nCurrent beatmap filters:\n\n");
@@ -227,7 +233,7 @@ Back to export menu: exit"
                 switch (command[0])
                 {
                     case "remove":
-                        string idArg = command[1];
+                        string? idArg = command.ElementAtOrDefault(1);
                         TryRemoveBeatmapFilter(idArg);
                         break;
                     case "reset":
@@ -253,10 +259,10 @@ Back to export menu: exit"
             }
         }
 
-        void TryRemoveBeatmapFilter(string idArg)
+        void TryRemoveBeatmapFilter(string? idArg)
         {
             var filters = config.Filters;
-            if (!int.TryParse(idArg, out int id) || id < 1 || id > filters.Count)
+            if (idArg is null || !int.TryParse(idArg, out int id) || id < 1 || id > filters.Count)
             {
                 Console.WriteLine($"Not an existing rule ID: {idArg}");
                 return;

@@ -184,7 +184,7 @@ namespace BeatmapExporter
 
             Console.Write(
     @"Only beatmaps which match ALL ACTIVE FILTERS will be exported.
-Prefixing the filter with ""!"" will negate the filter, if you want to use a ""less than"" filter. ""!"" can be used with most filters, though an example is only shown for star rating.
+Prefixing the filter with ""!"" will negate the filter, if you want to use a ""less than"" filter. ""!"" can be used with all filters, though an example is only shown for star rating.
 
 Examples:
 - To only export beatmaps 6.3 stars and above: stars 6.3

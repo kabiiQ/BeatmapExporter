@@ -49,6 +49,8 @@ namespace BeatmapExporter.Exporters.Lazer.LazerDB.Schema
 
         public bool SamplesMatchPlaybackRate { get; set; }
 
+        public DateTimeOffset? LastPlayed { get; set; }
+
         public double DistanceSpacing { get; set; }
 
         public int BeatDivisor { get; set; }

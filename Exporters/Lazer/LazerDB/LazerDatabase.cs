@@ -5,7 +5,7 @@ namespace BeatmapExporter.Exporters.Lazer.LazerDB
 {
     public class LazerDatabase
     {
-        const int LazerSchemaVersion = 14;
+        const int LazerSchemaVersion = 16;
         string database;
         string filesDirectory;
 

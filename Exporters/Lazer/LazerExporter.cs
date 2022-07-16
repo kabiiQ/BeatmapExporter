@@ -365,19 +365,19 @@ namespace BeatmapExporter.Exporters.Lazer
             // re-build 'collection' filters to optimize/cache iteration of beatmaps/collections for these
             if (collections is not null && collFilters.Count > 0)
             {
-                // build list of beatmap hashes from selected filters
+                // build list of beatmap ids from selected filters
                 var includedHashes = collections
                     .Where(c => collFilters.Any(c => c == "-all") switch
                     {
                         true => true,
                         false => collFilters.Any(selected => string.Equals(selected, c.Key, StringComparison.OrdinalIgnoreCase))
                     })
-                    .SelectMany(c => c.Value.Select(b => b.MD5Hash))
+                    .SelectMany(c => c.Value.Select(b => b.ID))
                     .ToList();
 
                 string desc = string.Join(", ", collFilters);
-                BeatmapFilter collFilter = new($"Collection filter: {(negateColl ? "NOT " : "")}{desc}", negateColl,
-                    b => includedHashes.Contains(b.MD5Hash));
+                BeatmapFilter collFilter = new($"Collection filter: {(negateColl ? "NOT in " : "")}{desc}", negateColl,
+                    b => includedHashes.Contains(b.ID));
 
                 // with placeholder collection filters removed, add re-built filter 
                 beatmapFilters.Add(collFilter);

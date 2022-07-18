@@ -1,11 +1,12 @@
 ﻿using BeatmapExporter.Exporters.Lazer.LazerDB.Schema;
 using Realms;
+using Realms.Exceptions;
 
 namespace BeatmapExporter.Exporters.Lazer.LazerDB
 {
     public class LazerDatabase
     {
-        const int LazerSchemaVersion = 16;
+        const int LazerSchemaVersion = 17;
         string database;
         string filesDirectory;
 
@@ -41,7 +42,7 @@ namespace BeatmapExporter.Exporters.Lazer.LazerDB
             RealmConfiguration config = new(database)
             {
                 IsReadOnly = true,
-                SchemaVersion = LazerSchemaVersion,
+                SchemaVersion = LazerSchemaVersion
             };
             config.Schema = new[] {
                 typeof(Beatmap),
@@ -58,9 +59,14 @@ namespace BeatmapExporter.Exporters.Lazer.LazerDB
             {
                 return Realm.GetInstance(config);
             }
-            catch (IOException ex)
+            catch (RealmException re)
             {
-                Console.WriteLine($"Error opening database: {ex.Message}");
+                Console.WriteLine($"\nError opening database: {re.Message}");
+                if(re.Message.Contains("is less than last set version"))
+                {
+                    Console.WriteLine("The osu!lazer database structure has updated since the last BeatmapExporter update.");
+                    Console.WriteLine("\nYou can check https://github.com/kabiiQ/BeatmapExporter/releases for a new release, or file an issue there to let me know it needs updating.");
+                }
                 return null;
             }
         }

@@ -7,5 +7,6 @@ namespace BeatmapExporter.Exporters.Lazer.LazerDB.Schema
     {
         public int OnlineID { get; set; } = 1;
         public string Username { get; set; } = string.Empty;
+        public string? CountryCode { get; set; }
     }
 }

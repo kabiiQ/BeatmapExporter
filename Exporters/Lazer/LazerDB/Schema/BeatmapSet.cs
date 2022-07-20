@@ -11,6 +11,8 @@ namespace BeatmapExporter.Exporters.Lazer.LazerDB.Schema
         [Indexed]
         public int OnlineID { get; set; } = -1;
         public DateTimeOffset DateAdded { get; set; }
+        public DateTimeOffset? DateSubmitted { get; set; }
+        public DateTimeOffset? DateRanked { get; set; }
         public IList<Beatmap> Beatmaps { get; } = null!;
         public IList<RealmNamedFileUsage> Files { get; } = null!;
         public bool DeletePending { get; set; }

@@ -31,7 +31,12 @@ namespace BeatmapExporter.Exporters.Lazer.LazerDB.Schema
 
         public double StarRating { get; set; }
 
+        [Indexed]
         public string MD5Hash { get; set; } = string.Empty;
+
+        public string OnlineMD5Hash { get; set; } = string.Empty;
+
+        public DateTimeOffset? LastOnlineUpdate { get; set; }
 
         public bool Hidden { get; set; }
 

@@ -29,7 +29,7 @@ namespace BeatmapExporter.Exporters.Lazer.LazerDB.Schema
 
         public string Hash { get; set; } = string.Empty;
 
-        public double StarRating { get; set; }
+        public double StarRating { get; set; } = -1;
 
         [Indexed]
         public string MD5Hash { get; set; } = string.Empty;

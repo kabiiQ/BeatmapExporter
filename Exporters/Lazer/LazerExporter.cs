@@ -1,6 +1,5 @@
 ﻿using BeatmapExporter.Exporters.Lazer.LazerDB;
 using BeatmapExporter.Exporters.Lazer.LazerDB.Schema;
-using osu_database_reader.Components.Beatmaps;
 using System.IO.Compression;
 
 namespace BeatmapExporter.Exporters.Lazer
@@ -21,7 +20,7 @@ namespace BeatmapExporter.Exporters.Lazer
         readonly Dictionary<string, List<Beatmap>>? collections;
         List<string> selectedFromCollections;
 
-        public LazerExporter(LazerDatabase lazerDb, List<BeatmapSet> beatmapSets, List<Collection>? lazerCollections)
+        public LazerExporter(LazerDatabase lazerDb, List<BeatmapSet> beatmapSets, List<BeatmapCollection>? lazerCollections)
         {
             this.lazerDb = lazerDb;
 
@@ -45,7 +44,7 @@ namespace BeatmapExporter.Exporters.Lazer
                 foreach (var coll in lazerCollections)
                 {
                     var collMaps = allBeatmaps
-                        .Where(b => coll.BeatmapHashes.Contains(b.MD5Hash))
+                        .Where(b => coll.BeatmapMD5Hashes.Contains(b.MD5Hash))
                         .ToList();
                     collections[coll.Name] = collMaps;
                 }

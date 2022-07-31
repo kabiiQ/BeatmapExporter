@@ -1,4 +1,4 @@
-using BeatmapExporter.Exporters.Lazer.LazerDB.Schema;
+﻿using BeatmapExporter.Exporters.Lazer.LazerDB.Schema;
 using Realms;
 using Realms.Exceptions;
 
@@ -7,8 +7,8 @@ namespace BeatmapExporter.Exporters.Lazer.LazerDB
     public class LazerDatabase
     {
         const int LazerSchemaVersion = 21;
-        string database;
-        string filesDirectory;
+        readonly string database;
+        readonly string filesDirectory;
 
         private LazerDatabase(string database)
         {
@@ -46,6 +46,7 @@ namespace BeatmapExporter.Exporters.Lazer.LazerDB
             };
             config.Schema = new[] {
                 typeof(Beatmap),
+                typeof(BeatmapCollection),
                 typeof(BeatmapDifficulty),
                 typeof(BeatmapMetadata),
                 typeof(BeatmapSet),
@@ -71,7 +72,7 @@ namespace BeatmapExporter.Exporters.Lazer.LazerDB
             }
         }
 
-        string HashedFilePath(string hash) => Path.Combine(filesDirectory, hash.Substring(0, 1), hash.Substring(0, 2), hash);
+        string HashedFilePath(string hash) => Path.Combine(filesDirectory, hash[..1], hash[..2], hash);
 
         public FileStream? OpenHashedFile(string hash)
         {

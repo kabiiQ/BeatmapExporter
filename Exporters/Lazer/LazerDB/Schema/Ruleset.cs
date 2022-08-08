@@ -14,4 +14,15 @@ namespace BeatmapExporter.Exporters.Lazer.LazerDB.Schema
         public int LastAppliedDifficultyVersion { get; set; }
         public bool Available { get; set; }
     }
+
+    public class ModPreset : RealmObject
+    {
+        [PrimaryKey]
+        public Guid ID { get; set; } = Guid.NewGuid();
+        public Ruleset Ruleset { get; set; } = null!;
+        public string Name { get; set; } = string.Empty;
+        public string Description { get; set; } = string.Empty;
+        public string Mods { get; set; } = string.Empty;
+        public bool DeletePending { get; set; }
+    }
 }

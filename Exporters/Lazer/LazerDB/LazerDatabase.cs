@@ -6,7 +6,7 @@ namespace BeatmapExporter.Exporters.Lazer.LazerDB
 {
     public class LazerDatabase
     {
-        const int LazerSchemaVersion = 21;
+        const int LazerSchemaVersion = 22;
         readonly string database;
         readonly string filesDirectory;
 
@@ -53,7 +53,8 @@ namespace BeatmapExporter.Exporters.Lazer.LazerDB
                 typeof(RealmFile),
                 typeof(RealmNamedFileUsage),
                 typeof(RealmUser),
-                typeof(Ruleset)
+                typeof(Ruleset),
+                typeof(ModPreset)
             };
 
             try

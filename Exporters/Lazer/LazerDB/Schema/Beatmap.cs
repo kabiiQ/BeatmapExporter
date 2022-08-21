@@ -36,6 +36,8 @@ namespace BeatmapExporter.Exporters.Lazer.LazerDB.Schema
 
         public string OnlineMD5Hash { get; set; } = string.Empty;
 
+        public DateTimeOffset? LastLocalUpdate { get; set; }
+
         public DateTimeOffset? LastOnlineUpdate { get; set; }
 
         public bool Hidden { get; set; }

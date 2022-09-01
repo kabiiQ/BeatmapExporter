@@ -4,7 +4,7 @@ namespace BeatmapExporter
 {
     internal class ExporterLoader
     {
-        const string Version = "1.2.7";
+        const string Version = "1.2.8";
         static async Task Main(string[] args) 
         {
             // check application version 

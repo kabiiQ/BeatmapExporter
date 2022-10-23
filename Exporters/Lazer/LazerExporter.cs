@@ -195,9 +195,9 @@ namespace BeatmapExporter.Exporters.Lazer
                         memStream.CopyTo(entryStream);
                     }
                 }
-                catch (IOException ioe)
+                catch (Exception e)
                 {
-                    Console.WriteLine($"Unable to export {filename} :: {ioe.Message}");
+                    Console.WriteLine($"Unable to export {filename} :: {e.Message}");
                 }
                 finally
                 {
@@ -283,40 +283,47 @@ namespace BeatmapExporter.Exporters.Lazer
                         }
 
                         // set mp3 tags 
-                        var mp3 = TagLib.File.Create(outputFile);
-                        if (string.IsNullOrEmpty(mp3.Tag.Title))
-                            mp3.Tag.Title = metadata.TitleUnicode;
-                        if(mp3.Tag.Performers.Count() == 0) 
-                            mp3.Tag.Performers = new[] { metadata.ArtistUnicode };
-                        if(string.IsNullOrEmpty(mp3.Tag.Description))
-                            mp3.Tag.Description = metadata.Tags;
-                        mp3.Tag.Comment = $"{mapset.OnlineID} {metadata.Tags}";
-
-                        // set beatmap background as album cover 
-                        if(mp3.Tag.Pictures.Count() == 0 && metadata.BackgroundFile is not null)
+                        try
                         {
-                            using FileStream? bg = lazerDb.OpenNamedFile(mapset, metadata.BackgroundFile);
-                            if(bg is not null)
+                            var mp3 = TagLib.File.Create(outputFile);
+                            if (string.IsNullOrEmpty(mp3.Tag.Title))
+                                mp3.Tag.Title = metadata.TitleUnicode;
+                            if (mp3.Tag.Performers.Count() == 0)
+                                mp3.Tag.Performers = new[] { metadata.ArtistUnicode };
+                            if (string.IsNullOrEmpty(mp3.Tag.Description))
+                                mp3.Tag.Description = metadata.Tags;
+                            mp3.Tag.Comment = $"{mapset.OnlineID} {metadata.Tags}";
+
+                            // set beatmap background as album cover 
+                            if (mp3.Tag.Pictures.Count() == 0 && metadata.BackgroundFile is not null)
                             {
-                                using MemoryStream ms = new();
-                                bg.CopyTo(ms);
-                                byte[] image = ms.ToArray();
-
-                                var cover = new TagLib.Id3v2.AttachmentFrame
+                                using FileStream? bg = lazerDb.OpenNamedFile(mapset, metadata.BackgroundFile);
+                                if (bg is not null)
                                 {
-                                    Type = TagLib.PictureType.FrontCover,
-                                    Description = "Background",
-                                    MimeType = System.Net.Mime.MediaTypeNames.Image.Jpeg,
-                                    Data = image,
-                                };
-                                mp3.Tag.Pictures = new[] { cover };
-                            }
-                        }
+                                    using MemoryStream ms = new();
+                                    bg.CopyTo(ms);
+                                    byte[] image = ms.ToArray();
 
-                        mp3.Save();
+                                    var cover = new TagLib.Id3v2.AttachmentFrame
+                                    {
+                                        Type = TagLib.PictureType.FrontCover,
+                                        Description = "Background",
+                                        MimeType = System.Net.Mime.MediaTypeNames.Image.Jpeg,
+                                        Data = image,
+                                    };
+                                    mp3.Tag.Pictures = new[] { cover };
+                                }
+                            }
+
+                            mp3.Save();
+                        }
+                        catch (Exception e)
+                        {
+                            Console.WriteLine($"Unable to set metadata for {outputFilename} :: {e.Message}\nExporting will continue.");
+                        }
                         exportedAudioFiles++;
-                    } 
-                    catch (IOException e)
+                    }
+                    catch (Exception e)
                     {
                         Console.WriteLine($"Unable to export beatmap :: {e.Message}");
                     }

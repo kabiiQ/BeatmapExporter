@@ -143,7 +143,7 @@ namespace BeatmapExporter
                         }
                         break;
                     case 2:
-                        Console.Write($"\nPath selected must be valid for your platform or export will fail! Be careful of invalid filename characters on Windows.\nDefault export path: {config.DefaultExportPath}\nCurrent export path: {config.ExportPath}\nNew export path: ");
+                        Console.Write($"\nPath selected must be valid for your platform or export will fail! Be careful of invalid filename characters on Windows.\nAudio exports will automatically export to a '{ExporterConfiguration.DefaultAudioPath}' folder at this location.\nDefault export path: {config.DefaultExportPath}\nCurrent export path: {config.ExportPath}\nNew export path: ");
                         string? pathInput = Console.ReadLine();
                         if (string.IsNullOrEmpty(pathInput))
                             continue;

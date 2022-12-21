@@ -214,7 +214,7 @@ namespace BeatmapExporter.Exporters.Lazer
         public void ExportAudioFiles()
         {
             // perform export of songs as .mp3 files
-            string exportDir = config.AudioExportPath;
+            string exportDir = config.ExportPath;
             Directory.CreateDirectory(exportDir);
 
             Console.WriteLine($"Exporting audio from {selectedBeatmapSets.Count} beatmap sets to as .mp3 files.");

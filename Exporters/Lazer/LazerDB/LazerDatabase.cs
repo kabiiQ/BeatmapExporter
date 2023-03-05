@@ -50,6 +50,7 @@ namespace BeatmapExporter.Exporters.Lazer.LazerDB
                 typeof(BeatmapDifficulty),
                 typeof(BeatmapMetadata),
                 typeof(BeatmapSet),
+                typeof(BeatmapUserSettings),
                 typeof(RealmFile),
                 typeof(RealmNamedFileUsage),
                 typeof(RealmUser),

@@ -16,6 +16,8 @@ namespace BeatmapExporter.Exporters.Lazer.LazerDB.Schema
 
         public BeatmapMetadata Metadata { get; set; } = null!;
 
+        public BeatmapUserSettings UserSettings { get; set; } = null!;
+
         public BeatmapSet? BeatmapSet { get; set; }
 
         public int Status { get; set; }
@@ -65,6 +67,8 @@ namespace BeatmapExporter.Exporters.Lazer.LazerDB.Schema
         public int GridSize { get; set; }
 
         public double TimelineZoom { get; set; }
+
+        public int CountdownOffset { get; set; }
 
         // Author kabii
         public override bool Equals(object obj)

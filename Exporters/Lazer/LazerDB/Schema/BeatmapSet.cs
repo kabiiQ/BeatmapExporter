@@ -15,6 +15,7 @@ namespace BeatmapExporter.Exporters.Lazer.LazerDB.Schema
         public DateTimeOffset? DateRanked { get; set; }
         public IList<Beatmap> Beatmaps { get; } = null!;
         public IList<RealmNamedFileUsage> Files { get; } = null!;
+        public int Status { get; set; } = -3;
         public bool DeletePending { get; set; }
         public string Hash { get; set; } = string.Empty;
         public bool Protected { get; set; }

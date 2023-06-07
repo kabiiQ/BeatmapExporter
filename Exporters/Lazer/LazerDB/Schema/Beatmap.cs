@@ -68,6 +68,8 @@ namespace BeatmapExporter.Exporters.Lazer.LazerDB.Schema
 
         public double TimelineZoom { get; set; }
 
+        public double? EditorTimestamp { get; set; }
+
         public int CountdownOffset { get; set; }
 
         // Author kabii

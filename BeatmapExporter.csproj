@@ -13,10 +13,9 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="FFMpegCore" Version="4.8.0" />
-    <PackageReference Include="HoLLy.osu.DatabaseReader" Version="3.1.0-alpha1" />
-    <PackageReference Include="Realm" Version="10.20.0" />
-    <PackageReference Include="TagLibSharp" Version="2.2.0" />
+    <PackageReference Include="FFMpegCore" Version="5.1.0" />
+    <PackageReference Include="Realm" Version="10.21.1" />
+    <PackageReference Include="TagLibSharp" Version="2.3.0" />
   </ItemGroup>
 
 </Project>

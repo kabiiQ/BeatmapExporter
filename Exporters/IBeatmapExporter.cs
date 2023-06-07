@@ -1,7 +1,12 @@
-﻿namespace BeatmapExporter.Exporters
+﻿using BeatmapExporter.Exporters.Lazer.LazerDB.Schema;
+
+namespace BeatmapExporter.Exporters
 {
+    public record struct MapCollection(int CollectionID, List<Beatmap> Beatmaps);
+
     public interface IBeatmapExporter
     {
+
         int BeatmapSetCount { get; }
         int BeatmapCount { get; }
         int SelectedBeatmapSetCount { get; }

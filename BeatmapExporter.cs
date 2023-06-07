@@ -1,4 +1,4 @@
-﻿using BeatmapExporter.Exporters;
+using BeatmapExporter.Exporters;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
 using System.Text;
@@ -198,6 +198,7 @@ Examples:
 - Specific gamemodes: mode osu/mania/ctb/taiko
 - Beatmap status: graveyard/leaderboard/ranked/approved/qualified/loved
 - Contained in a specific collection called ""songs"": collection songs
+- Contained in a specific collection labeled #1 in the collection list: collection #1
 - Contained in ANY collection: collection -all 
 - Remove a specific filter (using line number from list above): remove 1
 - Remove all filters: reset

@@ -1,6 +1,7 @@
 ﻿using BeatmapExporter.Exporters.Lazer.LazerDB;
 using BeatmapExporter.Exporters.Lazer.LazerDB.Schema;
 using System.IO.Compression;
+using System.Text.RegularExpressions;
 
 namespace BeatmapExporter.Exporters.Lazer
 {
@@ -17,7 +18,7 @@ namespace BeatmapExporter.Exporters.Lazer
             
         readonly Transcoder transcoder;
 
-        readonly Dictionary<string, List<Beatmap>>? collections;
+        readonly Dictionary<string, MapCollection>? collections;
         List<string> selectedFromCollections;
 
         public LazerExporter(LazerDatabase lazerDb, List<BeatmapSet> beatmapSets, List<BeatmapCollection>? lazerCollections)
@@ -41,12 +42,14 @@ namespace BeatmapExporter.Exporters.Lazer
             if(lazerCollections != null)
             {
                 collections = new();
+                var colIndex = 1;
                 foreach (var coll in lazerCollections)
                 {
-                    var collMaps = allBeatmaps
+                    var colMaps = allBeatmaps
                         .Where(b => coll.BeatmapMD5Hashes.Contains(b.MD5Hash))
                         .ToList();
-                    collections[coll.Name] = collMaps;
+                    collections[coll.Name] = new MapCollection(colIndex, colMaps);
+                    colIndex++;
                 }
             } 
             else
@@ -339,9 +342,9 @@ namespace BeatmapExporter.Exporters.Lazer
             if(collections is not null)
             {
                 Console.Write("osu! collections:\n\n");
-                foreach (var (name, maps) in collections)
+                foreach (var (name, (index, maps)) in collections)
                 {
-                    Console.WriteLine($"{name} ({maps.Count} beatmaps)");
+                    Console.WriteLine($"#{index}: {name} ({maps.Count} beatmaps)");
                 }
             } 
             else
@@ -351,6 +354,7 @@ namespace BeatmapExporter.Exporters.Lazer
             Console.Write("\nThe collection names as shown here can be used with the \"collection\" beatmap filter.\n");
         }
 
+        private readonly Regex idCollection = new("#([0-9]+)", RegexOptions.Compiled);
         public void UpdateSelectedBeatmaps()
         {
             List<string> collFilters = new();
@@ -358,16 +362,51 @@ namespace BeatmapExporter.Exporters.Lazer
             bool negateColl = false;
             foreach (var filter in config.Filters)
             {
+                // Validate collection filter requests
                 if (filter.Collections is not null)
                 {
-                    collFilters.AddRange(filter.Collections);
-                    negateColl = filter.Negate;
+                    if (collections is not null)
+                    {
+                        List<string> filteredCollections = new();
+                        foreach (var requestedFilter in filter.Collections)
+                        {
+                            string? targetCollection = null;
+                            var match = idCollection.Match(requestedFilter);
+                            if (match.Success)
+                            {
+                                // Find any collection filters that are requested by index
+                                var collectionId = int.Parse(match.Groups[1].Value);
+                                targetCollection = collections.FirstOrDefault(c => c.Value.CollectionID == collectionId).Key;
+                            }
+                            else
+                            {
+                                var exists = collections.ContainsKey(requestedFilter);
+                                if (exists)
+                                {
+                                    targetCollection = requestedFilter;
+                                }
+                            }
+                            if(targetCollection != null)
+                            {
+                                filteredCollections.Add(targetCollection);
+                            }
+                            else
+                            {
+                                Console.WriteLine($"Unable to find collection: {requestedFilter}.");
+                            }
+                        }
+                        collFilters.AddRange(filteredCollections);
+                        negateColl = filter.Negate;
+                    }
+                    else
+                    {
+                        Console.WriteLine("Unable to filter collections, collections were not available on startup!");
+                    }
                 }
-                else
+                else // this filter is not a collection filter
                     beatmapFilters.Add(filter);
             }
 
-            Console.WriteLine($"collection filters: {collFilters.Count}");
             // re-build 'collection' filters to optimize/cache iteration of beatmaps/collections for these
             if (collections is not null && collFilters.Count > 0)
             {
@@ -376,9 +415,9 @@ namespace BeatmapExporter.Exporters.Lazer
                     .Where(c => collFilters.Any(c => c == "-all") switch
                     {
                         true => true,
-                        false => collFilters.Any(selected => string.Equals(selected, c.Key, StringComparison.OrdinalIgnoreCase))
+                        false => collFilters.Any(filter => string.Equals(filter, c.Key, StringComparison.OrdinalIgnoreCase))
                     })
-                    .SelectMany(c => c.Value.Select(b => b.ID))
+                    .SelectMany(c => c.Value.Beatmaps.Select(b => b.ID))
                     .ToList();
 
                 string desc = string.Join(", ", collFilters);

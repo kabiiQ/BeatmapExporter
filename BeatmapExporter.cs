@@ -1,4 +1,4 @@
-using BeatmapExporter.Exporters;
+﻿using BeatmapExporter.Exporters;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
 using System.Text;
@@ -191,6 +191,8 @@ Examples:
 - Below 6.3 stars (using negation): !stars 6.3
 - Longer than 1:30 (90 seconds): length 90
 - 180BPM and above: bpm 180
+- Beatmaps added in the last 7 days: since 7
+- Beatmaps added in the last 5 hours: since 5:00
 - Specific beatmap ID (comma-separated): id 1
 - Mapped by RLC or Nathan (comma-separated): author RLC, Nathan
 - Specific artists (comma-separated): artist Camellia, nanahira

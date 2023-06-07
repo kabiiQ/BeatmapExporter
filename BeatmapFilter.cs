@@ -74,6 +74,7 @@ namespace BeatmapExporter
                 "author" => AuthorFilter(),
                 "id" => IDFilter(),
                 "bpm" => BPMFilter(),
+                "since" => AddedSinceFilter(),
                 "artist" => ArtistFilter(),
                 "tag" => TagFilter(),
                 "mode" => GamemodeFilter(),
@@ -146,6 +147,23 @@ namespace BeatmapExporter
                 b => b.BPM >= bpm);
         }
 
+        BeatmapFilter? AddedSinceFilter()
+        {
+            // since 2:00
+            TimeSpan since;
+            if(!TimeSpan.TryParse(args[1], out since))
+            {
+                Console.WriteLine($"Invalid time interval: {args[1]}");
+                return null;
+            }
+            return new(input, negate, b =>
+            {
+                if (b.BeatmapSet is null) return false; // if map doesn't have a set at all, we can't get the date added
+                var lifetime = DateTime.Now - b.BeatmapSet.DateAdded;
+                return lifetime < since;
+            });
+        }
+
         BeatmapFilter? ArtistFilter()
         {
             // artist Camellia, Nanahira
@@ -201,7 +219,7 @@ namespace BeatmapExporter
             };
             if(statusId is null)
             {
-                Console.WriteLine($"Unknown beatmap status: {args[1]}. Use graveyard, ranked, approved, qualified, or loved.");
+                Console.WriteLine($"Unknown beatmap status: {args[1]}. Use graveyard, leaderboard, ranked, approved, qualified, or loved.");
                 return null;
             }
             return new(input, negate,

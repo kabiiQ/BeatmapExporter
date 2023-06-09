@@ -255,7 +255,7 @@ Back to export menu: exit
                         }
                         else
                         {
-                            Console.WriteLine($"Unknown filter type {command[0]}.");
+                            Console.WriteLine($"Invalid filter '{command[0]}'.");
                         }
                         break;
                 }

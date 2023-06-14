@@ -1,4 +1,4 @@
-﻿using BeatmapExporter.Exporters.Lazer.LazerDB.Schema;
+using BeatmapExporter.Exporters.Lazer.LazerDB.Schema;
 using Realms;
 using Realms.Exceptions;
 
@@ -6,7 +6,7 @@ namespace BeatmapExporter.Exporters.Lazer.LazerDB
 {
     public class LazerDatabase
     {
-        const int LazerSchemaVersion = 28;
+        const int LazerSchemaVersion = 29;
         readonly string database;
         readonly string filesDirectory;
 

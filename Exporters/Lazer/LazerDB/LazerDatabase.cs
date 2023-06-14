@@ -1,4 +1,4 @@
-using BeatmapExporter.Exporters.Lazer.LazerDB.Schema;
+﻿using BeatmapExporter.Exporters.Lazer.LazerDB.Schema;
 using Realms;
 using Realms.Exceptions;
 
@@ -65,10 +65,10 @@ namespace BeatmapExporter.Exporters.Lazer.LazerDB
             catch (RealmException re)
             {
                 Console.WriteLine($"\nError opening database: {re.Message}");
-                if(re.Message.Contains("is less than last set version"))
+                if(re.Message.Contains("does not equal last set version"))
                 {
                     Console.WriteLine("The osu!lazer database structure has updated since the last BeatmapExporter update.");
-                    Console.WriteLine("\nYou can check https://github.com/kabiiQ/BeatmapExporter/releases for a new release, or file an issue there to let me know it needs updating.");
+                    Console.WriteLine("\nYou can check https://github.com/kabiiQ/BeatmapExporter/releases for a new release, or file an issue there to let me know it needs updating if it's been a few days.");
                 }
                 return null;
             }

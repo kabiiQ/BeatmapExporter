@@ -1,6 +1,7 @@
 ﻿using BeatmapExporter.Exporters.Lazer.LazerDB;
 using BeatmapExporter.Exporters.Lazer.LazerDB.Schema;
 using System.IO.Compression;
+using System.Text;
 using System.Text.RegularExpressions;
 
 namespace BeatmapExporter.Exporters.Lazer
@@ -37,7 +38,7 @@ namespace BeatmapExporter.Exporters.Lazer
 
             this.selectedFromCollections = new();
 
-            this.config = new ExporterConfiguration("lazerexport", "lazerexport.zip");
+            this.config = new ExporterConfiguration("lazerexport");
 
             if(lazerCollections != null)
             {
@@ -133,23 +134,6 @@ namespace BeatmapExporter.Exporters.Lazer
 
             BeatmapExporter.OpenExportDirectory(exportDir);
 
-            // if requested, produce a single .zip archive of the export
-            FileStream? exportZip = null;
-            ZipArchive? exportArchive = null;
-            if (config.ExportSingleArchive)
-            {
-                try
-                {
-                    exportZip = File.Open(Path.Combine(exportDir, config.ExportArchivePath), FileMode.CreateNew); // lazerexport.zip
-                    exportArchive = new ZipArchive(exportZip, ZipArchiveMode.Create, true);
-                } 
-                catch (IOException io)
-                {
-                    Console.WriteLine($"Unable to create export archive {Path.GetFullPath(config.ExportArchivePath)} :: {io.Message}");
-                    return;
-                }
-            }
-
             // export all named files, excluding filtered difficulties into .osz archive
             int attempted = 0;
             int exported = 0;
@@ -159,21 +143,11 @@ namespace BeatmapExporter.Exporters.Lazer
                 string filename = mapset.ArchiveFilename();
                 Console.WriteLine($"Exporting beatmap set ({attempted}/{SelectedBeatmapSetCount}): {filename}");
 
-                MemoryStream? memStream = null;
                 Stream? export = null;
                 try
                 {
-                    if (exportArchive is not null)
-                    {
-                        // if exporting to an archive, create the .osz file in memory rather than on disk
-                        memStream = new MemoryStream(5000000);
-                        export = memStream;
-                    }
-                    else
-                    {
-                        string exportPath = Path.Combine(exportDir, filename);
-                        export = File.Open(exportPath, FileMode.CreateNew);
-                    }
+                    string exportPath = Path.Combine(exportDir, filename);
+                    export = File.Open(exportPath, FileMode.CreateNew);
 
                     using ZipArchive osz = new(export, ZipArchiveMode.Create, true);
                     foreach (var namedFile in mapset.Files)
@@ -188,15 +162,6 @@ namespace BeatmapExporter.Exporters.Lazer
                         file?.CopyTo(entryStream);
                     }
                     exported++;
-
-                    if(memStream is not null)
-                    {
-                        // if exporting to an archive, copy the .osz archive into the .zip 
-                        var oszEntry = exportArchive!.CreateEntry(filename, config.CompressionLevel);
-                        using var entryStream = oszEntry.Open();
-                        memStream.Seek(0, SeekOrigin.Begin);
-                        memStream.CopyTo(entryStream);
-                    }
                 }
                 catch (Exception e)
                 {
@@ -207,10 +172,8 @@ namespace BeatmapExporter.Exporters.Lazer
                     export?.Dispose();
                 }
             }
-            exportArchive?.Dispose();
-            exportZip?.Dispose();
 
-            string location = exportArchive is not null ? Path.GetFullPath(config.ExportArchivePath) : Path.GetFullPath(exportDir);
+            string location = Path.GetFullPath(exportDir);
             Console.WriteLine($"Exported {exported}/{SelectedBeatmapSetCount} beatmaps to {location}.");
         }
 

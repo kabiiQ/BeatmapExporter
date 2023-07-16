@@ -11,12 +11,9 @@ namespace BeatmapExporter.Exporters
         private readonly string defaultExportPath;
         private string? exportPath = null;
 
-        private readonly string defaultArchivePath;
-
-        public ExporterConfiguration(string defaultExportPath, string defaultArchivePath)
+        public ExporterConfiguration(string defaultExportPath)
         {
             this.defaultExportPath = defaultExportPath;
-            this.defaultArchivePath = defaultArchivePath;
         }
 
         public List<BeatmapFilter> Filters { get; set; } = new();
@@ -39,12 +36,6 @@ namespace BeatmapExporter.Exporters
         public CompressionLevel CompressionLevel
         {
             get => CompressionEnabled ? CompressionLevel.SmallestSize : CompressionLevel.NoCompression;
-        }
-
-        public bool ExportSingleArchive { get; set; } = false;
-        public string ExportArchivePath
-        {
-            get => defaultArchivePath;
         }
 
         public Format ExportFormat { get; set; } = Format.Beatmap;

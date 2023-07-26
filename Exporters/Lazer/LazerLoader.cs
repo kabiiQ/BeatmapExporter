@@ -18,12 +18,11 @@ namespace BeatmapExporter.Exporters.Lazer
                 if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
                 {
                     // default install location: %appdata%/osu
-                    string appdata = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
-                    directory = Path.Combine(appdata, "osu");
+                    directory = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "osu");
                 }
                 else if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
                 {
-                    directory = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), ".osu/Songs");
+                    directory = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), "Library/Application Support/osu");
                 }
                 else
                 {

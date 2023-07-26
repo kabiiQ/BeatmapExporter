@@ -23,11 +23,11 @@ namespace BeatmapExporter.Exporters.Lazer
                 }
                 else if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
                 {
-                    directory = "~/.osu/Songs";
+                    directory = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), ".osu/Songs");
                 }
                 else
                 {
-                    directory = "~/.local/share/osu";
+                    directory = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), ".local/share/osu");
                 }
             }
 

@@ -55,6 +55,9 @@ namespace BeatmapExporter
                         case ExporterConfiguration.Format.Audio:
                             exporter.ExportAudioFiles();
                             break;
+                        case ExporterConfiguration.Format.Background:
+                            exporter.ExportBackgroundFiles();
+                            break;
                     }
                     break;
                 case 2:
@@ -86,6 +89,9 @@ namespace BeatmapExporter
                 {
                     case ExporterConfiguration.Format.Audio:
                         settings.Append("Beatmap audio files will be renamed, tagged and exported (.mp3 format)*");
+                        break;
+                    case ExporterConfiguration.Format.Background:
+                        settings.Append("Beatmap background files will be exported (original format)");
                         break;
                     case ExporterConfiguration.Format.Beatmap:
                         settings.Append("Beatmaps will be exported in osu! archive format (.osz)");
@@ -120,15 +126,17 @@ namespace BeatmapExporter
                 switch(op)
                 {
                     case 1:
-                        if(exportBeatmaps)
+                        switch (config.ExportFormat)
                         {
-                            Console.WriteLine("- CHANGED: Beatmap audio files will be renamed, tagged and exported (.mp3 format).");
-                            config.ExportFormat = ExporterConfiguration.Format.Audio;
-                        }
-                        else
-                        {
-                            Console.WriteLine("- CHANGED: Beatmaps will be exported in osu! archive format (.osz).");
-                            config.ExportFormat = ExporterConfiguration.Format.Beatmap;
+                            case ExporterConfiguration.Format.Beatmap:
+                                config.ExportFormat = ExporterConfiguration.Format.Audio;
+                                break;
+                            case ExporterConfiguration.Format.Audio:
+                                config.ExportFormat = ExporterConfiguration.Format.Background;
+                                break;
+                            case ExporterConfiguration.Format.Background:
+                                config.ExportFormat = ExporterConfiguration.Format.Beatmap;
+                                break;
                         }
                         break;
                     case 2:

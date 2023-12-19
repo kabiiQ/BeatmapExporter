@@ -1,4 +1,4 @@
-﻿using BeatmapExporter.Exporters.Lazer.LazerDB;
+using BeatmapExporter.Exporters.Lazer.LazerDB;
 using BeatmapExporter.Exporters.Lazer.LazerDB.Schema;
 using System.IO.Compression;
 using System.Text;
@@ -324,8 +324,8 @@ namespace BeatmapExporter.Exporters.Lazer
                 {
                     try
                     {
-                        //same naming format as audio but with filename as mapset ids may have the same background file
-                        string outputFilename = $"{Path.GetFileNameWithoutExtension(metadata.OutputAudioFilename(mapset.OnlineID))} {metadata.BackgroundFile}";
+                        // get output filename for background including original background name
+                        string outputFilename = metadata.OutputBackgroundFilename(mapset.OnlineID);
                         string outputFile = Path.Combine(exportDir, outputFilename);
 
                         attempted++;
@@ -342,7 +342,7 @@ namespace BeatmapExporter.Exporters.Lazer
                     }
                     catch (Exception e)
                     {
-                        Console.WriteLine($"Unable to export beatmap :: {e.Message}");
+                        Console.WriteLine($"Unable to export background image :: {e.Message}");
                     }
                 }
             }

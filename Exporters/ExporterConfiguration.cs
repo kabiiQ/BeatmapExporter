@@ -1,4 +1,4 @@
-using System.IO.Compression;
+﻿using System.IO.Compression;
 
 namespace BeatmapExporter.Exporters
 {
@@ -6,7 +6,7 @@ namespace BeatmapExporter.Exporters
     {
         public static readonly string DefaultAudioPath = "mp3";
 
-        public enum Format { Audio, Beatmap, Background };  
+        public enum Format { Beatmap, Audio, Background };
 
         private readonly string defaultExportPath;
         private string? exportPath = null;
@@ -47,9 +47,9 @@ namespace BeatmapExporter.Exporters
 
         public string ExportFormatUnitName => ExportFormat switch
         {
-            Format.Audio => "audio (.mp3)",
             Format.Beatmap => "osu! beatmaps (.osz)",
-            Format.Background => "backgrounds (original)",
+            Format.Audio => "audio (.mp3)",
+            Format.Background => "beatmap backgrounds",
             _ => throw new NotImplementedException()
         };
     }

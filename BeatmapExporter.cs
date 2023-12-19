@@ -27,7 +27,7 @@ namespace BeatmapExporter
         void ApplicationLoop()
         {
             // output main application menu
-            Console.Write($"\n1. Export selected {config.ExportFormatUnitName} ({exporter.SelectedBeatmapSetCount} beatmap sets, {exporter.SelectedBeatmapCount} beatmaps)\n2. Display selected beatmap sets ({exporter.SelectedBeatmapSetCount}/{exporter.BeatmapSetCount} beatmap sets)\n3. Display {exporter.CollectionCount} beatmap collections\n4. Advanced export settings (.mp3 export, compression, export location)\n5. Edit beatmap selection/filters\n\n0. Exit\nSelect operation: ");
+            Console.Write($"\n1. Export selected {config.ExportFormatUnitName} ({exporter.SelectedBeatmapSetCount} beatmap sets, {exporter.SelectedBeatmapCount} beatmaps)\n2. Display selected beatmap sets ({exporter.SelectedBeatmapSetCount}/{exporter.BeatmapSetCount} beatmap sets)\n3. Display {exporter.CollectionCount} beatmap collections\n4. Advanced export settings (.mp3/image export, compression, export location)\n5. Edit beatmap selection/filters\n\n0. Exit\nSelect operation: ");
 
             string? input = Console.ReadLine();
             if (input is null)
@@ -87,14 +87,14 @@ namespace BeatmapExporter
                 bool exportBeatmaps = config.ExportFormat == ExporterConfiguration.Format.Beatmap;
                 switch(config.ExportFormat)
                 {
+                    case ExporterConfiguration.Format.Beatmap:
+                        settings.Append("Type 1: Beatmaps will be exported in osu! archive format (.osz)");
+                        break;
                     case ExporterConfiguration.Format.Audio:
-                        settings.Append("Beatmap audio files will be renamed, tagged and exported (.mp3 format)*");
+                        settings.Append("Type 2: Beatmap audio files will be renamed, tagged and exported (.mp3 format)*");
                         break;
                     case ExporterConfiguration.Format.Background:
-                        settings.Append("Beatmap background files will be exported (original format)");
-                        break;
-                    case ExporterConfiguration.Format.Beatmap:
-                        settings.Append("Beatmaps will be exported in osu! archive format (.osz)");
+                        settings.Append("Type 3: Only beatmap background images will be exported (original format)*");
                         break;
                 }
 

@@ -1,4 +1,4 @@
-﻿using System.IO.Compression;
+using System.IO.Compression;
 
 namespace BeatmapExporter.Exporters
 {
@@ -27,7 +27,12 @@ namespace BeatmapExporter.Exporters
             get
             {
                 string basePath = exportPath is not null ? exportPath : DefaultExportPath;
-                return ExportFormat == Format.Audio ? Path.Combine(basePath, "mp3") : basePath;
+                return ExportFormat switch
+                {
+                    Format.Beatmap => basePath,
+                    Format.Audio => Path.Combine(basePath, "mp3"),
+                    Format.Background => Path.Combine(basePath, "bg")
+                };
             }
             set => exportPath = value;
         }

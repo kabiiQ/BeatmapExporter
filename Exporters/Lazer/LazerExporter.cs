@@ -1,4 +1,4 @@
-using BeatmapExporter.Exporters.Lazer.LazerDB;
+﻿using BeatmapExporter.Exporters.Lazer.LazerDB;
 using BeatmapExporter.Exporters.Lazer.LazerDB.Schema;
 using System.IO.Compression;
 using System.Text;
@@ -312,10 +312,11 @@ namespace BeatmapExporter.Exporters.Lazer
             int attempted = 0;
             foreach (var mapset in selectedBeatmapSets)
             {
-                // same filter as audio
+                // get beatmap diffs from this set with different background image filenames
                 var uniqueMetadata = mapset
                     .SelectedBeatmaps
                     .Select(b => b.Metadata)
+                    .Where(m => m.BackgroundFile != null)
                     .GroupBy(m => m.BackgroundFile)
                     .Select(g => g.First())
                     .ToList();

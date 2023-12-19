@@ -12,6 +12,5 @@ namespace BeatmapExporter.Exporters.Lazer.LazerDB.Schema
 
         public double SliderMultiplier { get; set; } = 1;
         public double SliderTickRate { get; set; } = 1;
-
     }
 }

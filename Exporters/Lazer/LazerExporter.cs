@@ -300,6 +300,57 @@ namespace BeatmapExporter.Exporters.Lazer
             Console.WriteLine($"Exported {exportedAudioFiles}/{attempted} audio files from {SelectedBeatmapCount} beatmaps to {location}.");
         }
 
+        public void ExportBackgroundFiles()
+        {
+            // perform export of beatmap backgrounds
+            string exportDir = config.ExportPath;
+            Directory.CreateDirectory(exportDir);
+            
+            BeatmapExporter.OpenExportDirectory(exportDir);
+
+            int exportedBackgroundFiles = 0;
+            int attempted = 0;
+            foreach (var mapset in selectedBeatmapSets)
+            {
+                // get beatmap diffs from this set with different background image filenames
+                var uniqueMetadata = mapset
+                    .SelectedBeatmaps
+                    .Select(b => b.Metadata)
+                    .Where(m => m.BackgroundFile != null)
+                    .GroupBy(m => m.BackgroundFile)
+                    .Select(g => g.First())
+                    .ToList();
+
+                foreach (var metadata in uniqueMetadata)
+                {
+                    try
+                    {
+                        // get output filename for background including original background name
+                        string outputFilename = metadata.OutputBackgroundFilename(mapset.OnlineID);
+                        string outputFile = Path.Combine(exportDir, outputFilename);
+
+                        attempted++;
+                        Console.WriteLine($"({attempted}/?) Exporting {outputFilename}");
+
+                        using FileStream? background = lazerDb.OpenNamedFile(mapset, metadata.BackgroundFile);
+                        if (background is null)
+                            continue;
+                        
+                        using FileStream output = File.Open(outputFile, FileMode.CreateNew);
+                        background.CopyTo(output);
+                        
+                        exportedBackgroundFiles++;
+                    }
+                    catch (Exception e)
+                    {
+                        Console.WriteLine($"Unable to export background image :: {e.Message}");
+                    }
+                }
+            }
+
+            string location = Path.GetFullPath(exportDir);
+            Console.WriteLine($"Exported {exportedBackgroundFiles}/{attempted} background files from {SelectedBeatmapCount} beatmaps to {location}.");
+        }
         public void DisplayCollections()
         {
             if(collections is not null)

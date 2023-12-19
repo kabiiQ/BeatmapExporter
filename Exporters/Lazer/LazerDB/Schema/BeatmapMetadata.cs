@@ -17,8 +17,21 @@ namespace BeatmapExporter.Exporters.Lazer.LazerDB.Schema
         public string BackgroundFile { get; set; } = string.Empty;
 
         // Author kabii
+        private string OutputName(int beatmapId) => $"{Artist.Trunc(30)} - {Title.Trunc(60)} ({beatmapId})";
+
         public string OutputAudioFilename(int beatmapId) =>
-            $"{Artist.Trunc(30)} - {Title.Trunc(60)} ({beatmapId}).mp3"
+            $"{OutputName(beatmapId)}.mp3"
             .RemoveFilenameCharacters();
+
+        public string OutputBackgroundFilename(int beatmapId)
+        {
+            var backgroundName = BackgroundFile.Trunc(120);
+            if (BackgroundFile != backgroundName)
+                // restore file extension if truncated
+                backgroundName = backgroundName + Path.GetExtension(BackgroundFile);
+            return 
+                $"{OutputName(beatmapId)} {backgroundName}"
+                .RemoveFilenameCharacters();
+        }
     }
 }

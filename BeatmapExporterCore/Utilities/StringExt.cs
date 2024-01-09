@@ -1,4 +1,4 @@
-﻿namespace BeatmapExporter
+﻿namespace BeatmapExporterCore.Utilities
 {
     public static class StringExt
     {

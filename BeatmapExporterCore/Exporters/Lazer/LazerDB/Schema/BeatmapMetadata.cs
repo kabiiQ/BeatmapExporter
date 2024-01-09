@@ -1,4 +1,5 @@
 ﻿// Original source file (modified by kabii) Copyright (c) ppy Pty Ltd <contact@ppy.sh>. Licensed under the MIT Licence.
+using BeatmapExporterCore.Utilities;
 using Realms;
 
 namespace BeatmapExporter.Exporters.Lazer.LazerDB.Schema

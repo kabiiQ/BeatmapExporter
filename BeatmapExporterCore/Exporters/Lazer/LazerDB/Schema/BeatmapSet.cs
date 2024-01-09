@@ -1,4 +1,5 @@
 ﻿// Original source file (modified by kabii) Copyright (c) ppy Pty Ltd <contact@ppy.sh>. Licensed under the MIT Licence.
+using BeatmapExporterCore.Utilities;
 using Realms;
 using System.Text;
 
@@ -43,19 +44,8 @@ namespace BeatmapExporter.Exporters.Lazer.LazerDB.Schema
             var difficulties = SelectedBeatmaps.Select(b => b.StarRating).OrderBy(r => r).Select(r => r.ToString("0.00"));
             string difficultySpread = string.Join(", ", difficulties);
 
-            var output = new StringBuilder();
-            output
-                .Append(OnlineID)
-                .Append(": ")
-                .Append(metadata.Artist)
-                .Append(" - ")
-                .Append(metadata.Title)
-                .Append(" (")
-                .Append(metadata.Author.Username)
-                .Append(" - ")
-                .Append(difficultySpread)
-                .Append(" stars)");
-            return output.ToString();
+            return
+                $"{OnlineID}: {metadata.Artist} - {metadata.Title} ({metadata.Author.Username} - {difficultySpread} stars)";
         }
 
         public string ArchiveFilename()

@@ -34,30 +34,129 @@ namespace BeatmapExporterCLI.Interface
             ExporterConfiguration.Format.Background => "beatmap backgrounds",
             _ => throw new NotImplementedException()
         };
-
+         
         public void ExportBeatmaps()
         {
-
+            Exporter.SetupExport();
+            int attempted = 0, exported = 0;
+            int count = Exporter.SelectedBeatmapSetCount;
+            Console.WriteLine($"Selected {Exporter.SelectedBeatmapSetCount} beatmap sets for export.");
+            foreach (var mapset in Exporter.SelectedBeatmapSets)
+            {
+                string? filename = null;
+                attempted++;
+                try
+                {
+                    Exporter.ExportBeatmap(mapset, out filename);
+                    exported++;
+                    Console.WriteLine($"Exported beatmap set ({attempted}/{count}): {filename}");
+                } catch (Exception e)
+                {
+                    Console.WriteLine($"Unable to export {filename} :: ${e.Message}");
+                }
+            };
+            Console.WriteLine($"Exported {exported}/{count} beatmaps to {Configuration.FullPath}.");
         }
 
         public void ExportAudioFiles()
         {
+            Exporter.SetupExport();
+            Console.WriteLine($"Exporting audio from {Exporter.SelectedBeatmapSetCount} beatmap sets as .mp3 files.");
+            if (Exporter.TranscodeAvailable)
+                Console.WriteLine("This operation will take longer if many selected beatmaps are not in .mp3 format.");
+            else
+                Console.WriteLine("FFmpeg runtime not found. Beatmaps that use other audio formats than .mp3 will be skipped.\nMake sure ffmpeg.exe is located on the system PATH or placed in the directory with this BeatmapExporter.exe to enable transcoding.");
 
+            int attempted = 0, exportedAudio = 0;
+            foreach (var mapset in Exporter.SelectedBeatmapSets)
+            {
+                var allAudio = Exporter.ExtractAudio(mapset);
+                
+                foreach (var audioExport in allAudio)
+                {
+                    attempted++;
+                    string audioFile = audioExport.AudioFile.AudioFile;
+                    var transcode = audioExport.TranscodeFrom != null;
+                    var transcodeNotice = transcode ? $"(transcode required from {audioExport.TranscodeFrom})" : "";
+                    try
+                    {
+                        Console.WriteLine($"({attempted}/?) Exporting {audioExport.OutputFilename}{transcodeNotice}");
+                        if (transcode && !Exporter.TranscodeAvailable)
+                        {
+                            Console.WriteLine($"Beatmap has non-mp3 audio: {audioFile}. FFmpeg not loaded, skipping.");
+                            continue;
+                        }
+
+                        void metadataFailure(Exception e) => Console.WriteLine($"Unable to set metadata for {audioExport.OutputFilename} :: {e.Message}\nExporting will continue.");
+                        Exporter.ExportAudio(audioExport, metadataFailure);
+                        exportedAudio++;
+
+                    } catch (TranscodeException te)
+                    {
+                        Console.WriteLine($"Unable to transcode audio: {audioFile}. An error occured :: {te.Message}");
+                    }
+                    catch (Exception e)
+                    {
+                        Console.WriteLine($"Unable to export beatmap :: {e.Message}");
+                    }
+                }
+            }
+            Console.WriteLine($"Exported {exportedAudio}/{attempted} audio files from {Exporter.SelectedBeatmapCount} beatmaps to {Configuration.FullPath}.");
         }
 
         public void ExportBackgroundFiles()
         {
+            Exporter.SetupExport();
+            Console.WriteLine($"Exporting beatmap background images from {Exporter.SelectedBeatmapSetCount}.");
 
+            int attempted = 0, exported = 0;
+            foreach (var mapset in Exporter.SelectedBeatmapSets)
+            {
+                var allImages = Exporter.ExtractBackgrounds(mapset);
+
+                foreach (var imageExport in allImages)
+                {
+                    attempted++;
+                    var backgroundFile = imageExport.BackgroundFile.BackgroundFile;
+
+                    try
+                    {
+                        Console.WriteLine($"({attempted}/?) Exporting {imageExport.OutputFilename}");
+                        exported++;
+                    }
+                    catch (Exception e)
+                    {
+                        Console.WriteLine($"Unable to export background image :: {e.Message}");
+                    }
+                }
+            }
+            Console.WriteLine($"Exported {exported}/{attempted} background files from {Exporter.SelectedBeatmapCount} beatmaps to {Configuration.FullPath}.");
         }
 
         public void DisplaySelectedBeatmaps()
         {
-
+            foreach (var map in Exporter.SelectedBeatmapSets)
+            {
+                Console.WriteLine(map.DifficultyString());
+            }
         }
 
         public void DisplayCollections()
         {
-
+            var collections = Exporter.Collections;
+            if (collections is not null)
+            {
+                Console.Write("osu! collections:\n\n");
+                foreach (var (name, (index, maps)) in collections)
+                {
+                    Console.WriteLine($"#{index}: {name} ({maps.Count} beatmaps)");
+                }
+            }
+            else
+            {
+                Console.WriteLine("Your osu!lazer collection database was not able to be loaded. Collection information and filtering is not available.");
+            }
+            Console.Write("\nThe collection names as shown here can be used with the \"collection\" beatmap filter.\n");
         }
 
         public void ExportConfiguration()
@@ -221,7 +320,8 @@ Back to export menu: exit
                         if (filter is not null)
                         {
                             filters.Add(filter);
-                            Exporter.UpdateSelectedBeatmaps();
+                            static void collectionFailure(string filter) => Console.WriteLine($"Unable to find collection: {filter}.");
+                            Exporter.UpdateSelectedBeatmaps(collectionFailure);
                             Console.Write("\nFilter added.\n\n");
                         }
                         else

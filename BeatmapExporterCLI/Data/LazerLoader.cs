@@ -14,10 +14,7 @@ namespace BeatmapExporterCLI.Data
             // osu!lazer has been selected at this point. 
             // load the osu!lazer database here, can operate on lazer-specific objects
             // assume default lazer directory, prompting user if not found (or specified as arg)
-            if(directory is null)
-            {
-                directory = LazerDatabase.DefaultInstallDirectory();
-            }
+            directory ??= LazerDatabase.DefaultInstallDirectory();
 
             Console.Write($" --- kabii's Lazer Exporter ---\n\nChecking directory: {directory}\nRun this application with your osu!lazer storage directory as an argument if this is not your osu! data location.\n");
 

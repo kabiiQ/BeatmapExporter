@@ -23,7 +23,7 @@ namespace BeatmapExporterCLI.Interface
             if (input[0] == '!')
             {
                 negate = true;
-                input = input.Substring(1);
+                input = input[1..];
             }
 
             this.negate = negate;
@@ -62,8 +62,7 @@ namespace BeatmapExporterCLI.Interface
         BeatmapFilter? StarsFilter()
         {
             // stars 6.3
-            float starRating;
-            if (!float.TryParse(args[1], out starRating))
+            if (!float.TryParse(args[1], out float starRating))
             {
                 Console.WriteLine($"Invalid star rating: {args[1]}");
                 return null;
@@ -75,8 +74,7 @@ namespace BeatmapExporterCLI.Interface
         BeatmapFilter? LengthFilter()
         {
             // length 90
-            int duration;
-            if (!Int32.TryParse(args[1], out duration))
+            if (!Int32.TryParse(args[1], out int duration))
             {
                 Console.WriteLine($"Invalid map duration: {args[1]}");
                 return null;
@@ -109,8 +107,7 @@ namespace BeatmapExporterCLI.Interface
         BeatmapFilter? BPMFilter()
         {
             // bpm 180
-            int bpm;
-            if (!Int32.TryParse(args[1], out bpm))
+            if (!Int32.TryParse(args[1], out int bpm))
             {
                 Console.WriteLine($"Invalid BPM: {args[1]}");
                 return null;
@@ -122,8 +119,7 @@ namespace BeatmapExporterCLI.Interface
         BeatmapFilter? AddedSinceFilter()
         {
             // since 2:00
-            TimeSpan since;
-            if (!TimeSpan.TryParse(args[1], out since))
+            if (!TimeSpan.TryParse(args[1], out TimeSpan since))
             {
                 Console.WriteLine($"Invalid time interval: {args[1]}");
                 return null;

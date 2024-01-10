@@ -23,7 +23,7 @@ namespace BeatmapExporter.Exporters.Lazer
         /// <param name="lazerDb">The lazer database, referenced for opening files later.</param>
         /// <param name="beatmapSets">All beatmap sets loaded into memory.</param>
         /// <param name="lazerCollections">If available, all collections into memory.</param>
-        public LazerExporter(LazerDatabase lazerDb, List<BeatmapSet> beatmapSets, List<BeatmapCollection>? lazerCollections)
+        public LazerExporter(LazerDatabase lazerDb, List<BeatmapSet> beatmapSets, List<BeatmapCollection> lazerCollections)
         {
             this.lazerDb = lazerDb;
 
@@ -43,21 +43,14 @@ namespace BeatmapExporter.Exporters.Lazer
             Configuration = new ExporterConfiguration("lazerexport");
 
             var colCount = 0;
-            if (lazerCollections != null)
+            Collections = new();
+            foreach (var coll in lazerCollections)
             {
-                Collections = new();
-                foreach (var coll in lazerCollections)
-                {
-                    colCount++;
-                    var colMaps = allBeatmapDiffs
-                        .Where(b => coll.BeatmapMD5Hashes.Contains(b.MD5Hash))
-                        .ToList();
-                    Collections[coll.Name] = new MapCollection(colCount, colMaps);
-                }
-            }
-            else
-            {
-                Collections = null;
+                colCount++;
+                var colMaps = allBeatmapDiffs
+                    .Where(b => coll.BeatmapMD5Hashes.Contains(b.MD5Hash))
+                    .ToList();
+                Collections[coll.Name] = new MapCollection(colCount, colMaps);
             }
             CollectionCount = colCount;
 
@@ -111,7 +104,7 @@ namespace BeatmapExporter.Exporters.Lazer
         /// <summary>
         /// All discovered collections. The dictionary key represents the collection's name as chosen by the user.
         /// </summary>
-        public Dictionary<string, MapCollection>? Collections
+        public Dictionary<string, MapCollection> Collections
         {
             get;
         }
@@ -241,14 +234,17 @@ namespace BeatmapExporter.Exporters.Lazer
         /// <param name="metadataFailure">An optional callback to notify users on metadata assignment failure. As metadata is non-critical, export will always continue.</param>
         /// <exception cref="TranscodeException">Audio transcode is required for this file and has failed.</exception>
         /// <exception cref="Exception">General audio file export has failed.</exception>
-        public async void ExportAudio(AudioExportTask export, Action<Exception>? metadataFailure)
+        public void ExportAudio(AudioExportTask export, Action<Exception>? metadataFailure)
         {            
             var (mapset, metadata, transcodeFrom, outputFilename) = export;
             string outputFile = Path.Combine(Configuration.ExportPath, outputFilename);
 
             using FileStream? audio = lazerDb.OpenNamedFile(mapset, metadata.AudioFile);
             if (audio is null)
+            {
+                Console.WriteLine($"Audio file {metadata.AudioFile} not found in beatmap {mapset.ArchiveFilename()}.");
                 return;
+            }
                 
             // Create physical .mp3 file, either through transcoding or simple copying
             if (transcodeFrom != null)
@@ -260,7 +256,7 @@ namespace BeatmapExporter.Exporters.Lazer
                 }
                 try
                 {
-                    await transcoder.TranscodeMP3(audio, outputFile);
+                    transcoder.TranscodeMP3(audio, outputFile);
                 }
                 catch (Exception e)
                 {
@@ -350,7 +346,10 @@ namespace BeatmapExporter.Exporters.Lazer
 
             using FileStream? background = lazerDb.OpenNamedFile(mapset, metadata.BackgroundFile);
             if (background is null)
+            {
+                Console.WriteLine($"Background file {metadata.BackgroundFile} not found in beatmap {mapset.ArchiveFilename()}");
                 return;
+            }
 
             using FileStream output = File.Open(outputFile, FileMode.CreateNew);
             background.CopyTo(output);
@@ -371,46 +370,43 @@ namespace BeatmapExporter.Exporters.Lazer
                 // Validate collection filter requests
                 if (filter.Collections is not null)
                 {
-                    if (Collections is not null)
+                    List<string> filteredCollections = new();
+                    foreach (var requestedFilter in filter.Collections)
                     {
-                        List<string> filteredCollections = new();
-                        foreach (var requestedFilter in filter.Collections)
+                        string? targetCollection = null;
+                        var match = idCollection.Match(requestedFilter);
+                        if (match.Success)
                         {
-                            string? targetCollection = null;
-                            var match = idCollection.Match(requestedFilter);
-                            if (match.Success)
+                            // Find any collection filters that are requested by index
+                            var collectionId = int.Parse(match.Groups[1].Value);
+                            targetCollection = Collections.FirstOrDefault(c => c.Value.CollectionID == collectionId).Key;
+                        }
+                        else
+                        {
+                            var exists = Collections.ContainsKey(requestedFilter);
+                            if (exists)
                             {
-                                // Find any collection filters that are requested by index
-                                var collectionId = int.Parse(match.Groups[1].Value);
-                                targetCollection = Collections.FirstOrDefault(c => c.Value.CollectionID == collectionId).Key;
-                            }
-                            else
-                            {
-                                var exists = Collections.ContainsKey(requestedFilter);
-                                if (exists)
-                                {
-                                    targetCollection = requestedFilter;
-                                }
-                            }
-                            if(targetCollection != null)
-                            {
-                                filteredCollections.Add(targetCollection);
-                            }
-                            else
-                            {
-                                collectionFailure?.Invoke(requestedFilter);
+                                targetCollection = requestedFilter;
                             }
                         }
-                        collFilters.AddRange(filteredCollections);
-                        negateColl = filter.Negated;
+                        if(targetCollection != null)
+                        {
+                            filteredCollections.Add(targetCollection);
+                        }
+                        else
+                        {
+                            collectionFailure?.Invoke(requestedFilter);
+                        }
                     }
+                    collFilters.AddRange(filteredCollections);
+                    negateColl = filter.Negated;
                 }
                 else // this filter is not a collection filter
                     beatmapFilters.Add(filter);
             }
 
             // re-build 'collection' filters to optimize/cache iteration of beatmaps/collections for these
-            if (Collections is not null && collFilters.Count > 0)
+            if (collFilters.Count > 0)
             {
                 // build list of beatmap ids from selected filters
                 var includedHashes = Collections
@@ -430,7 +426,7 @@ namespace BeatmapExporter.Exporters.Lazer
                 beatmapFilters.Add(collFilter);
             }
 
-            // collection filter will either be rebuilt above or removed (if collections are not available)
+            // Apply rebuilt collection filter
             Configuration.Filters = beatmapFilters;
 
             // compute and cache 'selected' beatmaps based on current filters

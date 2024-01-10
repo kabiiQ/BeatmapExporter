@@ -18,18 +18,19 @@ namespace BeatmapExporter.Exporters
             }
             catch (Exception)
             {
+                Console.WriteLine("FFmpeg not found. Conversion to .mp3 for beatmap audio export will not be available.");
                 Available = false;
             }
         }
 
-        public Task<bool> TranscodeMP3(FileStream sourceFile, string destFile)
+        public bool TranscodeMP3(FileStream sourceFile, string destFile)
         {
             if (!Available) throw new InvalidOperationException("Audio transcoder is not available within this runtime.");
 
             return FFMpegArguments
                 .FromPipeInput(new StreamPipeSource(sourceFile))
                 .OutputToFile(destFile, overwrite: false, o => o.WithAudioCodec(AudioCodec.LibMp3Lame))
-                .ProcessAsynchronously();
+                .ProcessSynchronously();
         }
     }
 }

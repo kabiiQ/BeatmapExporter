@@ -1,5 +1,6 @@
 ﻿using BeatmapExporter.Exporters;
 using BeatmapExporter.Exporters.Lazer;
+using System.Diagnostics.CodeAnalysis;
 
 namespace BeatmapExporterCLI.Interface
 {
@@ -29,6 +30,7 @@ namespace BeatmapExporterCLI.Interface
             }
         }
 
+        [DoesNotReturn]
         public static void Exit()
         {
             // keep console open

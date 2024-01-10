@@ -3,6 +3,7 @@ using BeatmapExporter.Exporters.Lazer.LazerDB;
 using BeatmapExporter.Exporters.Lazer.LazerDB.Schema;
 using BeatmapExporterCLI.Interface;
 using Realms;
+using Remotion.Linq.Parsing;
 
 namespace BeatmapExporterCLI.Data
 {
@@ -25,10 +26,21 @@ namespace BeatmapExporterCLI.Data
                 ExporterApp.Exit();
             }
 
-            Realm? realm = database!.Open();
-            if (realm is null)
+            Realm? realm = null;
+            try
             {
-                Console.WriteLine("\nUnable to open osu! database.");
+                realm = database!.Open();
+                if (realm is null)
+                    throw new IOException("Unable to open osu! database.");
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine($"\nError opening database: {e.Message}");
+                if (e is LazerVersionException)
+                {
+                    Console.WriteLine("The osu!lazer database structure has updated since the last BeatmapExporter update.");
+                    Console.WriteLine("\nYou can check https://github.com/kabiiQ/BeatmapExporter/releases for a new release, or file an issue there to let me know it needs updating if it's been a few days.");
+                }
                 ExporterApp.Exit();
             }
 

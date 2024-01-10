@@ -90,7 +90,7 @@ namespace BeatmapExporterCLI.Interface
                     }
                     catch (Exception e)
                     {
-                        Console.WriteLine($"Unable to export beatmap :: {e.Message}");
+                        Console.WriteLine($"Unable to export audio: {audioFile} :: {e.Message}");
                     }
                 }
             }
@@ -115,6 +115,7 @@ namespace BeatmapExporterCLI.Interface
                     try
                     {
                         Console.WriteLine($"({attempted}/?) Exporting {imageExport.OutputFilename}");
+                        Exporter.ExportBackground(imageExport);
                         exported++;
                     }
                     catch (Exception e)
@@ -136,18 +137,10 @@ namespace BeatmapExporterCLI.Interface
 
         public void DisplayCollections()
         {
-            var collections = Exporter.Collections;
-            if (collections is not null)
+            Console.Write("osu! collections:\n\n");
+            foreach (var (name, (index, maps)) in Exporter.Collections)
             {
-                Console.Write("osu! collections:\n\n");
-                foreach (var (name, (index, maps)) in collections)
-                {
-                    Console.WriteLine($"#{index}: {name} ({maps.Count} beatmaps)");
-                }
-            }
-            else
-            {
-                Console.WriteLine("Your osu!lazer collection database was not able to be loaded. Collection information and filtering is not available.");
+                Console.WriteLine($"#{index}: {name} ({maps.Count} beatmaps)");
             }
             Console.Write("\nThe collection names as shown here can be used with the \"collection\" beatmap filter.\n");
         }
@@ -264,7 +257,6 @@ Examples:
 - Beatmap status: graveyard/leaderboard/ranked/approved/qualified/loved
 - Contained in a specific collection called ""songs"": collection songs
 - Contained in a specific collection labeled #1 in the collection list: collection #1
-- Contained in ANY collection: collection -all 
 - Remove a specific filter (using line number from list above): remove 1
 - Remove all filters: reset
 Back to export menu: exit

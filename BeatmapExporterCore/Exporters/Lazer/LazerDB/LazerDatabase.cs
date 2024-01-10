@@ -103,8 +103,14 @@ namespace BeatmapExporter.Exporters.Lazer.LazerDB
         /// <exception cref="IOException">The file could not be opened</exception>
         public FileStream OpenHashedFile(string hash)
         {
-            string path = HashedFilePath(hash);
-            return File.Open(path, FileMode.Open); // Throws IOException
+            try
+            {
+                string path = HashedFilePath(hash);
+                return File.Open(path, FileMode.Open);
+            } catch(Exception e)
+            {
+                throw new IOException($"Unable to open file: {hash}", e);
+            } 
         }
 
         /// <summary>
@@ -122,7 +128,13 @@ namespace BeatmapExporter.Exporters.Lazer.LazerDB
                 return null;
             }
             string path = HashedFilePath(fileHash);
-            return File.Open(path, FileMode.Open); // Throws IOException
+            try
+            {
+                return File.Open(path, FileMode.Open); // Throws IOException
+            } catch(Exception e)
+            {
+                throw new IOException($"Unable to open file: {filename} from beatmap {set.ArchiveFilename()}", e);
+            }
         }
     }
 }

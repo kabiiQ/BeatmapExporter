@@ -3,7 +3,6 @@ using BeatmapExporter.Exporters.Lazer.LazerDB;
 using BeatmapExporter.Exporters.Lazer.LazerDB.Schema;
 using BeatmapExporterCLI.Interface;
 using Realms;
-using System.Runtime.InteropServices;
 
 namespace BeatmapExporterCLI.Data
 {

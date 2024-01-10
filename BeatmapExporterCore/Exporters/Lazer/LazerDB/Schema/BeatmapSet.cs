@@ -1,7 +1,6 @@
 ﻿// Original source file (modified by kabii) Copyright (c) ppy Pty Ltd <contact@ppy.sh>. Licensed under the MIT Licence.
 using BeatmapExporterCore.Utilities;
 using Realms;
-using System.Text;
 
 namespace BeatmapExporter.Exporters.Lazer.LazerDB.Schema
 {
@@ -38,7 +37,7 @@ namespace BeatmapExporter.Exporters.Lazer.LazerDB.Schema
             set { selected = value; }
         }
 
-        public string Display()
+        public string DifficultyString()
         {
             BeatmapMetadata metadata = Beatmaps.First().Metadata;
             var difficulties = SelectedBeatmaps.Select(b => b.StarRating).OrderBy(r => r).Select(r => r.ToString("0.00"));

@@ -1,5 +1,5 @@
-﻿using System.IO.Compression;
-using BeatmapExporterCore.Exporters;
+﻿using BeatmapExporterCore.Exporters;
+using System.IO.Compression;
 
 namespace BeatmapExporter.Exporters
 {
@@ -45,6 +45,11 @@ namespace BeatmapExporter.Exporters
             }
             set => exportPath = value;
         }
+
+        /// <summary>
+        /// The full export path, suitable for feedback to the user.
+        /// </summary>
+        public string FullPath => Path.GetFullPath(ExportPath);
 
         /// <summary>
         /// If compression is enabled for this exporter, disabled by default. Check <see cref="CompressionLevel"/> for actual compression level when creating archives.

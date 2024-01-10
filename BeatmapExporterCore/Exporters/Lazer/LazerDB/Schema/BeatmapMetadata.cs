@@ -29,7 +29,7 @@ namespace BeatmapExporter.Exporters.Lazer.LazerDB.Schema
             var backgroundName = BackgroundFile.Trunc(120);
             if (BackgroundFile != backgroundName)
                 // restore file extension if truncated
-                backgroundName = backgroundName + Path.GetExtension(BackgroundFile);
+                backgroundName += Path.GetExtension(BackgroundFile);
             return 
                 $"{OutputName(beatmapId)} {backgroundName}"
                 .RemoveFilenameCharacters();

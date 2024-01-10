@@ -1,14 +1,7 @@
 ﻿using BeatmapExporter.Exporters;
 using BeatmapExporter.Exporters.Lazer;
-using BeatmapExporter.Exporters.Lazer.LazerDB.Schema;
 using BeatmapExporterCore.Exporters;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.CompilerServices;
-using System.Security.Cryptography.X509Certificates;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace BeatmapExporterCLI.Interface
 {

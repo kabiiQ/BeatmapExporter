@@ -6,8 +6,9 @@ namespace BeatmapExporterCore.Exporters
     {
         /// <summary>
         /// A beatmap selection filter predicate, before any negation or editing.
+        /// This component of a BeatmapFilter checks lazer beatmaps specifically.
         /// </summary>
-        /// <param name="beatmap">A beatmap that will be checked for inclusion by this filter.</param>
+        /// <param name="beatmap">A lazer beatmap that will be checked for inclusion by this filter.</param>
         /// <returns>If this filter includes the specific beatmap.</returns>
         public delegate bool LazerFilter(Beatmap beatmap);
 

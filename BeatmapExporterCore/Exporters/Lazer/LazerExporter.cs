@@ -3,8 +3,6 @@ using BeatmapExporter.Exporters.Lazer.LazerDB.Schema;
 using BeatmapExporterCore.Exporters;
 using BeatmapExporterCore.Utilities;
 using System.IO.Compression;
-using System.Linq;
-using System.Text;
 using System.Text.RegularExpressions;
 
 namespace BeatmapExporter.Exporters.Lazer
@@ -35,6 +33,7 @@ namespace BeatmapExporter.Exporters.Lazer
                 .ToList();
             SelectedBeatmapSets = allBeatmapSets;
             TotalBeatmapSetCount = allBeatmapSets.Count;
+            SelectedBeatmapSetCount = TotalBeatmapSetCount;
 
             allBeatmapDiffs = allBeatmapSets.SelectMany(s => s.Beatmaps).ToList();
 
@@ -101,6 +100,15 @@ namespace BeatmapExporter.Exporters.Lazer
         }
 
         /// <summary>
+        /// Count of the beatmap sets currently selected, after filters are applied.
+        /// </summary>
+        public int SelectedBeatmapSetCount
+        {
+            get;
+            private set;
+        }
+
+        /// <summary>
         /// All discovered collections. The dictionary key represents the collection's name as chosen by the user.
         /// </summary>
         public Dictionary<string, MapCollection>? Collections
@@ -140,6 +148,9 @@ namespace BeatmapExporter.Exporters.Lazer
             return new FilterDetail(i + 1, filter.Description, diffCount);
         });
 
+        /// <summary>
+        /// Creates the export directory and opens the folder (for Windows platform)
+        /// </summary>
         public void SetupExport()
         {
             Directory.CreateDirectory(Configuration.ExportPath);
@@ -350,7 +361,7 @@ namespace BeatmapExporter.Exporters.Lazer
         /// Update the set of 'selected' beatmaps by applying all filters from this exporter's Configuration.Filters.
         /// </summary>
         /// <param name="collectionFailure">An optional callback to notify users on a collection filter mismatch.</param>
-        public void UpdateSelectedBeatmaps(Action<string>? collectionFailure)
+        public void UpdateSelectedBeatmaps(Action<string>? collectionFailure = null)
         {
             List<string> collFilters = new();
             List<BeatmapFilter> beatmapFilters = new();
@@ -424,6 +435,7 @@ namespace BeatmapExporter.Exporters.Lazer
 
             // compute and cache 'selected' beatmaps based on current filters
             int selectedCount = 0;
+            int selectedSetCount = 0;
             List<BeatmapSet> selectedSets = new();
             foreach (var set in allBeatmapSets)
             {
@@ -439,11 +451,13 @@ namespace BeatmapExporter.Exporters.Lazer
                 // after filtering beatmaps, "selected beatmap sets" will only include sets that STILL have at least 1 beatmap 
                 if (selected.Count > 0)
                 {
+                    selectedSetCount++;
                     selectedSets.Add(set);
                 }
             }
 
             SelectedBeatmapSets = selectedSets;
+            SelectedBeatmapSetCount = selectedSetCount;
             SelectedBeatmapCount = selectedCount;
         }
     }

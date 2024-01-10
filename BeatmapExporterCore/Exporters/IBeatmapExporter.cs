@@ -11,5 +11,5 @@ namespace BeatmapExporter.Exporters
     /// Interface representing a beatmap exporter (i.e. lazer or stable)
     /// Empty while not currently in use with 2.0 refactoring.
     /// </summary>
-    interface IBeatmapExporter { }
+    public interface IBeatmapExporter { }
 }

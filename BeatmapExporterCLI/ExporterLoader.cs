@@ -1,5 +1,4 @@
-﻿using BeatmapExporter.Exporters.Lazer;
-using BeatmapExporterCLI.Data;
+﻿using BeatmapExporterCLI.Data;
 using BeatmapExporterCLI.Interface;
 
 namespace BeatmapExporterCLI

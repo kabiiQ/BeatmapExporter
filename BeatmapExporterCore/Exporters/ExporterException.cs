@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace BeatmapExporterCore.Exporters
+﻿namespace BeatmapExporterCore.Exporters
 {
     /// <summary>
     /// Base class for BeatmapExporterCore exceptions

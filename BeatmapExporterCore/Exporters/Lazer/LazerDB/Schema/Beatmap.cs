@@ -73,7 +73,7 @@ namespace BeatmapExporter.Exporters.Lazer.LazerDB.Schema
         public int CountdownOffset { get; set; }
 
         // Author kabii
-        public override bool Equals(object obj)
+        public override bool Equals(object? obj)
         {
             if (obj == null || !GetType().Equals(obj.GetType()))
             {

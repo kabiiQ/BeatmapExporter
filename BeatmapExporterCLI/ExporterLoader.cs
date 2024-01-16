@@ -1,27 +1,20 @@
 ﻿using BeatmapExporterCLI.Data;
 using BeatmapExporterCLI.Interface;
+using BeatmapExporterCore.Utilities;
 
 namespace BeatmapExporterCLI
 {
     internal class ExporterLoader
     {
-        const string Version = "2.0.0";
         static async Task Main(string[] args) 
         {
-            // check application version 
-            try
+            // effectively just block for CLI update check - we want the update notification to appear first
+            // rather than interrupt later output
+            var update = await ExporterUpdater.CheckNewerVersionAvailable();
+            if (update.HasValue)
             {
-                var client = new HttpClient()
-                {
-                    Timeout = TimeSpan.FromSeconds(2),
-                };
-                var latest = await client.GetStringAsync("https://raw.githubusercontent.com/kabiiQ/BeatmapExporter/main/VERSION");
-                if(latest != Version)
-                {
-                    Console.WriteLine($"UPDATE AVAILABLE for BeatmapExporter: ({Version} -> {latest})\nhttps://github.com/kabiiQ/BeatmapExporter/releases/latest\n");
-                }
+                Console.WriteLine($"UPDATE AVAILABLE for BeatmapExporter: ({update.Value.Current} -> {update.Value.New})\n{ExporterUpdater.Latest}\n");
             }
-            catch (Exception) { } // unable to load version from github. not critical error, dont bother user
 
             // currently only load lazer, can add interface for selecting osu stable here later
             ExporterApp exporter = LazerLoader.Load(args.FirstOrDefault());

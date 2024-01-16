@@ -1,0 +1,46 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="clr-namespace:BeatmapExporterGUI.ViewModels"
+             mc:Ignorable="d" d:DesignWidth="1280" d:DesignHeight="72"
+             x:Class="BeatmapExporterGUI.Views.MenuRowView"
+             x:DataType="vm:MenuRowViewModel">
+
+  <Menu>
+    <MenuItem Header="_File">
+      <MenuItem Header="_Home" 
+                Command="{Binding Home}" />
+      <MenuItem Header="_Close Database"
+                Command="{Binding CloseCommand}" />
+      <Separator />
+      <MenuItem Header="_Exit BeatmapExporter"
+                Command="{Binding Exit}"/>
+    </MenuItem>
+    <MenuItem Header="_List All">
+      <MenuItem Header="_Beatmaps"
+                Command="{Binding Beatmaps} "/>
+      <MenuItem Header="_Collections"
+                Command="{Binding Collections}"/>
+    </MenuItem>
+    <MenuItem Header="_Export">
+      <MenuItem Header="_Settings/Beatmap Filters" />
+      <Separator />
+      <MenuItem Header="Export _Now"
+                Command="{Binding ExportCommand}" />
+    </MenuItem>
+    <MenuItem Header="_Version">
+      <MenuItem Header="{Binding ProgramVersion, StringFormat=BeatmapExporter version: {0}}"
+          IsEnabled="False" />
+      <MenuItem Header="{Binding DatabaseVersion, StringFormat=osu!lazer database version: {0}}"
+                IsEnabled="False" />
+      <MenuItem Header="BeatmapExporter _GitHub Project"
+                 Command="{Binding GitHub}" />
+      <MenuItem Header="BeatmapExporter Releases"
+                Command="{Binding Releases}" />
+      <MenuItem Header="osu! GitHub Releases"
+                Command="{Binding Osu}" />
+    </MenuItem>
+  </Menu>
+
+</UserControl>

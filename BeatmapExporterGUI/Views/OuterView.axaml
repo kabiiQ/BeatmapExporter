@@ -1,0 +1,24 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="clr-namespace:BeatmapExporterGUI.ViewModels"
+             mc:Ignorable="d" d:DesignWidth="1280" d:DesignHeight="1024"
+             x:Class="BeatmapExporterGUI.Views.OuterView"
+             x:DataType="vm:OuterViewModel">
+  
+  <DockPanel>
+    
+    <!-- This panel is required (or some other workaround) to keep the top bar able to move the window -->
+    <StackPanel Orientation="Horizontal"
+                DockPanel.Dock="Top">
+      
+      <ContentControl Content="{Binding MenuRow}" />
+      
+    </StackPanel>
+
+    <TransitioningContentControl Content="{Binding CurrentOperation}" />
+
+  </DockPanel>
+  
+</UserControl>

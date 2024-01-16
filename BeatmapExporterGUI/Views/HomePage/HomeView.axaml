@@ -1,0 +1,60 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="clr-namespace:BeatmapExporterGUI.ViewModels.HomePage"
+             mc:Ignorable="d" d:DesignWidth="1280" d:DesignHeight="1024"
+             x:Class="BeatmapExporterGUI.Views.HomePage.HomeView"
+             x:DataType="vm:HomeViewModel">
+  
+  <Grid ColumnDefinitions="*,*"
+        Margin="6">
+    
+    <!-- Left side: Database status page (loading, loaded, not loaded) -->
+    <TransitioningContentControl Grid.Column="0"
+                                 Content="{Binding DatabaseStatus}"
+                                 Margin="6"
+                                 BorderBrush="Black"
+                                 BorderThickness="0,0,1,0" />
+
+    <!-- Right side: update notification, system messages list -->
+    <StackPanel Grid.Column="1"
+                Margin="6"
+                Spacing="24">
+
+      <Border BorderBrush="Black"
+              BorderThickness="2"
+              CornerRadius="10"
+              Padding="12"
+              Background="#FFDDEE"
+              IsVisible="{Binding IsUpdateAvailable}">
+        <StackPanel Spacing="12">
+          <TextBlock FontSize="32"
+                     HorizontalAlignment="Center"
+                     FontWeight="Bold">Update Available</TextBlock>
+          <TextBlock>An update is available for BeatmapExporter. </TextBlock>
+          <TextBlock TextWrapping="Wrap">This update may be required if you are no longer able to open the osu!lazer database.</TextBlock>
+          <TextBlock TextWrapping="Wrap">Changes made to osu! often force this program to be updated as well.</TextBlock>
+          <TextBlock TextWrapping="Wrap">If the program is still working with your version of osu!, you do not need to update yet.</TextBlock>
+          <TextBlock Text="{Binding UpdateAvailable, StringFormat=Version change: {0}}" 
+                     FontWeight="Bold"/>
+          <Button Classes="accent"
+                  Command="{Binding Release}">View Latest Release (GitHub)</Button>
+        </StackPanel>
+      </Border>
+      
+        <ListBox ItemsSource="{Binding Exporter.SystemMessages}"
+                 Background="Transparent"
+                 Height="600">
+          <ListBox.ItemTemplate>
+            <DataTemplate>
+                <TextBlock Text="{Binding}"
+                           TextWrapping="Wrap" />
+            </DataTemplate>
+          </ListBox.ItemTemplate>
+        </ListBox>
+      </StackPanel>
+    
+  </Grid>
+  
+</UserControl>

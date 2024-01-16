@@ -1,4 +1,4 @@
-using BeatmapExporter.Exporters;
+﻿using BeatmapExporter.Exporters;
 using BeatmapExporter.Exporters.Lazer;
 using BeatmapExporterCore.Exporters;
 using System.Text;
@@ -19,14 +19,6 @@ namespace BeatmapExporterCLI.Interface
         public LazerExporter Exporter { get; }
 
         public ExporterConfiguration Configuration => Exporter.Configuration;
-
-        public string ExportFormatUnitName => Configuration.ExportFormat switch
-        {
-            ExporterConfiguration.Format.Beatmap => "osu! beatmaps (.osz)",
-            ExporterConfiguration.Format.Audio => "audio (.mp3)",
-            ExporterConfiguration.Format.Background => "beatmap backgrounds",
-            _ => throw new NotImplementedException()
-        };
          
         public void ExportBeatmaps()
         {

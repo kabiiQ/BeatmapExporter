@@ -1,7 +1,8 @@
-﻿using BeatmapExporter.Exporters.Lazer.LazerDB;
+using BeatmapExporter.Exporters.Lazer.LazerDB;
 using BeatmapExporter.Exporters.Lazer.LazerDB.Schema;
 using BeatmapExporterCore.Exporters;
 using BeatmapExporterCore.Utilities;
+using Realms.Utils;
 using System.IO.Compression;
 using System.Text.RegularExpressions;
 
@@ -72,7 +73,7 @@ namespace BeatmapExporter.Exporters.Lazer
         public int TotalBeatmapCount
         {
             get;
-        }  
+        }
         
         /// <summary>
         /// The beatmap sets currently selected, after filters are applied.
@@ -124,6 +125,17 @@ namespace BeatmapExporter.Exporters.Lazer
         {
             get;
         }
+
+        /// <summary>
+        /// A string representation of the configured output format. 
+        /// </summary>
+        public string ExportFormatUnitName => Configuration.ExportFormat switch
+        {
+            ExporterConfiguration.Format.Beatmap => "osu! beatmaps (.osz)",
+            ExporterConfiguration.Format.Audio => "audio (.mp3)",
+            ExporterConfiguration.Format.Background => "beatmap backgrounds",
+            _ => throw new NotImplementedException()
+        };
 
         /// <summary>
         /// If audio file transcoding is available
@@ -356,6 +368,7 @@ namespace BeatmapExporter.Exporters.Lazer
         }
 
         private readonly Regex idCollection = new("#([0-9]+)", RegexOptions.Compiled);
+
         /// <summary>
         /// Update the set of 'selected' beatmaps by applying all filters from this exporter's Configuration.Filters.
         /// </summary>
@@ -401,6 +414,7 @@ namespace BeatmapExporter.Exporters.Lazer
                     collFilters.AddRange(filteredCollections);
                     negateColl = filter.Negated;
                 }
+
                 else // this filter is not a collection filter
                     beatmapFilters.Add(filter);
             }

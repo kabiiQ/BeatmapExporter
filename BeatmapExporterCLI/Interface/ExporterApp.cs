@@ -16,12 +16,24 @@ namespace BeatmapExporterCLI.Interface
             Configuration = Exporter.Configuration;
         }
 
+        /// <summary>
+        /// Reference to the CLI-specific component container 
+        /// </summary>
         public LazerExporterCLI CLI { get; }
 
+        /// <summary>
+        /// Reference to the general lazer exporter component container
+        /// </summary>
         public LazerExporter Exporter { get; }
 
+        /// <summary>
+        /// Reference to the current configuration for export for the user
+        /// </summary>
         public ExporterConfiguration Configuration { get; }
-
+            
+        /// <summary>
+        /// Begins the infinite loop for the main application I/O flow.
+        /// </summary>
         public void StartApplicationLoop()
         {
             while (true)
@@ -30,6 +42,9 @@ namespace BeatmapExporterCLI.Interface
             }
         }
 
+        /// <summary>
+        /// Exits the program after blocking for user acknowledgement. 
+        /// </summary>
         [DoesNotReturn]
         public static void Exit()
         {
@@ -39,10 +54,13 @@ namespace BeatmapExporterCLI.Interface
             Environment.Exit(0);
         }
 
+        /// <summary>
+        /// Primary CLI user interaction flow.
+        /// </summary>
         void ApplicationLoop()
         {
             // output main application menu
-            Console.Write($"\n1. Export selected {CLI.ExportFormatUnitName} ({Exporter.SelectedBeatmapSetCount} beatmap sets, {Exporter.SelectedBeatmapCount} beatmaps)\n2. Display selected beatmap sets ({Exporter.SelectedBeatmapSetCount}/{Exporter.TotalBeatmapSetCount} beatmap sets)\n3. Display {Exporter.CollectionCount} beatmap collections\n4. Advanced export settings (.mp3/image export, compression, export location)\n5. Edit beatmap selection/filters\n\n0. Exit\nSelect operation: ");
+            Console.Write($"\n1. Export selected {Exporter.ExportFormatUnitName} ({Exporter.SelectedBeatmapSetCount} beatmap sets, {Exporter.SelectedBeatmapCount} beatmaps)\n2. Display selected beatmap sets ({Exporter.SelectedBeatmapSetCount}/{Exporter.TotalBeatmapSetCount} beatmap sets)\n3. Display {Exporter.CollectionCount} beatmap collections\n4. Advanced export settings (.mp3/image export, compression, export location)\n5. Edit beatmap selection/filters\n\n0. Exit\nSelect operation: ");
 
             string? input = Console.ReadLine();
             if (input is null)

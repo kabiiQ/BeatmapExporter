@@ -1,4 +1,4 @@
-﻿using BeatmapExporter.Exporters;
+using BeatmapExporter.Exporters;
 using BeatmapExporter.Exporters.Lazer;
 using BeatmapExporterCore.Exporters;
 using System.Text;
@@ -120,7 +120,7 @@ namespace BeatmapExporterCLI.Interface
                     }
                     catch (Exception e)
                     {
-                        Console.WriteLine($"Unable to export background image :: {e.Message}");
+                        Console.WriteLine($"Unable to export background image {backgroundFile} :: {e.Message}");
                     }
                 }
             }

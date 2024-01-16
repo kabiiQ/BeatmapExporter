@@ -2,13 +2,16 @@
 using BeatmapExporter.Exporters.Lazer.LazerDB;
 using BeatmapExporter.Exporters.Lazer.LazerDB.Schema;
 using BeatmapExporterCLI.Interface;
+using BeatmapExporterCore.Utilities;
 using Realms;
-using Remotion.Linq.Parsing;
 
 namespace BeatmapExporterCLI.Data
 {
     public static class LazerLoader
     {
+        /// <summary>
+        /// Attempt to locate and load the lazer database. May prompt user for the database path.
+        /// </summary>
         public static ExporterApp Load(string? directory)
         {
             // osu!lazer has been selected at this point. 
@@ -39,7 +42,7 @@ namespace BeatmapExporterCLI.Data
                 if (e is LazerVersionException)
                 {
                     Console.WriteLine("The osu!lazer database structure has updated since the last BeatmapExporter update.");
-                    Console.WriteLine("\nYou can check https://github.com/kabiiQ/BeatmapExporter/releases for a new release, or file an issue there to let me know it needs updating if it's been a few days.");
+                    Console.WriteLine($"\nYou can check {ExporterUpdater.Releases} for a new release, or file an issue there to let me know it needs updating if it's been a few days.");
                 }
                 ExporterApp.Exit();
             }
@@ -58,6 +61,9 @@ namespace BeatmapExporterCLI.Data
             return new ExporterApp(cli);
         }
 
+        /// <summary>
+        /// Checks provided directory for the lazer database, prompting the user once if not found in that directory.
+        /// </summary>
         public static LazerDatabase? Locate(string directory)
         {
             string? dbFile = LazerDatabase.GetDatabaseFile(directory);

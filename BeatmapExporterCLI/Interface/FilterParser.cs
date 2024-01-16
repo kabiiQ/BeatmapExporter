@@ -51,7 +51,9 @@ namespace BeatmapExporterCLI.Interface
             };
         }
 
-        // get the "remainder" of the input past the command arg and parse as comma-separated arguments
+        /// <summary>
+        /// Gets the "remainder" of the input past the command arg and parse as comma-seperated arguments
+        /// </summary>
         string[] CommaSeparatedArg(int commandLength) => input.Substring(commandLength + 1 /* include space */).Split(",").Select(s => s.Trim()).ToArray();
 
         BeatmapFilter? StarsFilter()

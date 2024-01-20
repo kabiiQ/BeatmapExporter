@@ -45,7 +45,7 @@ namespace BeatmapExporterGUI.ViewModels.HomePage
         
         public bool IsUpdateAvailable => UpdateAvailable != null;
 
-        public async void CheckForUpdate()
+        public async Task CheckForUpdate()
         {
             var update = await ExporterUpdater.CheckNewerVersionAvailable();
             if (update.HasValue)

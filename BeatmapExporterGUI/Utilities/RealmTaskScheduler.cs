@@ -22,19 +22,31 @@ namespace BeatmapExporterGUI.Utilities
 
         public void Start()
         {
-            new Thread(RunOnCurrentThread) { Name = "Realm Thread" }.Start();
+            new Thread(RunOnCurrentThread)
+            {
+                Name = "Realm Thread",
+                IsBackground = true
+            }.Start();
         }
 
         public Task Schedule(Action action)
         {
-            return
-                Task.Factory.StartNew
-                    (
-                        action,
-                        CancellationToken.None,
-                        TaskCreationOptions.None,
-                        this
-                    );
+            return Task.Factory.StartNew(
+                action,
+                CancellationToken.None,
+                TaskCreationOptions.None,
+                this
+                );
+        }
+
+        public Task<T> Schedule<T>(Func<T> func)
+        {
+            return Task.Factory.StartNew(
+                func,
+                CancellationToken.None,
+                TaskCreationOptions.None,
+                this
+                );
         }
 
         private void RunOnCurrentThread()

@@ -1,4 +1,5 @@
 ﻿using CommunityToolkit.Mvvm.Input;
+using System.Threading.Tasks;
 
 namespace BeatmapExporterGUI.ViewModels.HomePage
 {
@@ -12,7 +13,7 @@ namespace BeatmapExporterGUI.ViewModels.HomePage
         }
 
         [RelayCommand]
-        private async void Open()
+        private async Task Open()
         {
             var selectDir = await App.Current.DialogService.SelectDatabaseDialogAsync();
             await home.LoadDatabase(selectDir);

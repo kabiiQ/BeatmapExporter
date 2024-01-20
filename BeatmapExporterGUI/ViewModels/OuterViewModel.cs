@@ -1,4 +1,5 @@
 ﻿using BeatmapExporterGUI.ViewModels.HomePage;
+using BeatmapExporterGUI.ViewModels.Settings;
 using CommunityToolkit.Mvvm.ComponentModel;
 using System;
 using System.Threading;
@@ -37,6 +38,8 @@ public partial class OuterViewModel : ViewModelBase
     public void ListBeatmaps() => throw new NotImplementedException();
 
     public void ListCollections() => throw new NotImplementedException();
+
+    public void EditFilters() => CurrentOperation = new ExportConfigViewModel();
 
     public async Task Export(CancellationToken token)
     {

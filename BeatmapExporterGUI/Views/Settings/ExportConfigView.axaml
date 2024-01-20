@@ -1,0 +1,76 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="clr-namespace:BeatmapExporterGUI.ViewModels.Settings"
+             mc:Ignorable="d" d:DesignWidth="1280" d:DesignHeight="1024"
+             x:Class="BeatmapExporterGUI.Views.Settings.ExportConfigView"
+             x:DataType="vm:ExportConfigViewModel">
+
+  <Grid ColumnDefinitions="*,*"
+        Margin="6">
+    
+    <!-- Left side: Filter editing -->
+    <Border BorderBrush="Black"
+            BorderThickness="0,0,1,0"
+            Grid.Column="0">
+
+      <StackPanel Margin="6"
+                  Spacing="24">
+
+        <TextBlock FontSize="24"
+                   HorizontalAlignment="Center">Beatmap Selection/Filters</TextBlock>
+      
+     </StackPanel>
+    </Border>
+    
+    <!-- Right side: General export settings -->
+    <StackPanel Grid.Column="1"
+                Margin="6"
+                Spacing="24">
+
+      <TextBlock FontSize="24"
+                 HorizontalAlignment="Center">General Export Settings</TextBlock>
+
+      <!-- Export Mode setting -->
+      <StackPanel Spacing="6">
+        
+        <StackPanel Orientation="Horizontal"
+                    Spacing="12">
+          <TextBlock VerticalAlignment="Center">Export Mode</TextBlock>
+          <ComboBox ItemsSource="{Binding ExportModes}"
+                    SelectedIndex="{Binding SelectedExportIndex}" />
+        </StackPanel>
+        <TextBlock Text="{Binding ModeDescriptor}" />
+        
+      </StackPanel>
+      
+      <!-- Export Path setting -->
+      <StackPanel Spacing="6">
+
+        <TextBlock>Export Path</TextBlock>
+        <TextBlock Text="{Binding ExportPath}" />
+        <Button Command="{Binding SelectExportPath}">Change Export Location</Button>
+
+      </StackPanel>
+
+      <!-- Compression setting -->
+      <StackPanel Spacing="6"
+                  IsVisible="{Binding IsBeatmapExport}">
+        
+        <StackPanel Orientation="Horizontal"
+                    Spacing="12">
+
+          <TextBlock VerticalAlignment="Center">.osz compression</TextBlock>
+          <CheckBox IsChecked="{Binding CompressionEnabled}" />
+        
+        </StackPanel>
+        <TextBlock Text="{Binding CompressionDescriptor}" />
+      
+      </StackPanel>
+      
+    </StackPanel>
+    
+  </Grid>
+  
+</UserControl>

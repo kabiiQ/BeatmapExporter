@@ -1,4 +1,5 @@
 ﻿using BeatmapExporter.Exporters.Lazer;
+using BeatmapExporterCore.Exporters;
 using System.Linq;
 
 namespace BeatmapExporterGUI.ViewModels.HomePage
@@ -23,6 +24,6 @@ namespace BeatmapExporterGUI.ViewModels.HomePage
 
         public int Filters => Lazer.Configuration.Filters.Count();
 
-        public string ExportMode => Lazer.ExportFormatUnitName;
+        public string ExportMode => Lazer.Configuration.ExportFormat.UnitName();
     }
 }

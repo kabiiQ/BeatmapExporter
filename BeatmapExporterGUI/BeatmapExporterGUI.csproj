@@ -32,6 +32,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Compile Update="Views\Settings\ExportConfigView.axaml.cs">
+      <DependentUpon>ExportConfigView.axaml</DependentUpon>
+    </Compile>
     <Compile Update="Views\ExportView.axaml.cs">
       <DependentUpon>ExportView.axaml</DependentUpon>
     </Compile>

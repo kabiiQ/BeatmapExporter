@@ -1,4 +1,5 @@
 ﻿using BeatmapExporter.Exporters.Lazer.LazerDB;
+using BeatmapExporterCore.Exporters;
 using BeatmapExporterCore.Utilities;
 using BeatmapExporterGUI.Exporter;
 using BeatmapExporterGUI.Utilities;
@@ -35,10 +36,12 @@ public partial class MenuRowViewModel : ViewModelBase
 
     public void Collections() => outer.ListCollections();
 
+    public void Configuration() => outer.EditFilters();
+
     [RelayCommand(IncludeCancelCommand = true)]
     private async Task Export(CancellationToken token) => await outer.Export(token);
 
-    public string ExportDescription => Exporter.Lazer != null ? $"{Exporter.Lazer.ExportFormatUnitName}, {Exporter.Lazer.SelectedBeatmapSetCount} sets" : "not loaded";
+    public string ExportDescription => Exporter.Lazer?.Configuration != null ? $"{Exporter.Lazer.Configuration.ExportFormat.UnitName()}, {Exporter.Lazer.SelectedBeatmapSetCount} sets" : "not loaded";
 
     public string ProgramVersion => ExporterUpdater.Version;
 

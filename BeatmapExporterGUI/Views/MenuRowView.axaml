@@ -24,7 +24,8 @@
                 Command="{Binding Collections}"/>
     </MenuItem>
     <MenuItem Header="_Export">
-      <MenuItem Header="_Settings/Beatmap Filters" />
+      <MenuItem Header="_Settings/Beatmap Filters" 
+                Command="{Binding Configuration}" />
       <Separator />
       <MenuItem Header="Export _Now"
                 Command="{Binding ExportCommand}" />

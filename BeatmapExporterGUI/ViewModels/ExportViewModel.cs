@@ -1,4 +1,6 @@
 ﻿using BeatmapExporter.Exporters.Lazer;
+using BeatmapExporter.Exporters.Lazer.LazerDB.Schema;
+using BeatmapExporterCore.Exporters;
 using CommunityToolkit.Mvvm.ComponentModel;
 using System;
 using System.Collections.ObjectModel;
@@ -22,7 +24,7 @@ namespace BeatmapExporterGUI.ViewModels
             this.outer = outer;
             Exported = new();
 
-            TaskTitle = $"Exporting {lazer.ExportFormatUnitName}";
+            TaskTitle = $"Exporting {lazer.Configuration.ExportFormat.UnitName()}";
             TotalSetCount = lazer.SelectedBeatmapSetCount;
             Progress = 0;
             Description = string.Empty;
@@ -51,9 +53,9 @@ namespace BeatmapExporterGUI.ViewModels
         {
             Func<CancellationToken, Task> operation = lazer.Configuration.ExportFormat switch
             {
-                BeatmapExporter.Exporters.ExporterConfiguration.Format.Beatmap => ExportBeatmaps,
-                BeatmapExporter.Exporters.ExporterConfiguration.Format.Audio => ExportAudioFiles,
-                BeatmapExporter.Exporters.ExporterConfiguration.Format.Background => ExportBackgrounds
+                ExportFormat.Beatmap => ExportBeatmaps,
+                ExportFormat.Audio => ExportAudioFiles,
+                ExportFormat.Background => ExportBackgrounds
             };
 
             await operation(token);
@@ -98,38 +100,44 @@ namespace BeatmapExporterGUI.ViewModels
                 if (token.IsCancellationRequested)
                     break;
 
-                var allAudio = lazer.ExtractAudio(mapset);
-
-                foreach (var audioExport in allAudio)
-                {
-                    discovered++;
-                    string audioFile = audioExport.AudioFile.AudioFile;
-                    var transcode = audioExport.TranscodeFrom != null;
-                    var transcodeNotice = transcode ? $"(transcode required from {audioExport.TranscodeFrom})" : "";
-                    try
-                    {
-                        if (transcode && !lazer.TranscodeAvailable)
-                        {
-                            AddExport(false, $"Non-mp3 audio {audioExport.OutputFilename} found and FFmpeg is not loaded, this audio will be skipped.");
-                            continue;
-                        }
-                        AddExport(true, $"({discovered}/?) Exporting {audioExport.OutputFilename}{transcodeNotice}");
-
-                        void metadataFailure(Exception e) => AddExport(false, $"Unable to set metadata for {audioExport.OutputFilename} :: {e.Message}. Exporting will continue.");
-                        await Exporter.RealmScheduler.Schedule(() => lazer.ExportAudio(audioExport, metadataFailure));
-                        exportedAudio++;
-                    } catch (TranscodeException te)
-                    {
-                        AddExport(false, $"Unable to transcode audio: {audioFile}. An error occured :: {te.Message}");
-                    }
-                    catch (Exception e)
-                    {
-                        AddExport(false, $"Unable to export audio: {audioFile} :: {e.Message}");
-                    }
-                }
-                Progress++;
+                await Exporter.RealmScheduler.Schedule(() => ExportMapsetAudio(mapset, ref exportedAudio, ref discovered));
             }
             Description = $"Exported {exportedAudio}/{discovered} audio files from {TotalSetCount} beatmaps to {lazer.Configuration.FullPath}.";
+        }
+
+        private void ExportMapsetAudio(BeatmapSet mapset, ref int exportedAudio, ref int discovered)
+        {
+            var allAudio = lazer.ExtractAudio(mapset);
+
+            foreach (var audioExport in allAudio)
+            {
+                discovered++;
+                string audioFile = audioExport.AudioFile.AudioFile;
+                var transcode = audioExport.TranscodeFrom != null;
+                var transcodeNotice = transcode ? $"(transcode required from {audioExport.TranscodeFrom})" : "";
+                try
+                {
+                    if (transcode && !lazer.TranscodeAvailable)
+                    {
+                        AddExport(false, $"Non-mp3 audio {audioExport.OutputFilename} found and FFmpeg is not loaded, this audio will be skipped.");
+                        continue;
+                    }
+                    AddExport(true, $"({discovered}/?) Exporting {audioExport.OutputFilename}{transcodeNotice}");
+
+                    void metadataFailure(Exception e) => AddExport(false, $"Unable to set metadata for {audioExport.OutputFilename} :: {e.Message}. Exporting will continue.");
+                    lazer.ExportAudio(audioExport, metadataFailure);
+                    exportedAudio++;
+                }
+                catch (TranscodeException te)
+                {
+                    AddExport(false, $"Unable to transcode audio: {audioFile}. An error occured :: {te.Message}");
+                }
+                catch (Exception e)
+                {
+                    AddExport(false, $"Unable to export audio: {audioFile} :: {e.Message}");
+                }
+            }
+            Progress++;
         }
 
         private async Task ExportBackgrounds(CancellationToken token)

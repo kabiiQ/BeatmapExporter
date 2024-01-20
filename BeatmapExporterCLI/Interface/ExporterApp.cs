@@ -1,5 +1,6 @@
 ﻿using BeatmapExporter.Exporters;
 using BeatmapExporter.Exporters.Lazer;
+using BeatmapExporterCore.Exporters;
 using System.Diagnostics.CodeAnalysis;
 
 namespace BeatmapExporterCLI.Interface
@@ -60,7 +61,7 @@ namespace BeatmapExporterCLI.Interface
         void ApplicationLoop()
         {
             // output main application menu
-            Console.Write($"\n1. Export selected {Exporter.ExportFormatUnitName} ({Exporter.SelectedBeatmapSetCount} beatmap sets, {Exporter.SelectedBeatmapCount} beatmaps)\n2. Display selected beatmap sets ({Exporter.SelectedBeatmapSetCount}/{Exporter.TotalBeatmapSetCount} beatmap sets)\n3. Display {Exporter.CollectionCount} beatmap collections\n4. Advanced export settings (.mp3/image export, compression, export location)\n5. Edit beatmap selection/filters\n\n0. Exit\nSelect operation: ");
+            Console.Write($"\n1. Export selected {Configuration.ExportFormat.UnitName()} ({Exporter.SelectedBeatmapSetCount} beatmap sets, {Exporter.SelectedBeatmapCount} beatmaps)\n2. Display selected beatmap sets ({Exporter.SelectedBeatmapSetCount}/{Exporter.TotalBeatmapSetCount} beatmap sets)\n3. Display {Exporter.CollectionCount} beatmap collections\n4. Advanced export settings (.mp3/image export, compression, export location)\n5. Edit beatmap selection/filters\n\n0. Exit\nSelect operation: ");
 
             string? input = Console.ReadLine();
             if (input is null)
@@ -82,13 +83,13 @@ namespace BeatmapExporterCLI.Interface
                 case 1:
                     switch (Configuration.ExportFormat)
                     {
-                        case ExporterConfiguration.Format.Beatmap:
+                        case ExportFormat.Beatmap:
                             CLI.ExportBeatmaps();
                             break;
-                        case ExporterConfiguration.Format.Audio:
+                        case ExportFormat.Audio:
                             CLI.ExportAudioFiles();
                             break;
-                        case ExporterConfiguration.Format.Background:
+                        case ExportFormat.Background:
                             CLI.ExportBackgroundFiles();
                             break;
                     }

@@ -126,17 +126,6 @@ namespace BeatmapExporter.Exporters.Lazer
         }
 
         /// <summary>
-        /// A string representation of the configured output format. 
-        /// </summary>
-        public string ExportFormatUnitName => Configuration.ExportFormat switch
-        {
-            ExporterConfiguration.Format.Beatmap => "osu! beatmaps (.osz)",
-            ExporterConfiguration.Format.Audio => "audio (.mp3)",
-            ExporterConfiguration.Format.Background => "beatmap backgrounds",
-            _ => throw new NotImplementedException()
-        };
-
-        /// <summary>
         /// If audio file transcoding is available
         /// </summary>
         public bool TranscodeAvailable => transcoder.Available;
@@ -245,7 +234,7 @@ namespace BeatmapExporter.Exporters.Lazer
         /// <param name="metadataFailure">An optional callback to notify users on metadata assignment failure. As metadata is non-critical, export will always continue.</param>
         /// <exception cref="TranscodeException">Audio transcode is required for this file and has failed.</exception>
         /// <exception cref="Exception">General audio file export has failed.</exception>
-        public void ExportAudio(AudioExportTask export, Action<Exception>? metadataFailure)
+        public async Task ExportAudio(AudioExportTask export, Action<Exception>? metadataFailure)
         {            
             var (mapset, metadata, transcodeFrom, outputFilename) = export;
             string outputFile = Path.Combine(Configuration.ExportPath, outputFilename);
@@ -253,8 +242,7 @@ namespace BeatmapExporter.Exporters.Lazer
             using FileStream? audio = lazerDb.OpenNamedFile(mapset, metadata.AudioFile);
             if (audio is null)
             {
-                Console.WriteLine($"Audio file {metadata.AudioFile} not found in beatmap {mapset.ArchiveFilename()}.");
-                return;
+                throw new IOException($"Audio file {metadata.AudioFile} not found in beatmap {mapset.ArchiveFilename()}.");
             }
                 
             // Create physical .mp3 file, either through transcoding or simple copying
@@ -267,7 +255,8 @@ namespace BeatmapExporter.Exporters.Lazer
                 }
                 try
                 {
-                    transcoder.TranscodeMP3(audio, outputFile);
+                    await Task.Run(() => transcoder.TranscodeMP3(audio, outputFile));
+                    // transcoder.TranscodeMP3(audio, outputFile);
                 }
                 catch (Exception e)
                 {

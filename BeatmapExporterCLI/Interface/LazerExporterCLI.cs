@@ -146,21 +146,12 @@ namespace BeatmapExporterCLI.Interface
                     .Append("\n--- Advanced export settings ---\n* indicates a setting that has been changed.\n")
                     .Append("\n1. ");
 
-                bool exportBeatmaps = Configuration.ExportFormat == ExporterConfiguration.Format.Beatmap;
-                switch (Configuration.ExportFormat)
-                {
-                    case ExporterConfiguration.Format.Beatmap:
-                        settings.Append("Type 1: Beatmaps will be exported in osu! archive format (.osz)");
-                        break;
-                    case ExporterConfiguration.Format.Audio:
-                        settings.Append("Type 2: Beatmap audio files will be renamed, tagged and exported (.mp3 format)*");
-                        break;
-                    case ExporterConfiguration.Format.Background:
-                        settings.Append("Type 3: Only beatmap background images will be exported (original format)*");
-                        break;
-                }
+                bool exportBeatmaps = Configuration.ExportFormat == ExportFormat.Beatmap;
+                var formatId = (int)Configuration.ExportFormat + 1;
+                var edited = exportBeatmaps ? "" : "*";
 
                 settings
+                    .Append($"Type {formatId}: {Configuration.ExportFormat.Descriptor()}{edited}")
                     .Append("\n2. Export path: ")
                     .Append(Path.GetFullPath(Configuration.ExportPath));
                 if (Configuration.ExportPath != Configuration.DefaultExportPath)
@@ -188,21 +179,10 @@ namespace BeatmapExporterCLI.Interface
                 switch (op)
                 {
                     case 1:
-                        switch (Configuration.ExportFormat)
-                        {
-                            case ExporterConfiguration.Format.Beatmap:
-                                Configuration.ExportFormat = ExporterConfiguration.Format.Audio;
-                                break;
-                            case ExporterConfiguration.Format.Audio:
-                                Configuration.ExportFormat = ExporterConfiguration.Format.Background;
-                                break;
-                            case ExporterConfiguration.Format.Background:
-                                Configuration.ExportFormat = ExporterConfiguration.Format.Beatmap;
-                                break;
-                        }
+                        Configuration.ExportFormat = Configuration.ExportFormat.Next();
                         break;
                     case 2:
-                        Console.Write($"\nPath selected must be valid for your platform or export will fail! Be careful of invalid filename characters on Windows.\nAudio exports will automatically export to a '{ExporterConfiguration.DefaultAudioPath}' folder at this location.\nDefault export path: {Configuration.DefaultExportPath}\nCurrent export path: {Configuration.ExportPath}\nNew export path: ");
+                        Console.Write($"\nPath selected must be valid for your platform or export will fail! Be careful of invalid filename characters on Windows.\nAudio exports will automatically export to an 'mp3' folder at this location.\nDefault export path: {Configuration.DefaultExportPath}\nCurrent export path: {Configuration.ExportPath}\nNew export path: ");
                         string? pathInput = Console.ReadLine();
                         if (string.IsNullOrEmpty(pathInput))
                             continue;

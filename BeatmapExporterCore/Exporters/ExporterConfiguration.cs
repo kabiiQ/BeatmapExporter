@@ -5,13 +5,7 @@ namespace BeatmapExporter.Exporters
 {
     public class ExporterConfiguration
     {
-        public static readonly string DefaultAudioPath = "mp3";
         private string? exportPath = null;
-
-        /// <summary>
-        /// All available modes of exporting.
-        /// </summary>
-        public enum Format { Beatmap, Audio, Background };
 
         public ExporterConfiguration(string defaultExportPath)
         {
@@ -38,9 +32,9 @@ namespace BeatmapExporter.Exporters
                 string basePath = exportPath is not null ? exportPath : DefaultExportPath;
                 return ExportFormat switch
                 {
-                    Format.Beatmap => basePath,
-                    Format.Audio => Path.Combine(basePath, "mp3"),
-                    Format.Background => Path.Combine(basePath, "bg")
+                    ExportFormat.Beatmap => basePath,
+                    ExportFormat.Audio => Path.Combine(basePath, "mp3"),
+                    ExportFormat.Background => Path.Combine(basePath, "bg")
                 };
             }
             set => exportPath = value;
@@ -64,6 +58,6 @@ namespace BeatmapExporter.Exporters
         /// <summary>
         /// The current export mode.
         /// </summary>
-        public Format ExportFormat { get; set; } = Format.Beatmap;
+        public ExportFormat ExportFormat { get; set; } = ExportFormat.Beatmap;
     }
 }

@@ -1,6 +1,7 @@
 ﻿using BeatmapExporter.Exporters.Lazer.LazerDB;
 using BeatmapExporter.Exporters.Lazer.LazerDB.Schema;
 using BeatmapExporterCore.Exporters;
+using BeatmapExporterCore.Filters;
 using BeatmapExporterCore.Utilities;
 using System.IO.Compression;
 using System.Text.RegularExpressions;
@@ -17,7 +18,6 @@ namespace BeatmapExporter.Exporters.Lazer
         readonly LazerDatabase lazerDb;
         readonly Transcoder transcoder;
 
-        readonly List<BeatmapSet> allBeatmapSets;
         readonly List<Beatmap> allBeatmapDiffs;
 
         /// <param name="lazerDb">The lazer database, referenced for opening files later.</param>
@@ -27,15 +27,15 @@ namespace BeatmapExporter.Exporters.Lazer
         {
             this.lazerDb = lazerDb;
 
-            allBeatmapSets = beatmapSets
+            AllBeatmapSets = beatmapSets
                 .Where(set => set.Beatmaps.Count > 0)
                 .OrderBy(set => set.OnlineID)
                 .ToList();
-            SelectedBeatmapSets = allBeatmapSets;
-            TotalBeatmapSetCount = allBeatmapSets.Count;
+            SelectedBeatmapSets = AllBeatmapSets;
+            TotalBeatmapSetCount = AllBeatmapSets.Count;
             SelectedBeatmapSetCount = TotalBeatmapSetCount;
 
-            allBeatmapDiffs = allBeatmapSets.SelectMany(s => s.Beatmaps).ToList();
+            allBeatmapDiffs = AllBeatmapSets.SelectMany(s => s.Beatmaps).ToList();
 
             TotalBeatmapCount = allBeatmapDiffs.Count;
             SelectedBeatmapCount = TotalBeatmapCount;
@@ -70,6 +70,14 @@ namespace BeatmapExporter.Exporters.Lazer
         /// Count of the individual beatmap difficulties discovered.
         /// </summary>
         public int TotalBeatmapCount
+        {
+            get;
+        }
+
+        /// <summary>
+        /// All beatmap sets, without any filtering.
+        /// </summary>
+        public List<BeatmapSet> AllBeatmapSets
         {
             get;
         }
@@ -144,10 +152,11 @@ namespace BeatmapExporter.Exporters.Lazer
         /// <summary>
         /// Creates the export directory and opens the folder (for Windows platform)
         /// </summary>
-        public void SetupExport()
+        public void SetupExport(bool openDir = true)
         {
             Directory.CreateDirectory(Configuration.ExportPath);
-            PlatformUtil.OpenExportDirectory(Configuration.ExportPath);
+            if (openDir) 
+                PlatformUtil.OpenExportDirectory(Configuration.ExportPath);
         }
 
         /// <summary>
@@ -206,10 +215,10 @@ namespace BeatmapExporter.Exporters.Lazer
             var uniqueMetadata = mapset
                 .SelectedBeatmaps
                 .Select(b => b.Metadata)
-                .GroupBy(m => m.AudioFile)
-                .Select(g => g.First())
+                .DistinctBy(m => m.AudioFile)
                 .ToList();
 
+            int beatmapAudioCount = 0;
             foreach (var metadata in uniqueMetadata)
             {
                 // transcode if audio is not in .mp3 format
@@ -221,8 +230,9 @@ namespace BeatmapExporter.Exporters.Lazer
                 }
 
                 // produce more meaningful filename than 'audio.mp3' 
-                string outputFilename = metadata.OutputAudioFilename(mapset.OnlineID);
+                string outputFilename = metadata.OutputAudioFilename(mapset.OnlineID, beatmapAudioCount);
 
+                beatmapAudioCount++;
                 yield return new AudioExportTask(mapset, metadata, transcodeFrom, outputFilename);
             }
         }
@@ -326,10 +336,12 @@ namespace BeatmapExporter.Exporters.Lazer
                 .Select(g => g.First())
                 .ToList();
 
+            int beatmapBackgroundCount = 0;
             foreach (var metadata in uniqueMetadata)
             {
                 // get output filename for background including original background name
-                string outputFilename = metadata.OutputBackgroundFilename(mapset.OnlineID);
+                string outputFilename = metadata.OutputBackgroundFilename(mapset.OnlineID, beatmapBackgroundCount);
+                beatmapBackgroundCount++;
                 yield return new BackgroundExportTask(mapset, metadata, outputFilename);
             }
         }
@@ -353,6 +365,19 @@ namespace BeatmapExporter.Exporters.Lazer
 
             using FileStream output = File.Open(outputFile, FileMode.CreateNew);
             background.CopyTo(output);
+        }
+
+        /// <summary>
+        /// Export a single file from a Realm BeatmapSet, using its original filename.
+        /// </summary>
+        public void ExportSingleFile(BeatmapSet mapset, RealmNamedFileUsage fileUsage)
+        {
+            var filename = Path.GetFileName(fileUsage.Filename); // exporting a single file with its original filename (but no sub-directories that were in the beatmap structure)
+            string exportPath = Path.Combine(Configuration.ExportPath, filename);
+
+            using var export = File.Open(exportPath, FileMode.CreateNew);
+            using var file = lazerDb.OpenHashedFile(fileUsage.File.Hash);
+            file.CopyTo(export);
         }
 
         private readonly Regex idCollection = new("#([0-9]+)", RegexOptions.Compiled);
@@ -421,8 +446,9 @@ namespace BeatmapExporter.Exporters.Lazer
                     .ToList();
 
                 string desc = string.Join(", ", collFilters);
-                BeatmapFilter collFilter = new($"Collection filter: {(negateColl ? "NOT in " : "")}{desc}", negateColl,
-                    b => includedHashes.Contains(b.ID));
+                BeatmapFilter collFilter = new(desc, negateColl,
+                    b => includedHashes.Contains(b.ID),
+                    FilterTemplate.Collections);
 
                 // with placeholder collection filters removed, add re-built filter 
                 beatmapFilters.Add(collFilter);
@@ -435,7 +461,7 @@ namespace BeatmapExporter.Exporters.Lazer
             int selectedCount = 0;
             int selectedSetCount = 0;
             List<BeatmapSet> selectedSets = new();
-            foreach (var set in allBeatmapSets)
+            foreach (var set in AllBeatmapSets)
             {
                 var filteredMaps =
                     from map in set.Beatmaps

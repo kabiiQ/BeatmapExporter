@@ -36,4 +36,9 @@
             return (ExportFormat)iNext;
         }
     }
+
+    public static class ExportFormats
+    {
+        public static IEnumerable<ExportFormat> All() => (ExportFormat[])Enum.GetValues(typeof(ExportFormat));
+    }
 }

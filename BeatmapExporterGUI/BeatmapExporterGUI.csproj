@@ -32,6 +32,21 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Compile Update="Views\List\BeatmapExplorerView.axaml.cs">
+      <DependentUpon>BeatmapExplorerView.axaml</DependentUpon>
+    </Compile>
+    <Compile Update="Views\List\CollectionListView.axaml.cs">
+      <DependentUpon>CollectionListView.axaml</DependentUpon>
+    </Compile>
+    <Compile Update="Views\Settings\DropdownSelectorView.axaml.cs">
+      <DependentUpon>DropdownSelectorView.axaml</DependentUpon>
+    </Compile>
+    <Compile Update="Views\Settings\TextSelectorView.axaml.cs">
+      <DependentUpon>TextSelectorView.axaml</DependentUpon>
+    </Compile>
+    <Compile Update="Views\Settings\NewFilterView.axaml.cs">
+      <DependentUpon>NewFilterView.axaml</DependentUpon>
+    </Compile>
     <Compile Update="Views\Settings\ExportConfigView.axaml.cs">
       <DependentUpon>ExportConfigView.axaml</DependentUpon>
     </Compile>

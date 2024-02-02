@@ -20,6 +20,67 @@
 
         <TextBlock FontSize="24"
                    HorizontalAlignment="Center">Beatmap Selection/Filters</TextBlock>
+
+        <Grid RowDefinitions="*,*">
+
+          <!-- Current filters -->
+          <StackPanel Grid.Row="0"
+                      MinHeight="200"
+                      MaxHeight="600"
+                      Spacing="12">
+
+            <TextBlock Text="{Binding SelectionSummary}" />
+
+            <WrapPanel Orientation="Horizontal">
+
+              <Button Command="{Binding CreateFilterBuilder}"
+                      Margin="5">
+                <StackPanel Orientation="Horizontal"
+                            Spacing="6">
+                  <PathIcon Data="{StaticResource add_square_regular}"
+                            VerticalAlignment="Center" />
+                  <TextBlock VerticalAlignment="Center">Add New Filter</TextBlock>
+                </StackPanel>
+              </Button>
+              
+              <Button Command="{Binding RemoveSelectedFilterCommand}"
+                      Margin="5">
+                Remove Selected Filter
+              </Button>
+              
+              <Button Command="{Binding ResetFiltersCommand}"
+                      Margin="5">
+                Reset Filters
+              </Button>
+
+              <Button Command="{Binding ListBeatmapsCommand}"
+                      Classes="accent"
+                      Margin="5">
+                View Beatmap List
+              </Button>
+
+              <Button Command="{Binding ExportBeatmapsCommand}"
+                      Classes="accent"
+                      Margin="5">
+                Export Selected Beatmaps
+              </Button>
+              
+            </WrapPanel>
+
+            <ListBox ItemsSource="{Binding BeatmapFilters}"
+                      SelectedIndex="{Binding SelectedFilterIndex}"
+                      Background="Transparent" />
+            
+          </StackPanel>
+
+          <!-- New filter area -->
+          <StackPanel Grid.Row="1">
+            
+            <TransitioningContentControl Content="{Binding CurrentFilterCreationControl}" />
+            
+          </StackPanel>
+          
+        </Grid>
       
      </StackPanel>
     </Border>
@@ -49,7 +110,8 @@
       <StackPanel Spacing="6">
 
         <TextBlock>Export Path</TextBlock>
-        <TextBlock Text="{Binding ExportPath}" />
+        <TextBlock Text="{Binding ExportPath}"
+                   TextWrapping="Wrap" />
         <Button Command="{Binding SelectExportPath}">Change Export Location</Button>
 
       </StackPanel>

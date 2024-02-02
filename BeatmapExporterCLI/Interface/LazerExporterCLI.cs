@@ -1,4 +1,4 @@
-﻿using BeatmapExporter.Exporters;
+using BeatmapExporter.Exporters;
 using BeatmapExporter.Exporters.Lazer;
 using BeatmapExporterCore.Exporters;
 using System.Text;
@@ -273,7 +273,15 @@ Back to export menu: exit
                         return;
                     default:
                         // parse as new filter
-                        BeatmapFilter? filter = new FilterParser(input).Parse();
+                        BeatmapFilter? filter;
+                        try
+                        {
+                            filter = new FilterParser(input).Parse();
+                        } catch (ArgumentException ae)
+                        {
+                            Console.WriteLine($"Filter input error: {ae.Message}");
+                            break;
+                        }
                         if (filter is not null)
                         {
                             filters.Add(filter);

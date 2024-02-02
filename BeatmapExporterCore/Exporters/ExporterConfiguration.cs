@@ -1,4 +1,4 @@
-﻿using BeatmapExporterCore.Exporters;
+using BeatmapExporterCore.Exporters;
 using System.IO.Compression;
 
 namespace BeatmapExporter.Exporters
@@ -10,12 +10,13 @@ namespace BeatmapExporter.Exporters
         public ExporterConfiguration(string defaultExportPath)
         {
             DefaultExportPath = defaultExportPath;
+            Filters = new();
         }
 
         /// <summary>
         /// The beatmap filters currently applied to this exporter.
         /// </summary>
-        public List<BeatmapFilter> Filters { get; set; } = new();
+        public List<BeatmapFilter> Filters { get; set; }
 
         /// <summary>
         /// The default export path for this type of exporter.

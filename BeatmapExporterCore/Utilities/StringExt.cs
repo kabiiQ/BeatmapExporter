@@ -14,5 +14,7 @@
             .Replace("\\", "")
             .Replace("|", "")
             .Replace("?", "");
+
+        public static string[] CommaSeparatedArg(this string str) => str.Split(",").Select(s => s.Trim()).ToArray();
     }
 }

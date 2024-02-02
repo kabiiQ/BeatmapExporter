@@ -7,6 +7,7 @@ using BeatmapExporterGUI.Utilities;
 using BeatmapExporterGUI.ViewModels;
 using BeatmapExporterGUI.Views;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace BeatmapExporterGUI;
 
@@ -40,7 +41,7 @@ public partial class App : Application
             var userDirectory = desktop.Args?.FirstOrDefault();
 
             outer.Home.SetLoading();
-            outer.Home.CheckForUpdate();
+            Task.Run(() => outer.Home.CheckForUpdate());
             _ = outer.Home.LoadDatabase(userDirectory);
         }
 
@@ -52,5 +53,5 @@ public partial class App : Application
     public DialogService DialogService => dialogs!;
 
     // Skipping full DI model for static access, really not needed here
-    public static new App Current => (App)Application.Current;
+    public static new App Current => (App)Application.Current!;
 }

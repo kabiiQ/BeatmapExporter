@@ -1,6 +1,7 @@
-using BeatmapExporter.Exporters;
+﻿using BeatmapExporter.Exporters;
 using BeatmapExporter.Exporters.Lazer;
 using BeatmapExporterCore.Exporters;
+using BeatmapExporterCore.Filters;
 using System.Text;
 
 namespace BeatmapExporterCLI.Interface
@@ -73,7 +74,7 @@ namespace BeatmapExporterCLI.Interface
                         }
 
                         void metadataFailure(Exception e) => Console.WriteLine($"Unable to set metadata for {audioExport.OutputFilename} :: {e.Message}\nExporting will continue.");
-                        Exporter.ExportAudio(audioExport, metadataFailure);
+                        Exporter.ExportAudio(audioExport, metadataFailure).Wait();
                         exportedAudio++;
 
                     } catch (TranscodeException te)
@@ -123,7 +124,7 @@ namespace BeatmapExporterCLI.Interface
         {
             foreach (var map in Exporter.SelectedBeatmapSets)
             {
-                Console.WriteLine(map.DifficultyString());
+                Console.WriteLine(map.DiffSummary());
             }
         }
 
@@ -226,7 +227,7 @@ Examples:
 - Specific artists (comma-separated): artist Camellia, nanahira
 - Tags include ""touhou"": tag touhou
 - Specific gamemodes: mode osu/mania/ctb/taiko
-- Beatmap status: graveyard/leaderboard/ranked/approved/qualified/loved
+- Beatmap status: status graveyard/leaderboard/ranked/approved/qualified/loved
 - Contained in a specific collection called ""songs"": collection songs
 - Contained in a specific collection labeled #1 in the collection list: collection #1
 - Remove a specific filter (using line number from list above): remove 1

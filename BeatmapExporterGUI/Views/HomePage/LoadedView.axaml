@@ -16,15 +16,15 @@
     <Separator />
     
     <TextBlock FontSize="18">Beatmap Totals</TextBlock>
-    <TextBlock Text="{Binding BeatmapSets, StringFormat=Beatmap sets found: {0}}" />
-    <TextBlock Text="{Binding BeatmapDiffs, StringFormat=Beatmap diffs found: {0}}" />
-    <TextBlock Text="{Binding Collections, StringFormat=Beatmap collections: {0}}" />
+    <TextBlock Text="{Binding Lazer.TotalBeatmapSetCount, StringFormat=Beatmap sets found: {0}}" />
+    <TextBlock Text="{Binding Lazer.TotalBeatmapCount, StringFormat=Beatmap diffs found: {0}}" />
+    <TextBlock Text="{Binding Lazer.CollectionCount, StringFormat=Beatmap collections: {0}}" />
   
     <Separator />
 
     <TextBlock FontSize="18">Beatmaps Selected for Export</TextBlock>
-    <TextBlock Text="{Binding SetsSelected, StringFormat=Beatmap sets selected: {0}}" />
-    <TextBlock Text="{Binding DiffsSelected, StringFormat=Beatmap diffs selected: {0}}" />
+    <TextBlock Text="{Binding Lazer.SelectedBeatmapSetCount, StringFormat=Beatmap sets selected: {0}}" />
+    <TextBlock Text="{Binding Lazer.SelectedBeatmapCount, StringFormat=Beatmap diffs selected: {0}}" />
     <TextBlock Text="{Binding Filters, StringFormat=Filters applied: {0}}" />
     <TextBlock Text="{Binding ExportMode, StringFormat=Current export mode: {0}}" />
     

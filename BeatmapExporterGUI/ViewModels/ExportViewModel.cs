@@ -28,6 +28,7 @@ namespace BeatmapExporterGUI.ViewModels
             TotalSetCount = lazer.SelectedBeatmapSetCount;
             Progress = 0;
             Description = string.Empty;
+            ActiveExport = false;
         }
 
         public string TaskTitle { get; }
@@ -47,6 +48,8 @@ namespace BeatmapExporterGUI.ViewModels
 
         public ObservableCollection<ExportOperation> Exported { get; }
 
+        public bool ActiveExport { get; private set; }
+
         private void AddExport(bool success, string description) => Exported.Insert(0, new(success, description));
 
         public async Task StartExport(CancellationToken token)
@@ -58,7 +61,9 @@ namespace BeatmapExporterGUI.ViewModels
                 ExportFormat.Background => ExportBackgrounds
             };
 
+            ActiveExport = true;
             await operation(token);
+            ActiveExport = false;
         }
 
         private async Task ExportBeatmaps(CancellationToken token)
@@ -87,6 +92,8 @@ namespace BeatmapExporterGUI.ViewModels
             Description = status;
         }
 
+        private record struct ExportProgress(int Discovered, int Success);
+
         private async Task ExportAudioFiles(CancellationToken token)
         {
             lazer.SetupExport();
@@ -100,18 +107,27 @@ namespace BeatmapExporterGUI.ViewModels
                 if (token.IsCancellationRequested)
                     break;
 
-                await Exporter.RealmScheduler.Schedule(() => ExportMapsetAudio(mapset, ref exportedAudio, ref discovered));
+                await Exporter.RealmScheduler.Schedule(async () =>
+                {
+                    var (stepDiscover, stepSuccess) = await ExportMapsetAudio(mapset, discovered);
+                    // These states are used for UI info/progress, it seems better to update them async and be potentially desynced rather than waiting for slow exports just to maintain order
+                    discovered += stepDiscover;
+                    exportedAudio += stepSuccess;
+                    Progress++;
+                });
             }
             Description = $"Exported {exportedAudio}/{discovered} audio files from {TotalSetCount} beatmaps to {lazer.Configuration.FullPath}.";
         }
 
-        private void ExportMapsetAudio(BeatmapSet mapset, ref int exportedAudio, ref int discovered)
+        private async Task<ExportProgress> ExportMapsetAudio(BeatmapSet mapset, int totalDiscovered)
         {
             var allAudio = lazer.ExtractAudio(mapset);
 
+            int exportedAudio = 0, discovered = 0;
             foreach (var audioExport in allAudio)
             {
-                discovered++;
+                discovered++; // count of audio files discovered by this 
+                totalDiscovered++; // count of all audio files discovered across any other calls
                 string audioFile = audioExport.AudioFile.AudioFile;
                 var transcode = audioExport.TranscodeFrom != null;
                 var transcodeNotice = transcode ? $"(transcode required from {audioExport.TranscodeFrom})" : "";
@@ -122,10 +138,10 @@ namespace BeatmapExporterGUI.ViewModels
                         AddExport(false, $"Non-mp3 audio {audioExport.OutputFilename} found and FFmpeg is not loaded, this audio will be skipped.");
                         continue;
                     }
-                    AddExport(true, $"({discovered}/?) Exporting {audioExport.OutputFilename}{transcodeNotice}");
+                    AddExport(true, $"({totalDiscovered}/?) Exporting {audioExport.OutputFilename}{transcodeNotice}");
 
                     void metadataFailure(Exception e) => AddExport(false, $"Unable to set metadata for {audioExport.OutputFilename} :: {e.Message}. Exporting will continue.");
-                    lazer.ExportAudio(audioExport, metadataFailure);
+                    await lazer.ExportAudio(audioExport, metadataFailure);
                     exportedAudio++;
                 }
                 catch (TranscodeException te)
@@ -137,7 +153,7 @@ namespace BeatmapExporterGUI.ViewModels
                     AddExport(false, $"Unable to export audio: {audioFile} :: {e.Message}");
                 }
             }
-            Progress++;
+            return new(discovered, exportedAudio);
         }
 
         private async Task ExportBackgrounds(CancellationToken token)
@@ -145,33 +161,47 @@ namespace BeatmapExporterGUI.ViewModels
             lazer.SetupExport();
             Description = $"Exporting beatmap background images from {TotalSetCount} beatmap sets.";
 
-            int discovered = 0, exported = 0;
+            int discovered = 0, exportedBackgrounds = 0;
             foreach (var mapset in lazer.SelectedBeatmapSets)
             {
                 if (token.IsCancellationRequested)
                     break;
 
-                var allImages = lazer.ExtractBackgrounds(mapset);
-
-                foreach (var imageExport in allImages)
+                await Exporter.RealmScheduler.Schedule(() =>
                 {
-                    discovered++;
-                    var backgroundFile = imageExport.BackgroundFile.BackgroundFile;
-
-                    try
-                    {
-                        await Exporter.RealmScheduler.Schedule(() => lazer.ExportBackground(imageExport));
-                        exported++;
-                        AddExport(true, $"({discovered}/?) Exported background image {imageExport.OutputFilename}.");
-                    }
-                    catch (Exception e)
-                    {
-                        AddExport(false, $"Unable to export background image {backgroundFile} :: {e.Message}");
-                    }
-                }
-                Progress++;
+                    var (stepDiscover, stepSuccess) = ExportMapsetBackgrounds(mapset, discovered);
+                    // These states are used for UI info/progress, it seems better to update them async and be potentially desynced rather than waiting for slow exports just to maintain order
+                    discovered += stepDiscover;
+                    exportedBackgrounds += stepSuccess;
+                    Progress++;
+                });
             }
-            Description = $"Exported {exported}/{discovered} background files from {TotalSetCount} beatmaps to {lazer.Configuration.FullPath}.";
+            Description = $"Exported {exportedBackgrounds}/{discovered} background files from {TotalSetCount} beatmaps to {lazer.Configuration.FullPath}.";
+        }
+
+        private ExportProgress ExportMapsetBackgrounds(BeatmapSet mapset, int totalDiscovered)
+        {
+            var allImages = lazer.ExtractBackgrounds(mapset);
+
+            int exportedBackgrounds = 0, discovered = 0;
+            foreach (var imageExport in allImages)
+            {
+                discovered++;
+                totalDiscovered++;
+                var backgroundFile = imageExport.BackgroundFile.BackgroundFile;
+
+                try
+                {
+                    lazer.ExportBackground(imageExport);
+                    exportedBackgrounds++;
+                    AddExport(true, $"({totalDiscovered}/?) Exported background image {imageExport.OutputFilename}.");
+                }
+                catch (Exception e)
+                {
+                    AddExport(false, $"Unable to export background image {backgroundFile} :: {e.Message}");
+                }
+            }
+            return new(discovered, exportedBackgrounds);
         }
     }
 

@@ -18,20 +18,19 @@ namespace BeatmapExporter.Exporters.Lazer.LazerDB.Schema
         public string BackgroundFile { get; set; } = string.Empty;
 
         // Author kabii
-        private string OutputName(int beatmapId) => $"{Artist.Trunc(30)} - {Title.Trunc(60)} ({beatmapId})";
+        private string OutputName() => $"{Artist.Trunc(30)} - {Title.Trunc(60)}";
 
-        public string OutputAudioFilename(int beatmapId) =>
-            $"{OutputName(beatmapId)}.mp3"
+        private string DupeString(int dupeCount) => dupeCount > 0 ? $" ({dupeCount})" : "";
+
+        public string OutputAudioFilename(int beatmapId, int dupeCount = 0) =>
+            $"{OutputName()}{DupeString(dupeCount)}.mp3"
             .RemoveFilenameCharacters();
 
-        public string OutputBackgroundFilename(int beatmapId)
+        public string OutputBackgroundFilename(int beatmapId, int dupeCount = 0)
         {
-            var backgroundName = BackgroundFile.Trunc(120);
-            if (BackgroundFile != backgroundName)
-                // restore file extension if truncated
-                backgroundName += Path.GetExtension(BackgroundFile);
+            var extension = Path.GetExtension(BackgroundFile);
             return 
-                $"{OutputName(beatmapId)} {backgroundName}"
+                $"{OutputName()} ({beatmapId}){DupeString(dupeCount)}{extension}"
                 .RemoveFilenameCharacters();
         }
     }

@@ -37,7 +37,10 @@ namespace BeatmapExporter.Exporters.Lazer.LazerDB.Schema
             set { selected = value; }
         }
 
-        public string DifficultyString()
+        [Ignored]
+        public BeatmapMetadata? DiffMetadata => Beatmaps.FirstOrDefault()?.Metadata;
+
+        public string DiffSummary()
         {
             BeatmapMetadata metadata = Beatmaps.First().Metadata;
             var difficulties = SelectedBeatmaps.Select(b => b.StarRating).OrderBy(r => r).Select(r => r.ToString("0.00"));

@@ -10,17 +10,7 @@ namespace BeatmapExporterGUI.ViewModels.HomePage
         {
         }
 
-        private LazerExporter Lazer => Exporter.Lazer!;
-
-        public int BeatmapSets => Lazer.TotalBeatmapSetCount;
-
-        public int BeatmapDiffs => Lazer.TotalBeatmapCount;
-
-        public int Collections => Lazer.CollectionCount;
-
-        public int SetsSelected => Lazer.SelectedBeatmapSetCount;
-
-        public int DiffsSelected => Lazer.SelectedBeatmapCount;
+        public LazerExporter Lazer => Exporter.Lazer!;
 
         public int Filters => Lazer.Configuration.Filters.Count();
 

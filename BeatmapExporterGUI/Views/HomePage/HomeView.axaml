@@ -42,17 +42,23 @@
                   Command="{Binding Release}">View Latest Release (GitHub)</Button>
         </StackPanel>
       </Border>
-      
-        <ListBox ItemsSource="{Binding Exporter.SystemMessages}"
-                 Background="Transparent"
-                 Height="600">
-          <ListBox.ItemTemplate>
+
+      <ScrollViewer Name="SystemMessages">
+        <ItemsControl ItemsSource="{Binding Exporter.SystemMessages}">
+
+          <ItemsControl.ItemTemplate>
             <DataTemplate>
-                <TextBlock Text="{Binding}"
-                           TextWrapping="Wrap" />
+            
+              <TextBlock Text="{Binding}"
+                         Margin="6,12"
+                         TextWrapping="Wrap" />
+            
             </DataTemplate>
-          </ListBox.ItemTemplate>
-        </ListBox>
+          </ItemsControl.ItemTemplate>
+        
+        </ItemsControl>
+      </ScrollViewer>
+      
       </StackPanel>
     
   </Grid>

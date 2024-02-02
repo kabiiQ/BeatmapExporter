@@ -25,7 +25,7 @@
 
     <Button Command="{Binding ExportCancelCommand}">Stop Export</Button>
 
-    <ScrollViewer Height="600"
+    <ScrollViewer Name="ExportViewer"
                   VerticalScrollBarVisibility="Visible">
       <ItemsControl ItemsSource="{Binding Exported}">
         

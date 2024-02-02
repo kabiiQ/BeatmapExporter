@@ -18,9 +18,16 @@ public partial class MenuRowViewModel : ViewModelBase
         this.outer = outer;
     }
 
-    public void Exit() => ExporterApp.Exit();
+    private bool DatabaseLoaded => Exporter.Lazer != null;
 
-    [RelayCommand(CanExecute = nameof(DatabaseLoaded))]
+    private bool CanNavigate => !outer.IsExporting;
+
+    private bool CanUnload => DatabaseLoaded && CanNavigate;
+
+    [RelayCommand]
+    private void Exit() => ExporterApp.Exit();
+
+    [RelayCommand(CanExecute = nameof(CanUnload))]
     private void Close()
     {
         Exporter.Unload();
@@ -28,17 +35,19 @@ public partial class MenuRowViewModel : ViewModelBase
         outer.NavigateHome();
     }
 
-    private bool DatabaseLoaded() => Exporter.Lazer != null;
+    [RelayCommand(CanExecute = nameof(CanNavigate))]
+    private void Home() => outer.NavigateHome();
 
-    public void Home() => outer.NavigateHome();
+    [RelayCommand(CanExecute = nameof(CanNavigate))]
+    private void Beatmaps() => outer.ListBeatmaps();
 
-    public void Beatmaps() => outer.ListBeatmaps();
+    [RelayCommand(CanExecute = nameof(CanNavigate))]
+    private void Collections() => outer.ListCollections();
 
-    public void Collections() => outer.ListCollections();
+    [RelayCommand(CanExecute = nameof(CanNavigate))]
+    private void Configuration() => outer.EditFilters();
 
-    public void Configuration() => outer.EditFilters();
-
-    [RelayCommand(IncludeCancelCommand = true)]
+    [RelayCommand(IncludeCancelCommand = true, CanExecute = nameof(CanNavigate))]
     private async Task Export(CancellationToken token) => await outer.Export(token);
 
     public string ExportDescription => Exporter.Lazer?.Configuration != null ? $"{Exporter.Lazer.Configuration.ExportFormat.UnitName()}, {Exporter.Lazer.SelectedBeatmapSetCount} sets" : "not loaded";
@@ -46,6 +55,8 @@ public partial class MenuRowViewModel : ViewModelBase
     public string ProgramVersion => ExporterUpdater.Version;
 
     public string DatabaseVersion => LazerDatabase.LazerSchemaVersion.ToString();
+
+    public string LazerVersion => LazerDatabase.FirstLazerVersion;
 
     public void GitHub() => ProcessHelper.OpenUrl(ExporterUpdater.Project);
 

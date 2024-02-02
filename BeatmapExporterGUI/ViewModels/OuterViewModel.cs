@@ -1,7 +1,7 @@
 ﻿using BeatmapExporterGUI.ViewModels.HomePage;
+using BeatmapExporterGUI.ViewModels.List;
 using BeatmapExporterGUI.ViewModels.Settings;
 using CommunityToolkit.Mvvm.ComponentModel;
-using System;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -35,11 +35,11 @@ public partial class OuterViewModel : ViewModelBase
 
     public void NavigateHome() => CurrentOperation = Home;
 
-    public void ListBeatmaps() => throw new NotImplementedException();
+    public void ListBeatmaps() => CurrentOperation = new BeatmapListViewModel();
 
-    public void ListCollections() => throw new NotImplementedException();
+    public void ListCollections() => CurrentOperation = new CollectionListViewModel();
 
-    public void EditFilters() => CurrentOperation = new ExportConfigViewModel();
+    public void EditFilters() => CurrentOperation = new ExportConfigViewModel(this);
 
     public async Task Export(CancellationToken token)
     {
@@ -47,4 +47,6 @@ public partial class OuterViewModel : ViewModelBase
         CurrentOperation = export;
         await export.StartExport(token);
     }
+
+    public bool IsExporting => (CurrentOperation as ExportViewModel)?.ActiveExport ?? false;
 }

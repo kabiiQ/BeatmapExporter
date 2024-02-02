@@ -1,0 +1,45 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="clr-namespace:BeatmapExporterGUI.ViewModels.List"
+             mc:Ignorable="d" d:DesignWidth="1280" d:DesignHeight="1024"
+             x:Class="BeatmapExporterGUI.Views.List.BeatmapExplorerView"
+             x:DataType="vm:BeatmapExplorerViewModel">
+
+  <StackPanel Spacing="12">
+
+    <StackPanel Orientation="Horizontal"
+                Spacing="6">
+      
+      <TextBlock VerticalAlignment="Center">View:</TextBlock>
+      <ComboBox ItemsSource="{Binding DisplayOptionNames}"
+                SelectedIndex="{Binding SelectedDisplayOption}" />
+
+      <Button Command="{Binding ExportSelectedDifficultyCommand}">Export Selected Difficulty</Button>
+
+      <Button Command="{Binding ExportSelectedFileCommand}">Export Selected File</Button>
+      
+    </StackPanel>
+
+    <TextBlock Text="{Binding SetName, StringFormat=Selected beatmap set: {0}}"
+               FontSize="18"
+               TextWrapping="Wrap" />
+
+    <TextBlock FontSize="18">Beatmap Difficulties</TextBlock>
+    
+    <ListBox ItemsSource="{Binding DiffNames}"
+             SelectedIndex="{Binding SelectedDiffIndex}"
+             Name="DiffList"
+             Background="Transparent" />
+
+    <TextBlock FontSize="18">All Beatmap Files</TextBlock>
+    
+    <ListBox ItemsSource="{Binding FileNames}" 
+             SelectedIndex="{Binding SelectedFileIndex}"
+             Name="FileList"
+             Background="Transparent" />
+    
+  </StackPanel>
+  
+</UserControl>

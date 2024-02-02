@@ -8,31 +8,34 @@
              x:DataType="vm:MenuRowViewModel">
 
   <Menu>
+    
     <MenuItem Header="_File">
       <MenuItem Header="_Home" 
-                Command="{Binding Home}" />
+                Command="{Binding HomeCommand}" />
       <MenuItem Header="_Close Database"
                 Command="{Binding CloseCommand}" />
       <Separator />
       <MenuItem Header="_Exit BeatmapExporter"
-                Command="{Binding Exit}"/>
+                Command="{Binding ExitCommand}"/>
     </MenuItem>
-    <MenuItem Header="_List All">
-      <MenuItem Header="_Beatmaps"
-                Command="{Binding Beatmaps} "/>
-      <MenuItem Header="_Collections"
-                Command="{Binding Collections}"/>
-    </MenuItem>
+    
     <MenuItem Header="_Export">
-      <MenuItem Header="_Settings/Beatmap Filters" 
-                Command="{Binding Configuration}" />
+      <MenuItem Header="View _Beatmaps"
+                Command="{Binding BeatmapsCommand}" />
+      <MenuItem Header="View _Collections"
+                Command="{Binding CollectionsCommand}" />
+      <MenuItem Header="_Filter Beatmaps/Export Settings" 
+                Command="{Binding ConfigurationCommand}" />
       <Separator />
       <MenuItem Header="Export _Now"
                 Command="{Binding ExportCommand}" />
     </MenuItem>
+    
     <MenuItem Header="_Version">
       <MenuItem Header="{Binding ProgramVersion, StringFormat=BeatmapExporter version: {0}}"
           IsEnabled="False" />
+      <MenuItem Header="{Binding LazerVersion, StringFormat=Built for osu!lazer release: {0}}"
+                IsEnabled="False" />
       <MenuItem Header="{Binding DatabaseVersion, StringFormat=osu!lazer database version: {0}}"
                 IsEnabled="False" />
       <MenuItem Header="BeatmapExporter _GitHub Project"

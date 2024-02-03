@@ -40,7 +40,7 @@ namespace BeatmapExporterGUI.Utilities
             };
             var file = await storage.OpenFilePickerAsync(options);
             var parent = file.Count > 0 ? await file[0].GetParentAsync() : null;
-            return parent?.Path.AbsolutePath;
+            return parent?.Path.LocalPath;
         }
 
         /// <summary>

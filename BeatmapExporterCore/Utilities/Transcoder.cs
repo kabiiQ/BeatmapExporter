@@ -6,8 +6,6 @@ namespace BeatmapExporterCore.Utilities
 {
     public class Transcoder
     {
-        public bool Available { get; }
-
         public Transcoder()
         {
             try
@@ -23,6 +21,15 @@ namespace BeatmapExporterCore.Utilities
             }
         }
 
+        /// <summary>
+        /// If the FFMpeg runtime was successfully when this Transcoder was initalized.
+        /// </summary>
+        public bool Available { get; }
+
+        /// <summary>
+        /// Performs a transcode on an audio file into MP3 format, saving it to disk.
+        /// </summary>
+        /// <exception cref="InvalidOperationException">If the FFMpeg runtime was not found on application launch. This condition can be checked before attempting the transcode, <see cref="Available" /></exception>
         public bool TranscodeMP3(FileStream sourceFile, string destFile)
         {
             if (!Available) throw new InvalidOperationException("Audio transcoder is not available within this runtime.");

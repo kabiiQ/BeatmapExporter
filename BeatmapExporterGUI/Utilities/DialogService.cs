@@ -5,6 +5,9 @@ using System.Threading.Tasks;
 
 namespace BeatmapExporterGUI.Utilities
 {
+    /// <summary>
+    /// Service class with methods for opening dialogs to the user.
+    /// </summary>
     public class DialogService
     {
         private readonly Window mainWindow;
@@ -21,6 +24,9 @@ namespace BeatmapExporterGUI.Utilities
             };
         }
 
+        /// <summary>
+        /// Opens a dialog for the user to select a client.realm file, returning the containing directory.
+        /// </summary>
         public async Task<string?> SelectDatabaseDialogAsync()
         {
             var storage = mainWindow.StorageProvider;
@@ -37,6 +43,9 @@ namespace BeatmapExporterGUI.Utilities
             return parent?.Path.AbsolutePath;
         }
 
+        /// <summary>
+        /// Opens a dialog for the user to select any directory.
+        /// </summary>
         public async Task<string?> SelectDirectoryAsync(string? current)
         {
             var storage = mainWindow.StorageProvider;

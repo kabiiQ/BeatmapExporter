@@ -11,7 +11,7 @@ using System.Windows.Input;
 namespace BeatmapExporterGUI.ViewModels
 {
     /// <summary>
-    /// Follows a single export task throughout
+    /// Page following an export task throughout and displaying progress to the user
     /// </summary>
     public partial class ExportViewModel : ViewModelBase
     {
@@ -31,8 +31,14 @@ namespace BeatmapExporterGUI.ViewModels
             ActiveExport = false;
         }
 
+        /// <summary>
+        /// Description of the general export operation, displayed to the user.
+        /// </summary>
         public string TaskTitle { get; }
 
+        /// <summary>
+        /// Total number of beatmap sets selected for export.
+        /// </summary>
         public int TotalSetCount { get; }
 
         /// <summary>
@@ -41,17 +47,32 @@ namespace BeatmapExporterGUI.ViewModels
         [ObservableProperty]
         private int _Progress;
 
+        /// <summary>
+        /// Export operation status displayed to the user. 
+        /// </summary>
         [ObservableProperty]
         private string _Description;
 
+        /// <summary>
+        /// Reference to the export cancel command to allow this page to cancel export started from the MenuRow export command
+        /// </summary>
         public ICommand ExportCancelCommand => outer.MenuRow.ExportCancelCommand;
 
+        /// <summary>
+        /// A collection of <see cref="ExportOperation" /> structs each representing one attempted export by this operation
+        /// </summary>
         public ObservableCollection<ExportOperation> Exported { get; }
 
+        /// <summary>
+        /// If there is an export currently active. Used to disable navigation away until export is complete/cancelled.
+        /// </summary>
         public bool ActiveExport { get; private set; }
 
         private void AddExport(bool success, string description) => Exported.Insert(0, new(success, description));
 
+        /// <summary>
+        /// Identifies the requested export format and begins the export operation represented by this ExportView. 
+        /// </summary>
         public async Task StartExport(CancellationToken token)
         {
             Func<CancellationToken, Task> operation = lazer.Configuration.ExportFormat switch
@@ -66,6 +87,9 @@ namespace BeatmapExporterGUI.ViewModels
             ActiveExport = false;
         }
 
+        /// <summary>
+        /// Exports all selected beatmaps, updating the user viewable statuses with each attempted export.
+        /// </summary>
         private async Task ExportBeatmaps(CancellationToken token)
         {
             lazer.SetupExport();
@@ -94,6 +118,9 @@ namespace BeatmapExporterGUI.ViewModels
 
         private record struct ExportProgress(int Discovered, int Success);
 
+        /// <summary>
+        /// Exports audio files from all selected beatmaps, updating the export description with the export status.
+        /// </summary>
         private async Task ExportAudioFiles(CancellationToken token)
         {
             lazer.SetupExport();
@@ -119,6 +146,9 @@ namespace BeatmapExporterGUI.ViewModels
             Description = $"Exported {exportedAudio}/{discovered} audio files from {TotalSetCount} beatmaps to {lazer.Configuration.FullPath}.";
         }
 
+        /// <summary>
+        /// Identifies selected beatmap's audio files and exports, updating the user viewable statuses with each attempted export.
+        /// </summary>
         private async Task<ExportProgress> ExportMapsetAudio(BeatmapSet mapset, int totalDiscovered)
         {
             var allAudio = lazer.ExtractAudio(mapset);

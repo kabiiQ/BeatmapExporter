@@ -10,6 +10,9 @@ using System.Threading.Tasks;
 
 namespace BeatmapExporterGUI.ViewModels.Settings
 {
+    /// <summary>
+    /// Page component representing a beatmap filter 'builder' operation.
+    /// </summary>
     public partial class NewFilterViewModel : ViewModelBase
     {
         private readonly ExportConfigViewModel exportView;
@@ -53,6 +56,10 @@ namespace BeatmapExporterGUI.ViewModels.Settings
         /// </summary>
         public string InputDescription => $"{SelectedFilterType.InputDescription(Negate)}:";
 
+        /// <summary>
+        /// Identifies and instanciates the appropriate <see cref="ValueSelectorViewModel" /> for the selected beatmap filter type.
+        /// This value will be directly displayed onto the user interface.
+        /// </summary>
         public ValueSelectorViewModel ValueSelector => SelectedFilterType.InputType switch
         {
             FilterTemplate.Input.RawText => new TextSelectorViewModel(this),
@@ -67,10 +74,16 @@ namespace BeatmapExporterGUI.ViewModels.Settings
             FilterTemplate.Input.Collection => new DropdownSelectorViewModel(this, Exporter.Lazer!.Collections.Keys.ToList())
         };
 
+        /// <summary>
+        /// A BeatmapFilter generated from the current user input, null if the user input is not valid.
+        /// </summary>
         [ObservableProperty]
         [NotifyCanExecuteChangedFor(nameof(SaveFilterCommand))]
         private BeatmapFilter? _CurrentFilter;
 
+        /// <summary>
+        /// If the current user input generated a valid BeatmapFilter that can be applied to the beatmap selection.
+        /// </summary>
         public bool FilterValid => CurrentFilter != null;
 
         /// <summary>

@@ -6,6 +6,9 @@ using System.Runtime.InteropServices;
 
 namespace BeatmapExporter.Exporters.Lazer.LazerDB
 {
+    /// <summary>
+    /// Exception thrown when the osu!lazer database indicates a version mismatch
+    /// </summary>
     public class LazerVersionException : ExporterException { }
 
     public class LazerDatabase

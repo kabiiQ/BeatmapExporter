@@ -3,8 +3,14 @@ using System.Runtime.InteropServices;
 
 namespace BeatmapExporterGUI.Utilities
 {
+    /// <summary>
+    /// Helper methods for starting processes on the system.
+    /// </summary>
     public static class ProcessHelper
     {
+        /// <summary>
+        /// Attempts to open a URL in the system default browser.
+        /// </summary>
         public static void OpenUrl(string url)
         {
             try

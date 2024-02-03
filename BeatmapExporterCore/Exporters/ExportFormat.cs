@@ -29,6 +29,9 @@
             _ => throw new NotImplementedException()
         };
 
+        /// <summary>
+        /// The 'next' ExportFormat, based on the natural ordering of the ExportFormat enum.
+        /// </summary>
         public static ExportFormat Next(this ExportFormat format)
         {
             var max = Enum.GetValues(typeof(ExportFormat)).Length;
@@ -39,6 +42,9 @@
 
     public static class ExportFormats
     {
+        /// <summary>
+        /// Array of all ExportFormat enum values.
+        /// </summary>
         public static IEnumerable<ExportFormat> All() => (ExportFormat[])Enum.GetValues(typeof(ExportFormat));
     }
 }

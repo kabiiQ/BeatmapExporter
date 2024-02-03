@@ -9,7 +9,8 @@ using System.Threading.Tasks;
 namespace BeatmapExporterGUI.ViewModels.List
 {
     /// <summary>
-    /// View for listing all beatmaps. Currently displays all beatmap sets on one side and further explores a selected beatmap further on the other.
+    /// Page for exploring the files within a single beatmap set. Currently displays the beatmap difficulties on top and all files (including difficulty files) on the bottom.
+    /// Both diffs and files allow user-selection and singular export.
     /// </summary>
     public partial class BeatmapExplorerViewModel : ViewModelBase
     {
@@ -44,15 +45,27 @@ namespace BeatmapExporterGUI.ViewModels.List
             }));
         }
 
+        /// <summary>
+        /// The song and mapper name of the beatmap set this explorer represents.
+        /// </summary>
         public string SetName { get; private set; } = string.Empty;
 
         #region Diff Display Settings
+        /// <summary>
+        /// List of all the displayed difficulties, may change with user selection change.
+        /// </summary>
         [ObservableProperty]
         private List<Beatmap> _DisplayedDiffs;
 
+        /// <summary>
+        /// The currently selected display option, which is indexed 1:1 to the <see cref="BeatmapSorting.View" /> enum values.
+        /// </summary>
         [ObservableProperty]
         private int _SelectedDisplayOption;
 
+        /// <summary>
+        /// The string representations for all supported display options. ex. Display all beatmaps
+        /// </summary>
         public List<string> DisplayOptionNames => beatmapListView.DisplayOptions.Select(d => d.DiffName()).ToList();
 
         partial void OnSelectedDisplayOptionChanged(int value)
@@ -60,6 +73,10 @@ namespace BeatmapExporterGUI.ViewModels.List
             Task.Run(() => ApplyDisplaySetting());
         }
 
+        /// <summary>
+        /// Updates the displayed beatmap difficulties to match the current <see cref="SelectedDisplayOption" />
+        /// </summary>
+        /// <returns></returns>
         private async Task ApplyDisplaySetting() => await Exporter.RealmScheduler.Schedule(() =>
         {
             if (SelectedDisplayOption == (int)BeatmapSorting.View.Selected)
@@ -75,23 +92,41 @@ namespace BeatmapExporterGUI.ViewModels.List
         #endregion
 
         #region File Display/Selection
+        /// <summary>
+        /// The string representations for the difficulties listed within this beatmap set, indexed 1:1 to <see cref="DisplayedDiffs" />
+        /// </summary>
         [ObservableProperty]
         private List<string> _DiffNames;
 
+        /// <summary>
+        /// The index of the currently user-selected difficulty, indexed to both <see cref="DisplayedDiffs" /> and <see cref="DiffNames" />
+        /// </summary>
         [ObservableProperty]
         [NotifyCanExecuteChangedFor(nameof(ExportSelectedDifficultyCommand))]
         private int _SelectedDiffIndex;
 
+        /// <summary>
+        /// The index of the currently user-selected file, indexed to both <see cref="FileNames" /> and <see cref="BeatmapSet.Files" />
+        /// </summary>
         [ObservableProperty]
         [NotifyCanExecuteChangedFor(nameof(ExportSelectedFileCommand))]
         private int _SelectedFileIndex;
 
+        /// <summary>
+        /// The string representations for the files listed within this beatmap set. 
+        /// </summary>
         public List<string> FileNames { get; private set; }
         #endregion
 
         #region Selection Export
+        /// <summary>
+        /// If a beatmap difficulty is currently selected by the user.
+        /// </summary>
         public bool CanExportDiff => SelectedDiffIndex != -1;
 
+        /// <summary>
+        /// If a beatmap file is currently selected by the user.
+        /// </summary>
         public bool CanExportFile => SelectedFileIndex != -1;
 
         /// <summary>
@@ -140,7 +175,7 @@ namespace BeatmapExporterGUI.ViewModels.List
             }
             catch (Exception e)
             {
-                Exporter.AddSystemMessage($"Failed to export single file {filename} :: {e.Message}");
+                Exporter.AddSystemMessage($"Failed to export single file {filename} :: {e.Message}", error: true);
             }
         });
         #endregion

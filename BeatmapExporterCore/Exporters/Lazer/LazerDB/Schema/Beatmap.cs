@@ -1,8 +1,8 @@
-﻿// Original source file (modified by kabii) Copyright (c) ppy Pty Ltd <contact@ppy.sh>. Licensed under the MIT Licence.
-using Realms;
+﻿using Realms;
 
 namespace BeatmapExporter.Exporters.Lazer.LazerDB.Schema
 {
+    // Original source file (modified by kabii) Copyright (c) ppy Pty Ltd <contact@ppy.sh>. Licensed under the MIT Licence.
     public class Beatmap : RealmObject
     {
         [PrimaryKey]
@@ -73,6 +73,9 @@ namespace BeatmapExporter.Exporters.Lazer.LazerDB.Schema
         public int CountdownOffset { get; set; }
 
         // Author kabii
+        /// <summary>
+        /// Assesses Beatmap equality based on the beatmap UUID
+        /// </summary>
         public override bool Equals(object? obj)
         {
             if (obj == null || !GetType().Equals(obj.GetType()))
@@ -86,6 +89,10 @@ namespace BeatmapExporter.Exporters.Lazer.LazerDB.Schema
             }
         }
 
+        /// <summary>
+        /// A string which describes this beatmap's difficulty details in two lines
+        /// </summary>
+        /// <returns></returns>
         public string Details()
         {
             int lengthSeconds = (int)Length / 1000;

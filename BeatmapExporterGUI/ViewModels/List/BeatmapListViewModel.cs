@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 namespace BeatmapExporterGUI.ViewModels.List
 {
     /// <summary>
-    /// View for listing all beatmaps. Currently displays all beatmap sets on one side and further explores a selected beatmap further on the other.
+    /// Page for listing all beatmaps. Currently displays all beatmap sets on one side and further explores a selected beatmap further on the other.
     /// </summary>
     public partial class BeatmapListViewModel : ViewModelBase
     {
@@ -158,11 +158,13 @@ namespace BeatmapExporterGUI.ViewModels.List
                 return true;
             }
         }
-
+        /// <summary>
+        /// If a beatmap set is currently selected by the user.
+        /// </summary>
         public bool CanExportBeatmapSet => SelectedSetIndex != -1;
 
         /// <summary>
-        /// Export a  single user-selected beatmap
+        /// Export a single user-selected beatmap
         /// </summary>
         [RelayCommand(CanExecute = nameof(CanExportBeatmapSet))]
         public async Task ExportSelectedBeatmap()
@@ -178,10 +180,13 @@ namespace BeatmapExporterGUI.ViewModels.List
             }
             catch (Exception e)
             {
-                Exporter.AddSystemMessage($"Failed to export single beatmap {filename} :: {e.Message}");
+                Exporter.AddSystemMessage($"Failed to export single beatmap {filename} :: {e.Message}", error: true);
             }
         }
 
+        /// <summary>
+        /// User-requested input to manually open the export directory.
+        /// </summary>
         public void OpenExportDirectory() => Exporter.Lazer!.SetupExport(openDir: true);
         #endregion
     }

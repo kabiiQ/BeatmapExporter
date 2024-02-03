@@ -6,6 +6,9 @@ using System.Threading.Tasks;
 
 namespace BeatmapExporterGUI.Utilities
 {
+    /// <summary>
+    /// Single thread scheduler used for accessing the Realm database in a synchronous manner.
+    /// </summary>
     public sealed class RealmTaskScheduler : TaskScheduler
     {
         [ThreadStatic]
@@ -20,15 +23,21 @@ namespace BeatmapExporterGUI.Utilities
             this.taskQueue = new BlockingCollection<Task>();
         }
 
+        /// <summary>
+        /// Begins the RealmTaskScheduler thread.
+        /// </summary>
         public void Start()
         {
             new Thread(RunOnCurrentThread)
             {
                 Name = "Realm Thread",
-                IsBackground = true
+                IsBackground = true // this thread should not keep the process alive
             }.Start();
         }
 
+        /// <summary>
+        /// Schedules an Task with no return on the Realm thread.
+        /// </summary>
         public Task Schedule(Action action)
         {
             return Task.Factory.StartNew(
@@ -39,6 +48,9 @@ namespace BeatmapExporterGUI.Utilities
                 );
         }
 
+        /// <summary>
+        /// Schedules a Task returning a value on the Realm thread.
+        /// </summary>
         public Task<T> Schedule<T>(Func<T> func)
         {
             return Task.Factory.StartNew(

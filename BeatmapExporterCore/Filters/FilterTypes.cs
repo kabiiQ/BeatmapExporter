@@ -29,6 +29,9 @@ namespace BeatmapExporterCore.Filters
     /// </summary>
     public class FilterTemplate
     {
+        /// <summary>
+        /// Delegate function generating a BeatmapFilter for a type of filter from a user input string and the filter negation state at the time of the input.
+        /// </summary>
         public delegate BeatmapFilter FilterConstructor(string userInput, bool negate);
 
         /// <summary>
@@ -48,22 +51,50 @@ namespace BeatmapExporterCore.Filters
             Constructor = constructor;
         }
 
+        /// <summary>
+        /// Filter name which may be used for finding filter types from user input.
+        /// </summary>
         public string ShortName { get; }
 
+        /// <summary>
+        /// Full filter name, suitable for use in user-viewed outputs.
+        /// </summary>
         public string FullName { get; }
 
+        /// <summary>
+        /// Defines the type of input the user should be providing for this filter, ex. 'maximum'. 
+        /// </summary>
         public string NormalInputDescriptor { get; }
 
+        /// <summary>
+        /// Defines the type of input the user should provide if this filter is negated, ex. 'minimum'.
+        /// </summary>
         public string NegatedInputDescriptor { get; }
 
+        /// <summary>
+        /// A detailed description of the filter's functionality, suitable for display to the user directly.
+        /// </summary>
         public string FilterDetail { get; }
 
+        /// <summary>
+        /// The Input type needed from the user to create a filter of this type. Use RawText if not creating a more precise input type.
+        /// This is additional info useful for creating a better interface, may be ignored (ex. CLI).
+        /// </summary>
         public Input InputType { get; }
 
+        /// <summary>
+        /// Function which constructs a filter of this type from a user input.
+        /// </summary>
         public FilterConstructor Constructor { get; }
 
+        /// <summary>
+        /// A string briefly defining the type of input the user should provide, using the full filter name and appropriate input descriptor.
+        /// </summary>
         public string InputDescription(bool negated) => $"{FullName} {(negated ? NegatedInputDescriptor : NormalInputDescriptor)}";
 
+        // All BeatmapExporter-supported filters are defined below.
+
+        #region Filters
         public static FilterTemplate StarRating = new(
             "stars",
             "Beatmap star rating/difficulty",
@@ -287,5 +318,6 @@ namespace BeatmapExporterCore.Filters
                 // builds a placeholder filter that will be re-built if/where the user's collections are available
                 return new(input, negate, collections);
             });
+        #endregion
     }
 }

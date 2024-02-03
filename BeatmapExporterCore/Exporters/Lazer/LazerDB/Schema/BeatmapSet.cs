@@ -1,7 +1,7 @@
-﻿// Original source file (modified by kabii) Copyright (c) ppy Pty Ltd <contact@ppy.sh>. Licensed under the MIT Licence.
-using BeatmapExporterCore.Utilities;
+﻿using BeatmapExporterCore.Utilities;
 using Realms;
 
+// Original source file (modified by kabii) Copyright (c) ppy Pty Ltd <contact@ppy.sh>. Licensed under the MIT Licence.
 namespace BeatmapExporter.Exporters.Lazer.LazerDB.Schema
 {
     public class BeatmapSet : RealmObject

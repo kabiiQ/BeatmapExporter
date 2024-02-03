@@ -28,6 +28,9 @@ namespace BeatmapExporterGUI.Exporter
             SystemMessages = new();
         }
 
+        /// <summary>
+        /// Exits the AvaloniaUI application
+        /// </summary>
         public static void Exit()
         {
             if (Application.Current!.ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
@@ -36,6 +39,9 @@ namespace BeatmapExporterGUI.Exporter
             }
         }
 
+        /// <summary>
+        /// Opens the latest BeatmapExporter release in web browser
+        /// </summary>
         public static void OpenLatestRelease() => ProcessHelper.OpenUrl(ExporterUpdater.Latest);
 
         /// <summary>
@@ -70,7 +76,7 @@ namespace BeatmapExporterGUI.Exporter
                 AddSystemMessage($"Error opening database: {e.Message}", error: true);
                 if (e is LazerVersionException)
                 {
-                    AddSystemMessage("The osu!lazer database structure has updated since the last BeatmapExporter update.");
+                    AddSystemMessage("The osu!lazer database structure has updated since the last BeatmapExporter update.", error: true);
                     AddSystemMessage("You can check GitHub for a new release, or file an issue there to let me know it needs updating if it's been a few days.");
                 }
                 return false;
@@ -90,21 +96,44 @@ namespace BeatmapExporterGUI.Exporter
             return true;
         }
 
+        /// <summary>
+        /// Unloads the LazerExporter instance, allowing the user to load a database.
+        /// </summary>
         public void Unload() => Lazer = null;
 
+        /// <summary>
+        /// The currently loaded LazerExporter instance.
+        /// </summary>
         public LazerExporter? Lazer { get; private set; }
 
+        /// <summary>
+        /// The ExporterConfiguration contained within the currently loaded LazerExporter instance.
+        /// </summary>
         public ExporterConfiguration? Configuration => Lazer?.Configuration;
 
+        /// <summary>
+        /// The single-thread task scheduler that should be used for all Realm database access.
+        /// </summary>
         public RealmTaskScheduler RealmScheduler { get; }
 
+        /// <summary>
+        /// Struct representing a single BeatmapExporter system message.
+        /// </summary>
         public record struct Message(bool IsError, string Content, DateTime Timestamp)
         {
             public override readonly string? ToString() => $"{(IsError ? "(!)" : "")}{Timestamp:HH:mm} - {Content}";
         }
 
+        /// <summary>
+        /// All recorded Message instances for this application 
+        /// </summary>
         public ObservableCollection<Message> SystemMessages { get; }
 
+        /// <summary>
+        /// Adds a new system message to be displayed to the user
+        /// </summary>
+        /// <param name="message">The message content</param>
+        /// <param name="error">If this message represents an error. May be formatted differently for the user.</param>
         public void AddSystemMessage(string message, bool error = false) => SystemMessages.Insert(0, new(error, message, DateTime.Now));
     }
 }

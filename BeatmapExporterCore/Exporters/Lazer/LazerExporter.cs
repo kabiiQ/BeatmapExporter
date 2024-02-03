@@ -8,6 +8,9 @@ using System.Text.RegularExpressions;
 
 namespace BeatmapExporter.Exporters.Lazer
 {
+    /// <summary>
+    /// Exception used when an mp3 transcode operation encounters any error.
+    /// </summary>
     public class TranscodeException : ExporterException
     {
         public TranscodeException(Exception inner) : base(inner.Message) { }
@@ -239,6 +242,7 @@ namespace BeatmapExporter.Exporters.Lazer
 
         /// <summary>
         /// Export a single audio file from a beatmap.
+        /// If the FFMpeg runtime is available, non-mp3 audio files will have a transcode attempted into mp3 format. 
         /// </summary>
         /// <param name="export">An AudioExportTask container, as produced by <see cref="ExportAudio(AudioExportTask, Action{Exception})"/></param>
         /// <param name="metadataFailure">An optional callback to notify users on metadata assignment failure. As metadata is non-critical, export will always continue.</param>

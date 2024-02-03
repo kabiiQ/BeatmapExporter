@@ -20,8 +20,6 @@ This utility allows you to export beatmaps back into `.osz` files.
 
 There is a beatmap filter system allowing you to select a portion of your library to only export certain maps (for example, above a certain star rating, specific artists/mappers, specific gamemodes, specific collections, etc). You can also simply export your **entire library** at once.
 
-You can also export directly into a .zip for more easily transferring your library.
-
 ## Audio Export
 
 As of version 1.2, there is an option to export only audio files. Rather than entire beatmap archives, only .mp3 audio files will be exported. 
@@ -34,16 +32,28 @@ If a beatmap uses a non-mp3 audio format, [FFmpeg](https://ffmpeg.org/download.h
 
 As of version 1.3.8, there is an option to export only [beatmap background image files](https://github.com/kabiiQ/BeatmapExporter/pull/10).
 
+## Graphical User Interface
+
+As of version 2.0, I have developed a more complete GUI application for BeatmapExporter. If there are bugs with the GUI application on your system, while you should feel free to report these issues to let me know, it has been built in a way to allow the older CLI (command line) program to still be available and receive updates. The CLI should also continue to be fully functional if you prefer it or are just more used to using it already. When viewing releases, the older CLI files are named BeatmapExporterCLI, while the GUI files are named simply BeatmapExporter.
+
+The GUI is likely to have more bugs on non-Windows platforms as I have not had anyone confirm if it even works on those platforms yet. Please do let me know in a GitHub issue if it is not working, but even if this is the case the CLI version should still work for you.
+
+Filtering beatmaps screenshot in the GUI:
+
+![](https://i.imgur.com/h9TpkAD.png)
+
 # Download/Usage
 
 Executables are available from the [Releases](https://github.com/kabiiQ/BeatmapExporter/releases) section on GitHub. 
 
 If you are on a Windows system and your osu! database is in the default location (%appdata%\osu), you should be able to simply run the application. If you changed the database location when install osu!lazer, the program will be unable to locate it and will prompt you to enter it. 
 
-If you are not on Windows, I included default directories for OSX and Linux and it should automatically work, but it is untested.
+If you are not on Windows, I included default directories for OSX and Linux and it should automatically work, but it is untested on these platforms. 
 
-You can also launch the program with the database folder as the launch argument if you already know it will be in an unusual location. The database folder needed contains a "files" folder. This folder can also be opened from in-game if you moved it and are unsure where it is located. If you did not move it, it should just automatically work.
+You can alternatively launch the program with the database folder as the launch argument if you already know it will be in an unusual location. The database folder needed contains a "files" folder. This folder can also be opened from in-game if you moved it and are unsure where it is located. If you did not move it, it should just automatically work.
 
-# Basic Export Task Screenshot (Exporting Beatmaps with a Tag)
+# Basic Export Task Screenshot
+
+Exporting beatmaps with a tag with the original CLI program version:
 
 ![](https://i.imgur.com/bbM1D5Z.png)

@@ -55,7 +55,7 @@ namespace BeatmapExporterGUI.Utilities
                 options.SuggestedStartLocation = await storage.TryGetFolderFromPathAsync(current);
 
             var dir = await storage.OpenFolderPickerAsync(options);
-            return dir.Count > 0 ? dir[0].Path.AbsolutePath : null;
+            return dir.Count > 0 ? dir[0].Path.LocalPath : null;
         }
     }
 }

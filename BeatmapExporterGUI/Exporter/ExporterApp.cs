@@ -42,7 +42,7 @@ namespace BeatmapExporterGUI.Exporter
         /// <summary>
         /// Opens the latest BeatmapExporter release in web browser
         /// </summary>
-        public static void OpenLatestRelease() => ProcessHelper.OpenUrl(ExporterUpdater.Latest);
+        public static void OpenLatestRelease() => PlatformUtil.OpenUrl(ExporterUpdater.Latest);
 
         /// <summary>
         /// Attempt to load an osu!lazer database into this app

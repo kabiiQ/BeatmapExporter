@@ -1,0 +1,29 @@
+<Application xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:util="using:BeatmapExporterGUI.Utilities"
+             x:Class="BeatmapExporterGUI.App"
+             RequestedThemeVariant="Default">
+
+  <Application.Styles>
+    
+    <FluentTheme>
+      <FluentTheme.Palettes>
+        <ColorPaletteResources x:Key="Light" Accent="#ffff66aa" AltHigh="White" AltLow="White" AltMedium="White" AltMediumHigh="White" AltMediumLow="White" BaseHigh="Black" BaseLow="#ffffddee" BaseMedium="#ffbe90a8" BaseMediumHigh="#ff925d79" BaseMediumLow="#ffa87790" ChromeAltLow="#ff925d79" ChromeBlackHigh="Black" ChromeBlackLow="#ffffddee" ChromeBlackMedium="#ff925d79" ChromeBlackMediumLow="#ffbe90a8" ChromeDisabledHigh="#ffffddee" ChromeDisabledLow="#ffbe90a8" ChromeGray="#ffa87790" ChromeHigh="#ffffddee" ChromeLow="#ffffeefd" ChromeMedium="#ffffebfa" ChromeMediumLow="#ffffeefd" ChromeWhite="White" ListLow="#ffffebfa" ListMedium="#ffffddee" RegionColor="#ffeeeeff" />
+        <ColorPaletteResources x:Key="Dark" Accent="#ffbb1177" AltHigh="Black" AltLow="Black" AltMedium="Black" AltMediumHigh="Black" AltMediumLow="Black" BaseHigh="White" BaseLow="#ff333333" BaseMedium="#ff9a9a9a" BaseMediumHigh="#ffb4b4b4" BaseMediumLow="#ff676767" ChromeAltLow="#ffb4b4b4" ChromeBlackHigh="Black" ChromeBlackLow="#ffb4b4b4" ChromeBlackMedium="Black" ChromeBlackMediumLow="Black" ChromeDisabledHigh="#ff333333" ChromeDisabledLow="#ff9a9a9a" ChromeGray="Gray" ChromeHigh="Gray" ChromeLow="#ff151515" ChromeMedium="#ff1d1d1d" ChromeMediumLow="#ff2c2c2c" ChromeWhite="White" ListLow="#ff1d1d1d" ListMedium="#ff333333" RegionColor="#ff451287" />
+      </FluentTheme.Palettes>
+    </FluentTheme>
+
+    <StyleInclude Source="avares://BeatmapExporterGUI/Styles/General.axaml" />
+    <StyleInclude Source="avares://BeatmapExporterGUI/Styles/Icons.axaml" />
+      
+  </Application.Styles>
+
+  <Application.Resources>
+    <FontFamily x:Key="Exo2">avares://BeatmapExporterGUI/Assets/Exo2#Exo 2.0</FontFamily>
+  </Application.Resources>
+
+  <Application.DataTemplates>
+    <util:ViewLocator />
+  </Application.DataTemplates>
+
+</Application>

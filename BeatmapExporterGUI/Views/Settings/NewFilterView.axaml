@@ -1,0 +1,50 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="clr-namespace:BeatmapExporterGUI.ViewModels.Settings"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="600"
+             x:Class="BeatmapExporterGUI.Views.Settings.NewFilterView"
+             x:DataType="vm:NewFilterViewModel">
+
+  <StackPanel Spacing="18">
+
+    <TextBlock FontSize="24"
+               HorizontalAlignment="Center">
+      Create New Beatmap Filter
+    </TextBlock>
+
+    <StackPanel Orientation="Horizontal"
+                Spacing="6">
+      <TextBlock VerticalAlignment="Center">Beatmap Filter Type</TextBlock>
+      <ComboBox VerticalAlignment="Center" 
+                ItemsSource="{Binding AvailableFilterTypes}"
+                SelectedIndex="{Binding SelectedFilterIndex}" />
+    </StackPanel>
+
+    <TextBlock Text="{Binding FilterDescription}"
+               TextWrapping="Wrap" />
+
+    <!-- Filter value input -->
+    
+    <TextBlock Text="{Binding InputDescription}" />
+    
+    <ContentControl Content="{Binding ValueSelector}" 
+                    Width="400"
+                    HorizontalAlignment="Left" />
+
+    <CheckBox IsChecked="{Binding Negate}">Invert/Negate Filter</CheckBox>
+
+    <StackPanel Orientation="Horizontal"
+                Spacing="12">
+
+      <Button Classes="accent"
+              Command="{Binding SaveFilterCommand}">Apply Filter</Button>
+      
+      <Button Command="{Binding CancelCreation}">Cancel</Button>
+      
+    </StackPanel>
+    
+  </StackPanel>
+  
+</UserControl>

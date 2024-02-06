@@ -1,0 +1,75 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <LangVersion>latest</LangVersion>
+    <AvaloniaUseCompiledBindingsByDefault>true</AvaloniaUseCompiledBindingsByDefault>
+  </PropertyGroup>
+
+  
+  <ItemGroup>
+    <AvaloniaResource Include="Assets\**" />
+  </ItemGroup>
+
+  
+  <ItemGroup>
+    <None Remove="Assets\Exo2\Exo2.0-ExtraBold.otf" />
+    <None Remove="Assets\Exo2\Exo2.0-ExtraBoldItalic.otf" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Avalonia" Version="$(AvaloniaVersion)" />
+    <PackageReference Include="Avalonia.Themes.Fluent" Version="$(AvaloniaVersion)" />
+    <PackageReference Include="Avalonia.Fonts.Inter" Version="$(AvaloniaVersion)" />
+    <PackageReference Include="CommunityToolkit.Mvvm" Version="8.2.0" />
+
+    <!--Condition below is needed to remove Avalonia.Diagnostics package from build output in Release configuration.-->
+    <PackageReference Condition="'$(Configuration)' == 'Debug'" Include="Avalonia.Diagnostics" Version="$(AvaloniaVersion)" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\BeatmapExporterCore\BeatmapExporterCore.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="Views\List\BeatmapExplorerView.axaml.cs">
+      <DependentUpon>BeatmapExplorerView.axaml</DependentUpon>
+    </Compile>
+    <Compile Update="Views\List\CollectionListView.axaml.cs">
+      <DependentUpon>CollectionListView.axaml</DependentUpon>
+    </Compile>
+    <Compile Update="Views\Settings\DropdownSelectorView.axaml.cs">
+      <DependentUpon>DropdownSelectorView.axaml</DependentUpon>
+    </Compile>
+    <Compile Update="Views\Settings\TextSelectorView.axaml.cs">
+      <DependentUpon>TextSelectorView.axaml</DependentUpon>
+    </Compile>
+    <Compile Update="Views\Settings\NewFilterView.axaml.cs">
+      <DependentUpon>NewFilterView.axaml</DependentUpon>
+    </Compile>
+    <Compile Update="Views\Settings\ExportConfigView.axaml.cs">
+      <DependentUpon>ExportConfigView.axaml</DependentUpon>
+    </Compile>
+    <Compile Update="Views\ExportView.axaml.cs">
+      <DependentUpon>ExportView.axaml</DependentUpon>
+    </Compile>
+    <Compile Update="Views\HomePage\LoadingView.axaml.cs">
+      <DependentUpon>LoadingView.axaml</DependentUpon>
+    </Compile>
+    <Compile Update="Views\HomePage\LoadedView.axaml.cs">
+      <DependentUpon>LoadedView.axaml</DependentUpon>
+    </Compile>
+    <Compile Update="Views\HomePage\NotLoadedView.axaml.cs">
+      <DependentUpon>NotLoadedView.axaml</DependentUpon>
+    </Compile>
+    <Compile Update="Views\HomePage\HomeView.axaml.cs">
+      <DependentUpon>HomeView.axaml</DependentUpon>
+    </Compile>
+    <Compile Update="Views\MenuRowView.axaml.cs">
+      <DependentUpon>MenuRowView.axaml</DependentUpon>
+    </Compile>
+    <Compile Update="Views\OuterView.axaml.cs">
+      <DependentUpon>OuterView.axaml</DependentUpon>
+    </Compile>
+  </ItemGroup>
+</Project>

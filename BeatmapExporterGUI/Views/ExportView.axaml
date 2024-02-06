@@ -1,0 +1,53 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="clr-namespace:BeatmapExporterGUI.ViewModels"
+             mc:Ignorable="d" d:DesignWidth="1280" d:DesignHeight="1024"
+             x:Class="BeatmapExporterGUI.Views.ExportView"
+             x:DataType="vm:ExportViewModel">
+
+  <!-- ExportView follows through a single export operation -->
+  <StackPanel Margin="12"
+              Spacing="12">
+
+    <TextBlock HorizontalAlignment="Center"
+               Text="{Binding TaskTitle}"
+               FontSize="24" />
+    
+    <ProgressBar Minimum="0"
+                 Maximum="{Binding TotalSetCount}"
+                 Value="{Binding Progress}"
+                 ShowProgressText="True"
+                 Height="60"/>
+    
+    <TextBlock Text="{Binding Description}" />
+
+    <Button Command="{Binding ExportCancelCommand}">Stop Export</Button>
+
+    <ScrollViewer Name="ExportViewer"
+                  VerticalScrollBarVisibility="Visible">
+      <ItemsControl ItemsSource="{Binding Exported}">
+        
+        <ItemsControl.ItemTemplate>
+          <DataTemplate>
+
+            <Border CornerRadius="5"
+                    BorderBrush="{Binding Color}"
+                    BorderThickness="1"
+                    Padding="5"
+                    Margin="6">
+              
+              <TextBlock Text="{Binding Detail}"
+                         TextWrapping="Wrap" />
+              
+            </Border>
+            
+          </DataTemplate>
+        </ItemsControl.ItemTemplate>
+      </ItemsControl>
+    </ScrollViewer>
+    
+  </StackPanel>
+  
+</UserControl>

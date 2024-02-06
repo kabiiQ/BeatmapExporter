@@ -1,0 +1,47 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="clr-namespace:BeatmapExporterGUI.ViewModels.List"
+             mc:Ignorable="d" d:DesignWidth="1280" d:DesignHeight="1024"
+             x:Class="BeatmapExporterGUI.Views.List.CollectionListView"
+             x:DataType="vm:CollectionListViewModel">
+
+  <Grid ColumnDefinitions="*,*"
+      Margin="6">
+
+    <Border BorderBrush="Black"
+            BorderThickness="0,0,1,0"
+            Grid.Column="0">
+
+      <StackPanel Margin="6"
+                  Spacing="24">
+
+        <TextBlock FontSize="24"
+                   HorizontalAlignment="Center">Collection List</TextBlock>
+        
+        <ListBox ItemsSource="{Binding CollectionList}"
+                 SelectedItem="{Binding SelectedCollection}"
+                 Name="CollectionList"
+                 Background="Transparent" />
+
+      </StackPanel>
+
+    </Border>
+
+    <StackPanel Grid.Column="1"
+                Margin="6"
+                Spacing="24">
+
+      <TextBlock FontSize="24"
+                 HorizontalAlignment="Center">Beatmaps in Collection</TextBlock>
+
+      <ListBox ItemsSource="{Binding BeatmapDetails}"
+               Name="BeatmapList"
+               Background="Transparent" />
+
+    </StackPanel>
+
+  </Grid>
+  
+</UserControl>

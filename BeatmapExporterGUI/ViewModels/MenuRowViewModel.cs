@@ -1,7 +1,6 @@
 ﻿using BeatmapExporter.Exporters.Lazer.LazerDB;
 using BeatmapExporterCore.Utilities;
 using BeatmapExporterGUI.Exporter;
-using BeatmapExporterGUI.Utilities;
 using CommunityToolkit.Mvvm.Input;
 using System.Threading;
 using System.Threading.Tasks;

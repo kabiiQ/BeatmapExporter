@@ -8,17 +8,17 @@ For issues or if an update is required, you can create an issue on GitHub. Alter
 
 # Purpose/Functionality
 
-BeatmapExporter is a command-line program/tool that can mass-export your osu! beatmap library from the modern osu!lazer storage format.
+BeatmapExporter is a program/tool that can mass-export your osu! beatmap library from the modern osu!lazer storage format.
 
 osu!lazer does not have a "Songs/" folder as "stable" osu! does. Lazer's files are stored under hashed filenames and other information about the beatmap is contained in a local "Realm" database on your PC.
 
 ## Beatmap Export
 
-This new storage format results in a better experience while playing the game. However, a result of this system is that you can not easily export all or part of your songs library for sharing or moving back to osu! stable. 
+This new storage format which osu! uses results in a better experience while playing the game. However, a result of this system is that you can not easily export all or part of your songs library for sharing or moving back to osu! stable. 
 
 This utility allows you to export beatmaps back into `.osz` files. 
 
-There is a beatmap filter system allowing you to select a portion of your library to only export certain maps (for example, above a certain star rating, specific artists/mappers, specific gamemodes, specific collections, etc). You can also simply export your **entire library** at once.
+There is a beatmap filter system allowing you to select a portion of your library to only export certain maps (for example, above a certain star rating, specific artists/mappers, specific gamemodes, specific collections, etc). You can also simply export your entire library at once.
 
 ## Audio Export
 
@@ -34,9 +34,11 @@ As of version 1.3.8, there is an option to export only [beatmap background image
 
 ## Graphical User Interface
 
-As of version 2.0, I have developed a more complete GUI application for BeatmapExporter. If there are bugs with the GUI application on your system, while you should feel free to report these issues to let me know, it has been built in a way to allow the older CLI (command line) program to still be available and receive updates. The CLI should also continue to be fully functional if you prefer it or are just more used to using it already. When viewing releases, the older CLI files are named BeatmapExporterCLI, while the GUI files are named simply BeatmapExporter.
+As of version 2.0, I have developed a more complete GUI application for BeatmapExporter. If there are bugs with the GUI application on your system, while you should feel free to report these issues to let me know, it has been built in a way to allow the older CLI (command line) program to still be available and receive updates. The CLI should also continue to be fully functional if you prefer it or are just more comfortable using it already. When viewing releases, the original CLI versions are named BeatmapExporterCLI, while the newer GUI versions are named simply BeatmapExporter.
 
-The GUI is likely to have more bugs on non-Windows platforms as I have not had anyone confirm if it even works on those platforms yet. Please do let me know in a GitHub issue if it is not working, but even if this is the case the CLI version should still work for you.
+The GUI is likely to have more bugs on non-Windows platforms as I have not had anyone confirm if it even works on those platforms yet. Please do let me know in a GitHub issue if it is not working, but even if it is unusable the CLI version should still work for you.
+
+All features including the format of exported files are functionally the same between the versions.
 
 Filtering beatmaps screenshot in the GUI:
 

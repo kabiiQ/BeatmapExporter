@@ -33,13 +33,13 @@
     
     <MenuItem Header="_Version">
       <MenuItem Header="{Binding ProgramVersion, StringFormat=BeatmapExporter version: {0}}"
-          IsEnabled="False" />
+                IsEnabled="False" />
       <MenuItem Header="{Binding LazerVersion, StringFormat=Built for osu!lazer release: {0}}"
                 IsEnabled="False" />
       <MenuItem Header="{Binding DatabaseVersion, StringFormat=osu!lazer database version: {0}}"
                 IsEnabled="False" />
       <MenuItem Header="BeatmapExporter _GitHub Project"
-                 Command="{Binding GitHub}" />
+                Command="{Binding GitHub}" />
       <MenuItem Header="BeatmapExporter Releases"
                 Command="{Binding Releases}" />
       <MenuItem Header="osu! GitHub Releases"

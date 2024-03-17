@@ -30,9 +30,9 @@ public partial class MenuRowViewModel : ViewModelBase
     private bool CanNavigate => !outer.IsExporting;
 
     /// <summary>
-    /// If the user should be able to unload the osu! database manually.
+    /// If the user should be able to unload the osu! database or start an export.
     /// </summary>
-    private bool CanUnload => DatabaseLoaded && CanNavigate;
+    private bool CanExport => DatabaseLoaded && CanNavigate;
 
     /// <summary>
     /// User-requested action to exit the entire BeatmapExporter program.
@@ -43,7 +43,7 @@ public partial class MenuRowViewModel : ViewModelBase
     /// <summary>
     /// User-requested action to unload the currently loaded osu! database.
     /// </summary>
-    [RelayCommand(CanExecute = nameof(CanUnload))]
+    [RelayCommand(CanExecute = nameof(CanExport))]
     private void Close()
     {
         Exporter.Unload();
@@ -56,16 +56,16 @@ public partial class MenuRowViewModel : ViewModelBase
     [RelayCommand(CanExecute = nameof(CanNavigate))]
     private void Home() => outer.NavigateHome();
 
-    [RelayCommand(CanExecute = nameof(CanNavigate))]
+    [RelayCommand(CanExecute = nameof(CanExport))]
     private void Beatmaps() => outer.ListBeatmaps();
 
-    [RelayCommand(CanExecute = nameof(CanNavigate))]
+    [RelayCommand(CanExecute = nameof(CanExport))]
     private void Collections() => outer.ListCollections();
 
-    [RelayCommand(CanExecute = nameof(CanNavigate))]
+    [RelayCommand(CanExecute = nameof(CanExport))]
     private void Configuration() => outer.EditFilters();
 
-    [RelayCommand(IncludeCancelCommand = true, CanExecute = nameof(CanNavigate))]
+    [RelayCommand(IncludeCancelCommand = true, CanExecute = nameof(CanExport))]
     private async Task Export(CancellationToken token) => await outer.Export(token);
 
     // The below properties are references to the relevant BeatmapExporter version numbers

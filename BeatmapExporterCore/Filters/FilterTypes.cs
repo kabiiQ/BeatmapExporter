@@ -1,4 +1,4 @@
-using BeatmapExporterCore.Utilities;
+﻿using BeatmapExporterCore.Utilities;
 using System.Reflection;
 
 namespace BeatmapExporterCore.Filters
@@ -190,11 +190,11 @@ namespace BeatmapExporterCore.Filters
 
         public static FilterTemplate AddedSince = new(
             "since",
-            "Beatmap Set Added",
+            "Beatmap Set added (date)",
             "in the last",
-            "older than",
-            "Selects beatmap sets using the time since they were added to your osu!lazer. If this information is not accurate in osu! then this will not work properly.\nFor example, input '8:00' to only export beatmaps added within the last 8 hours." +
-            "\nInput '4' to only export beatmaps added within the last 4 days, or negate this filter to export only beatmaps added more than 4 days ago.",
+            "before",
+            "Selects beatmap sets using the time since they were added to your osu!lazer. This is only as accurate as the date that osu! has recorded.\nFor example, input '8:00' to only export beatmaps added within the last 8 hours." +
+            "\nInput '4' to only export beatmaps added within the last 4 days, or negate this filter to only export beatmaps added more than 4 days ago.",
             Input.RawText,
             (input, negate) =>
             {

@@ -1,4 +1,4 @@
-using BeatmapExporter.Exporters;
+﻿using BeatmapExporter.Exporters;
 using BeatmapExporter.Exporters.Lazer;
 using BeatmapExporterCore.Exporters;
 using BeatmapExporterCore.Filters;
@@ -217,7 +217,7 @@ Prefixing the filter with ""!"" will negate the filter, if you want to use a ""l
 
 Examples:
 - To only export beatmaps 6.3 stars and above: stars 6.3
-- Below 6.3 stars (using negation): !stars 6.3
+- Below 6.3 stars (negation example, works for all filters): !stars 6.3
 - Longer than 1:30 (90 seconds): length 90
 - 180BPM and above: bpm 180
 - Beatmaps added in the last 7 days: since 7

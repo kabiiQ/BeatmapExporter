@@ -1,4 +1,4 @@
-﻿using BeatmapExporter.Exporters;
+using BeatmapExporter.Exporters;
 using BeatmapExporter.Exporters.Lazer;
 using BeatmapExporterCore.Exporters;
 using BeatmapExporterCore.Filters;
@@ -222,12 +222,15 @@ Examples:
 - 180BPM and above: bpm 180
 - Beatmaps added in the last 7 days: since 7
 - Beatmaps added in the last 5 hours: since 5:00
+- Beatmaps ranked in the last 30 days: ranked 30
 - Specific beatmap ID (comma-separated): id 1
 - Mapped by RLC or Nathan (comma-separated): author RLC, Nathan
 - Specific artists (comma-separated): artist Camellia, nanahira
 - Tags include ""touhou"": tag touhou
 - Specific gamemodes: mode osu/mania/ctb/taiko
 - Beatmap status: status graveyard/leaderboard/ranked/approved/qualified/loved
+- Beatmap played in the last 30 days: played 30
+- Beatmap has ever been played: everplayed yes
 - Contained in a specific collection called ""songs"": collection songs
 - Contained in a specific collection labeled #1 in the collection list: collection #1
 - Remove a specific filter (using line number from list above): remove 1

@@ -63,6 +63,10 @@ namespace BeatmapExporterGUI.ViewModels.Settings
         public ValueSelectorViewModel ValueSelector => SelectedFilterType.InputType switch
         {
             FilterTemplate.Input.RawText => new TextSelectorViewModel(this),
+            FilterTemplate.Input.YesNo => new DropdownSelectorViewModel(this, new()
+            {
+                "yes", "no"
+            }),
             FilterTemplate.Input.Gamemode => new DropdownSelectorViewModel(this, new()
             {
                 "osu", "mania", "ctb", "taiko"

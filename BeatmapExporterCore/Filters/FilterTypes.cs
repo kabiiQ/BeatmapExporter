@@ -1,4 +1,4 @@
-﻿using BeatmapExporterCore.Utilities;
+using BeatmapExporterCore.Utilities;
 using System.Reflection;
 
 namespace BeatmapExporterCore.Filters
@@ -38,7 +38,7 @@ namespace BeatmapExporterCore.Filters
         /// The type of data that this filter template will collect from the user. 
         /// May be used to determine if there is a superior interface available than text input.
         /// </summary>
-        public enum Input { RawText, Gamemode, Status, Collection };
+        public enum Input { RawText, YesNo, Gamemode, Status, Collection };
 
         private FilterTemplate(string shortName, string fullName, string normalInput, string negatedInput, string detail, Input inputType, FilterConstructor constructor)
         {
@@ -212,6 +212,29 @@ namespace BeatmapExporterCore.Filters
                     AddedSince!);
             });
 
+        public static FilterTemplate RankedSince = new(
+            "ranked",
+            "Beatmap Set ranked (date)",
+            "in the last",
+            "before",
+            "Selects beatmap sets using the time since they were ranked.\nFor example, input '30' to only export beatmaps ranked in the last 30 days, or negate this filter to export beatmaps ranked more than 30 days ago",
+            Input.RawText,
+            (input, negate) =>
+            {
+                // 30
+                if (!TimeSpan.TryParse(input, out TimeSpan since))
+                    throw new ArgumentException("Invalid time interval");
+
+                return new(input, negate,
+                    b =>
+                    {
+                        var ranked = b.BeatmapSet?.DateRanked;
+                        if (ranked == null) return false; // beatmap is not ranked
+                        return DateTime.Now - ranked < since;
+                    },
+                    RankedSince!);
+            });
+
         public static FilterTemplate Artist = new(
             "artist",
             "Song artist",
@@ -302,6 +325,53 @@ namespace BeatmapExporterCore.Filters
                 return new(input, negate,
                     b => statusId.Contains(b.Status),
                     OnlineStatus!);
+            });
+
+        public static FilterTemplate PlayedSince = new(
+            "played",
+            "Beatmap played (date)",
+            "in the last",
+            "not since",
+            "Selected beatmaps using the time that you last played them.\nFor example, input 12:00 to only export beatmaps that you played within the last 12 hours."
+            + "\nInput '30' to only export beatmaps you have played within the last 30 days, or negate this filter to export all beatmaps which you have not played in the last 30 days.\nUse the \"everplayed\" filter instead if you want to select all played/unplayed beatmaps.",
+            Input.RawText,
+            (input, negate) =>
+            {
+                // 12:00 
+                if (!TimeSpan.TryParse(input, out TimeSpan since))
+                    throw new ArgumentException("Invalid time interval");
+
+                return new(input, negate,
+                    b =>
+                    {
+                        if (b.LastPlayed == null) return false; // beatmap has never been played
+                        var playedAgo = DateTime.Now - b.LastPlayed;
+                        return playedAgo < since;
+                    },
+                    PlayedSince!);
+            });
+
+        public static FilterTemplate Played = new(
+            "everplayed",
+            "Beatmap played ever",
+            "",
+            "(negated)",
+            "Selects beatmaps that have been played at least once (yes), or only unplayed beatmaps (no).",
+            Input.YesNo,
+            (input, negate) =>
+            {
+                bool? played = input.ToLower() switch
+                {
+                    "yes" => true,
+                    "no" => false,
+                    _ => null
+                };
+                if (played == null)
+                    throw new ArgumentException("Invalid beatmap played selection. Use \"yes\" for played beatmaps, or \"no\" for unplayed beatmaps.");
+
+                return new(input, negate,
+                    b => (b.LastPlayed != null) == played,
+                    Played!);
             });
 
         public static FilterTemplate Collections = new(

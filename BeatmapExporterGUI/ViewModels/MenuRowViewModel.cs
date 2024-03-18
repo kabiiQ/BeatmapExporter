@@ -70,7 +70,7 @@ public partial class MenuRowViewModel : ViewModelBase
 
     // The below properties are references to the relevant BeatmapExporter version numbers
 
-    public string ProgramVersion => ExporterUpdater.Version;
+    public string ProgramVersion => ExporterUpdater.FeatureVersion;
 
     public string DatabaseVersion => LazerDatabase.LazerSchemaVersion.ToString();
 

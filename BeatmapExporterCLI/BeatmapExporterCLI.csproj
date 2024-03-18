@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
@@ -11,6 +11,22 @@
     <EnableCompressionInSingleFile>true</EnableCompressionInSingleFile>
     <IncludeAllContentForSelfExtract>true</IncludeAllContentForSelfExtract>
   </PropertyGroup>
+
+  <PropertyGroup>
+    <PackageId>BeatmapExporterCLI</PackageId>
+    <Version>2.1.0-pre</Version>
+    <FileVersion>2.1.0</FileVersion>
+    <Authors>kabii</Authors>
+    <Title>BeatmapExporter</Title>
+    <Description>Command-line beatmap exporter utility for osu!lazer</Description>
+    <Copyright>MIT 2022 kabii</Copyright>
+    <RepositoryUrl>https://github.com/kabiiQ/BeatmapExporter.git</RepositoryUrl>
+    <ApplicationIcon>bmex.ico</ApplicationIcon>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Content Include="bmex.ico" />
+  </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\BeatmapExporterCore\BeatmapExporterCore.csproj" />

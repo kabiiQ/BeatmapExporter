@@ -33,5 +33,16 @@ namespace BeatmapExporter.Exporters.Lazer.LazerDB.Schema
                 $"{OutputName(beatmapId)} {backgroundName}"
                 .RemoveFilenameCharacters();
         }
+        
+        //GetDisplayTitle() step in (from lazer's BeatmapMetadataExtensions) to stay consistent with lazer's naming
+        public string Display()
+        {
+            string author = string.IsNullOrEmpty(this.Author.Username) ? string.Empty : $" ({this.Author.Username})";
+
+            string artist = string.IsNullOrEmpty(this.Artist) ? "unknown artist" : this.Artist;
+            string title = string.IsNullOrEmpty(this.Title) ? "unknown title" : this.Title;
+
+            return $"{artist} - {title}{author}".Trim();
+        }
     }
 }

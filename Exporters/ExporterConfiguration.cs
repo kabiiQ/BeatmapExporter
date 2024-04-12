@@ -6,7 +6,7 @@ namespace BeatmapExporter.Exporters
     {
         public static readonly string DefaultAudioPath = "mp3";
 
-        public enum Format { Beatmap, Audio, Background };
+        public enum Format { Beatmap, Audio, Background, Score };
 
         private readonly string defaultExportPath;
         private string? exportPath = null;
@@ -31,7 +31,8 @@ namespace BeatmapExporter.Exporters
                 {
                     Format.Beatmap => basePath,
                     Format.Audio => Path.Combine(basePath, "mp3"),
-                    Format.Background => Path.Combine(basePath, "bg")
+                    Format.Background => Path.Combine(basePath, "bg"),
+                    Format.Score => Path.Combine(basePath, "osr")
                 };
             }
             set => exportPath = value;
@@ -50,6 +51,7 @@ namespace BeatmapExporter.Exporters
             Format.Beatmap => "osu! beatmaps (.osz)",
             Format.Audio => "audio (.mp3)",
             Format.Background => "beatmap backgrounds",
+            Format.Score => "osu! scores (.osr)",
             _ => throw new NotImplementedException()
         };
     }

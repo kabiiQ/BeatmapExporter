@@ -1,7 +1,6 @@
 ﻿using BeatmapExporter.Exporters.Lazer.LazerDB.Schema;
 using Realms;
 using Realms.Exceptions;
-using Test.schemas;
 
 namespace BeatmapExporter.Exporters.Lazer.LazerDB
 {

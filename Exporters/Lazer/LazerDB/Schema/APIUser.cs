@@ -5,7 +5,7 @@
 
 using Newtonsoft.Json;
 
-namespace Test
+namespace BeatmapExporter.Exporters.Lazer.LazerDB.Schema
 {
     [JsonObject(MemberSerialization.OptIn)]
     public class APIUser 

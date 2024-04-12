@@ -2,7 +2,6 @@
 
 using Newtonsoft.Json;
 using Realms;
-using Test.schemas;
 
 namespace BeatmapExporter.Exporters.Lazer.LazerDB.Schema
 {

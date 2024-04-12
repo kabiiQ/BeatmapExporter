@@ -27,7 +27,7 @@ namespace BeatmapExporter
         void ApplicationLoop()
         {
             // output main application menu
-            Console.Write($"\n1. Export selected {config.ExportFormatUnitName} ({exporter.SelectedBeatmapSetCount} beatmap sets, {exporter.SelectedBeatmapCount} beatmaps)\n2. Display selected beatmap sets ({exporter.SelectedBeatmapSetCount}/{exporter.BeatmapSetCount} beatmap sets)\n3. Display {exporter.CollectionCount} beatmap collections\n4. Advanced export settings (.mp3/image export, compression, export location)\n5. Edit beatmap selection/filters\n\n0. Exit\nSelect operation: ");
+            Console.Write($"\n1. Export selected {config.ExportFormatUnitName} ({exporter.SelectedBeatmapSetCount} beatmap sets, {exporter.SelectedBeatmapCount} beatmaps)\n2. Display selected beatmap sets ({exporter.SelectedBeatmapSetCount}/{exporter.BeatmapSetCount} beatmap sets)\n3. Display {exporter.CollectionCount} beatmap collections\n4. Advanced export settings (.mp3/image/score export, compression, export location)\n5. Edit beatmap selection/filters\n\n0. Exit\nSelect operation: ");
 
             string? input = Console.ReadLine();
             if (input is null)
@@ -57,6 +57,9 @@ namespace BeatmapExporter
                             break;
                         case ExporterConfiguration.Format.Background:
                             exporter.ExportBackgroundFiles();
+                            break;
+                        case ExporterConfiguration.Format.Score:
+                            exporter.ExportScores();
                             break;
                     }
                     break;
@@ -95,6 +98,9 @@ namespace BeatmapExporter
                         break;
                     case ExporterConfiguration.Format.Background:
                         settings.Append("Type 3: Only beatmap background images will be exported (original format)*");
+                        break;
+                    case ExporterConfiguration.Format.Score:
+                        settings.Append("Type 4: Only scores will be exported (.osr)*");
                         break;
                 }
 
@@ -135,6 +141,9 @@ namespace BeatmapExporter
                                 config.ExportFormat = ExporterConfiguration.Format.Background;
                                 break;
                             case ExporterConfiguration.Format.Background:
+                                config.ExportFormat = ExporterConfiguration.Format.Score;
+                                break;
+                            case ExporterConfiguration.Format.Score:
                                 config.ExportFormat = ExporterConfiguration.Format.Beatmap;
                                 break;
                         }

@@ -412,18 +412,17 @@ namespace BeatmapExporter.Exporters.Lazer
                         }
                         catch (Exception e)
                         {
-                            Console.WriteLine($"Unable to export {filename} :: {e.Message}");
+                            Console.WriteLine($"Unable to export score {filename} :: {e.Message}");
                         }
                         finally
                         {
                             export?.Dispose();
                         }
                     }
-
-                    string location = Path.GetFullPath(exportDir);
-                    Console.WriteLine($"Exported {exported}/{selectedScoreCount} scores to {location}.");
                 }
             }
+            string location = Path.GetFullPath(exportDir);
+            Console.WriteLine($"Exported {exported}/{selectedScoreCount} scores to {location}.");
         }
     
         public void DisplayCollections()

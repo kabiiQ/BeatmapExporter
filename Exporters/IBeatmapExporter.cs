@@ -20,6 +20,7 @@ namespace BeatmapExporter.Exporters
         void ExportBeatmaps();
         void ExportAudioFiles();
         void ExportBackgroundFiles();
+        void ExportScores();
         void DisplayCollections();
     }
 }

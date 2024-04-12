@@ -16,6 +16,8 @@ namespace BeatmapExporter.Exporters.Lazer
 
         int selectedBeatmapCount; // internally maintained count of selected beatmaps
         List<BeatmapSet> selectedBeatmapSets;
+        
+        int selectedScoreCount; // internally maintained count of selected scores
             
         readonly Transcoder transcoder;
 
@@ -35,6 +37,10 @@ namespace BeatmapExporter.Exporters.Lazer
             int count = allBeatmaps.Count;
             this.beatmapCount = count;
             this.selectedBeatmapCount = count;
+            foreach (var beatmap in allBeatmaps)
+            {
+                this.selectedScoreCount += beatmap.Scores.Count();
+            }
 
             this.selectedFromCollections = new();
 
@@ -351,6 +357,75 @@ namespace BeatmapExporter.Exporters.Lazer
             string location = Path.GetFullPath(exportDir);
             Console.WriteLine($"Exported {exportedBackgroundFiles}/{attempted} background files from {SelectedBeatmapCount} beatmaps to {location}.");
         }
+
+        public void ExportScores()
+        {
+            var excludedHashes =
+                from set in selectedBeatmapSets // get all sets that contain at least one selected difficulty
+                from map in set.Beatmaps // get each difficulty (regardless of filtering) from those sets
+                where !set.SelectedBeatmaps.Contains(map) // get difficulties that will be filtered for export
+                select map.Hash;
+            var excluded = excludedHashes.ToList();
+            
+            string exportDir = config.ExportPath;
+            Directory.CreateDirectory(exportDir);
+            
+            Console.WriteLine($"Selected {selectedScoreCount} beatmap scores for export.");
+
+            BeatmapExporter.OpenExportDirectory(exportDir);
+
+            int attempted = 0;
+            int exported = 0;
+            foreach (var mapset in selectedBeatmapSets)
+            {
+                foreach (var beatmap in mapset.Beatmaps)
+                {
+                    foreach (var score in beatmap.Scores)
+                    {
+                        
+                        string filename = score.OutputScoreFilename();
+                        Console.WriteLine($"Exporting score ({attempted}/{selectedScoreCount}): {filename}");
+
+                        Stream? export = null;
+                        try
+                        {
+                            string exportPath = Path.Combine(exportDir, filename);
+                            export = File.Open(exportPath, FileMode.CreateNew);
+
+                            using ZipArchive osr = new(export, ZipArchiveMode.Create, true);
+                            //ScoreInfo has a beatmap hash property that can be used to filter
+                            //skips all scores in beatmap if hash is blacklisted
+                            string beatmapHash = score.BeatmapHash;
+                            if (excluded.Contains(beatmapHash))
+                                break;
+                            
+                            attempted++;
+                            foreach (var namedFile in score.Files)
+                            {
+                                string hash = namedFile.File.Hash;
+                                var entry = osr.CreateEntry(namedFile.Filename, config.CompressionLevel);
+                                using var entryStream = entry.Open();
+                                using var file = lazerDb.OpenHashedFile(hash);
+                                file?.CopyTo(entryStream);
+                            }
+                            exported++;
+                        }
+                        catch (Exception e)
+                        {
+                            Console.WriteLine($"Unable to export {filename} :: {e.Message}");
+                        }
+                        finally
+                        {
+                            export?.Dispose();
+                        }
+                    }
+
+                    string location = Path.GetFullPath(exportDir);
+                    Console.WriteLine($"Exported {exported}/{selectedScoreCount} scores to {location}.");
+                }
+            }
+        }
+    
         public void DisplayCollections()
         {
             if(collections is not null)

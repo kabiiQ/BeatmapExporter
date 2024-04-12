@@ -1,6 +1,7 @@
 ﻿// Copyright (c) ppy Pty Ltd <contact@ppy.sh>. Licensed under the MIT Licence.
 // See the LICENCE file in the repository root for full licence text.
 
+using BeatmapExporter;
 using BeatmapExporter.Exporters.Lazer.LazerDB.Schema;
 using Realms;
 
@@ -17,6 +18,9 @@ namespace Test.schemas
         
         public Beatmap? BeatmapInfo { get; set; }
         
+        public string BeatmapHash { get; set; } = string.Empty;
+
+        public IList<RealmNamedFileUsage> Files { get; } = null!;
         public DateTimeOffset Date { get; set; }
         
         [MapTo("User")]
@@ -36,12 +40,13 @@ namespace Test.schemas
         //Display methods can be removed and replaced with a realm property if following lazer's naming is not important 
         public string Display() => $"{this.User.Username} playing {this.BeatmapInfo?.Display() ?? "unknown"}";
         
-        public string ArchiveFilename()
+        public string OutputScoreFilename()
         {
             string scoreString = this.Display();
-            string filename = $"{scoreString} ({this.Date.LocalDateTime:yyyy-MM-dd_HH-mm})";
-
-            return filename;
+            string filename = $"{scoreString} ({this.Date.LocalDateTime:yyyy-MM-dd_HH-mm}).osr";
+            
+            return filename.RemoveFilenameCharacters();
         }
+        
     }
 }

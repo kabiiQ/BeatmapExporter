@@ -1,5 +1,8 @@
 ﻿// Original source file (modified by kabii) Copyright (c) ppy Pty Ltd <contact@ppy.sh>. Licensed under the MIT Licence.
+
+using Newtonsoft.Json;
 using Realms;
+using Test.schemas;
 
 namespace BeatmapExporter.Exporters.Lazer.LazerDB.Schema
 {
@@ -15,6 +18,10 @@ namespace BeatmapExporter.Exporters.Lazer.LazerDB.Schema
         public BeatmapDifficulty Difficulty { get; set; } = null!;
 
         public BeatmapMetadata Metadata { get; set; } = null!;
+        
+        [JsonIgnore]
+        [Backlink(nameof(ScoreInfo.BeatmapInfo))]
+        public IQueryable<ScoreInfo> Scores { get; } = null!;
 
         public BeatmapUserSettings UserSettings { get; set; } = null!;
 

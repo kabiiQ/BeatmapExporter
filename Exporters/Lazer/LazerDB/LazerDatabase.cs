@@ -1,6 +1,7 @@
 ﻿using BeatmapExporter.Exporters.Lazer.LazerDB.Schema;
 using Realms;
 using Realms.Exceptions;
+using Test.schemas;
 
 namespace BeatmapExporter.Exporters.Lazer.LazerDB
 {
@@ -55,7 +56,8 @@ namespace BeatmapExporter.Exporters.Lazer.LazerDB
                 typeof(RealmNamedFileUsage),
                 typeof(RealmUser),
                 typeof(Ruleset),
-                typeof(ModPreset)
+                typeof(ModPreset),
+                typeof(ScoreInfo)
             };
 
             try

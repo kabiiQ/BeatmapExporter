@@ -104,5 +104,13 @@ namespace BeatmapExporterCore.Exporters.Lazer.LazerDB.Schema
         {
             return HashCode.Combine(base.GetHashCode(), ID);
         }
+        
+        //GetDisplayTitle() step in (from lazer's BeatmapInfoExtensions) to stay consistent with lazer's naming
+        public string Display()
+        {
+            return $"{this.Metadata.Display()} {GetVersionString()}".Trim();
+        }
+        //GetVersionString() step in (from lazer's BeatmapInfoExtensions)
+        private string GetVersionString() => string.IsNullOrEmpty(this.DifficultyName) ? string.Empty : $"[{this.DifficultyName}]";
     }
 }

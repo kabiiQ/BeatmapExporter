@@ -75,7 +75,8 @@ namespace BeatmapExporterCore.Exporters.Lazer.LazerDB
                     typeof(RealmNamedFileUsage),
                     typeof(RealmUser),
                     typeof(Ruleset),
-                    typeof(ModPreset)
+                    typeof(ModPreset),
+                    typeof(ScoreInfo)
             }
             };
 

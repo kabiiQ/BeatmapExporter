@@ -1,6 +1,6 @@
-﻿using BeatmapExporter.Exporters.Lazer.LazerDB.Schema;
+﻿using BeatmapExporterCore.Exporters.Lazer.LazerDB.Schema;
 
-namespace BeatmapExporter.Exporters
+namespace BeatmapExporterCore.Exporters
 {
     /// <summary>
     /// Container representing a single discovered osu! collection.

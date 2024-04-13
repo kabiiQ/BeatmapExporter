@@ -1,10 +1,9 @@
-﻿using BeatmapExporter.Exporters.Lazer.LazerDB.Schema;
-using BeatmapExporterCore.Exporters;
+﻿using BeatmapExporterCore.Exporters.Lazer.LazerDB.Schema;
 using Realms;
 using Realms.Exceptions;
 using System.Runtime.InteropServices;
 
-namespace BeatmapExporter.Exporters.Lazer.LazerDB
+namespace BeatmapExporterCore.Exporters.Lazer.LazerDB
 {
     /// <summary>
     /// Exception thrown when the osu!lazer database indicates a version mismatch

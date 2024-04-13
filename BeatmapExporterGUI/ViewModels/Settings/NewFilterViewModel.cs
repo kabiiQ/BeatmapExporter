@@ -1,5 +1,5 @@
 ﻿using Avalonia.Data;
-using BeatmapExporter.Exporters;
+using BeatmapExporterCore.Exporters;
 using BeatmapExporterCore.Filters;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;

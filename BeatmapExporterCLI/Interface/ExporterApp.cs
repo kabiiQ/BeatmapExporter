@@ -1,5 +1,4 @@
-﻿using BeatmapExporter.Exporters;
-using BeatmapExporter.Exporters.Lazer;
+﻿using BeatmapExporterCore.Exporters.Lazer;
 using BeatmapExporterCore.Exporters;
 using System.Diagnostics.CodeAnalysis;
 

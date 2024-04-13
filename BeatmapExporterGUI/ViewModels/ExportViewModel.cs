@@ -1,5 +1,5 @@
-﻿using BeatmapExporter.Exporters.Lazer;
-using BeatmapExporter.Exporters.Lazer.LazerDB.Schema;
+﻿using BeatmapExporterCore.Exporters.Lazer;
+using BeatmapExporterCore.Exporters.Lazer.LazerDB.Schema;
 using BeatmapExporterCore.Exporters;
 using CommunityToolkit.Mvvm.ComponentModel;
 using System;

@@ -1,8 +1,7 @@
-﻿using BeatmapExporterCore.Exporters;
-using BeatmapExporterCore.Filters;
+﻿using BeatmapExporterCore.Filters;
 using System.IO.Compression;
 
-namespace BeatmapExporter.Exporters
+namespace BeatmapExporterCore.Exporters
 {
     public class ExporterConfiguration
     {

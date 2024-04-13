@@ -1,6 +1,6 @@
 ﻿using Avalonia.Controls;
 using Avalonia.Platform.Storage;
-using BeatmapExporter.Exporters.Lazer.LazerDB;
+using BeatmapExporterCore.Exporters.Lazer.LazerDB;
 using System.Threading.Tasks;
 
 namespace BeatmapExporterGUI.Utilities

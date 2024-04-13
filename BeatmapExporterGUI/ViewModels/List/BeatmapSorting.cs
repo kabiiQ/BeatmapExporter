@@ -1,4 +1,4 @@
-﻿using BeatmapExporter.Exporters.Lazer.LazerDB.Schema;
+﻿using BeatmapExporterCore.Exporters.Lazer.LazerDB.Schema;
 using System;
 using System.Collections.Generic;
 using System.Linq;

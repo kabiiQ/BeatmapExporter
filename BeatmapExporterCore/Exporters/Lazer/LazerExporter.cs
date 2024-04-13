@@ -1,12 +1,11 @@
-﻿using BeatmapExporter.Exporters.Lazer.LazerDB;
-using BeatmapExporter.Exporters.Lazer.LazerDB.Schema;
-using BeatmapExporterCore.Exporters;
+﻿using BeatmapExporterCore.Exporters.Lazer.LazerDB;
+using BeatmapExporterCore.Exporters.Lazer.LazerDB.Schema;
 using BeatmapExporterCore.Filters;
 using BeatmapExporterCore.Utilities;
 using System.IO.Compression;
 using System.Text.RegularExpressions;
 
-namespace BeatmapExporter.Exporters.Lazer
+namespace BeatmapExporterCore.Exporters.Lazer
 {
     /// <summary>
     /// Exception used when an mp3 transcode operation encounters any error.

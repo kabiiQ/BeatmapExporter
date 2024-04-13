@@ -1,9 +1,9 @@
 ﻿using Avalonia;
 using Avalonia.Controls.ApplicationLifetimes;
-using BeatmapExporter.Exporters;
-using BeatmapExporter.Exporters.Lazer;
-using BeatmapExporter.Exporters.Lazer.LazerDB;
-using BeatmapExporter.Exporters.Lazer.LazerDB.Schema;
+using BeatmapExporterCore.Exporters;
+using BeatmapExporterCore.Exporters.Lazer;
+using BeatmapExporterCore.Exporters.Lazer.LazerDB;
+using BeatmapExporterCore.Exporters.Lazer.LazerDB.Schema;
 using BeatmapExporterCore.Utilities;
 using BeatmapExporterGUI.Utilities;
 using CommunityToolkit.Mvvm.ComponentModel;

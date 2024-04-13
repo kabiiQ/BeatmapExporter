@@ -60,7 +60,7 @@ namespace BeatmapExporterCLI.Interface
         void ApplicationLoop()
         {
             // output main application menu
-            Console.Write($"\n1. Export selected {Configuration.ExportFormat.UnitName()} ({Exporter.SelectedBeatmapSetCount} beatmap sets, {Exporter.SelectedBeatmapCount} beatmaps)\n2. Display selected beatmap sets ({Exporter.SelectedBeatmapSetCount}/{Exporter.TotalBeatmapSetCount} beatmap sets)\n3. Display {Exporter.CollectionCount} beatmap collections\n4. Advanced export settings (.mp3/image export, compression, export location)\n5. Edit beatmap selection/filters\n\n0. Exit\nSelect operation: ");
+            Console.Write($"\n1. Export selected {Configuration.ExportFormat.UnitName()} ({Exporter.SelectedBeatmapSetCount} beatmap sets, {Exporter.SelectedBeatmapCount} beatmaps)\n2. Display selected beatmap sets ({Exporter.SelectedBeatmapSetCount}/{Exporter.TotalBeatmapSetCount} beatmap sets)\n3. Display {Exporter.CollectionCount} beatmap collections\n4. Advanced export settings (.mp3/image/score export, compression, export location)\n5. Edit beatmap selection/filters\n\n0. Exit\nSelect operation: ");
 
             string? input = Console.ReadLine();
             if (input is null)
@@ -90,6 +90,9 @@ namespace BeatmapExporterCLI.Interface
                             break;
                         case ExportFormat.Background:
                             CLI.ExportBackgroundFiles();
+                            break;
+                        case ExportFormat.Score:
+                            CLI.ExportScores();
                             break;
                     }
                     break;

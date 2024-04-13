@@ -369,6 +369,36 @@ namespace BeatmapExporterCore.Exporters.Lazer
             using FileStream output = File.Open(outputFile, FileMode.CreateNew);
             background.CopyTo(output);
         }
+        
+        /// <summary>
+        /// Export a single score
+        /// </summary>
+        /// <param name="score">The score to export</param>
+        /// <param name="filename">The output filename that will be used. Will be set regardless of success of export and should be used for user feedback.</param>
+        /// <exception cref="IOException">The BeatmapSet export was unsuccessful and an error should be noted to the user.</exception>
+        public void ExportScore(ScoreInfo score, out string filename)
+        {
+            Stream? export = null;
+            try
+            {
+                filename = score.OutputScoreFilename();
+                string exportPath = Path.Combine(Configuration.ExportPath, filename);
+                export = File.Open(exportPath, FileMode.CreateNew);
+                using ZipArchive osr = new(export, ZipArchiveMode.Create, true);
+                foreach (var namedFile in score.Files)
+                {
+                    string hash = namedFile.File.Hash;
+                    var entry = osr.CreateEntry(namedFile.Filename, Configuration.CompressionLevel);
+                    using var entryStream = entry.Open();
+                    using var file = lazerDb.OpenHashedFile(hash);
+                    file?.CopyTo(entryStream);
+                }
+            }
+            finally
+            {
+                export?.Dispose();
+            }
+        }
 
         /// <summary>
         /// Export a single file from a Realm BeatmapSet, using its original filename.

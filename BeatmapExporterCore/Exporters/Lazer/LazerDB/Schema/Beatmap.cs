@@ -1,4 +1,5 @@
-﻿using Realms;
+﻿using Newtonsoft.Json;
+using Realms;
 
 namespace BeatmapExporterCore.Exporters.Lazer.LazerDB.Schema
 {
@@ -15,6 +16,10 @@ namespace BeatmapExporterCore.Exporters.Lazer.LazerDB.Schema
         public BeatmapDifficulty Difficulty { get; set; } = null!;
 
         public BeatmapMetadata Metadata { get; set; } = null!;
+        
+        [JsonIgnore]
+        [Backlink(nameof(ScoreInfo.BeatmapInfo))]
+        public IQueryable<ScoreInfo> Scores { get; } = null!;
 
         public BeatmapUserSettings UserSettings { get; set; } = null!;
 

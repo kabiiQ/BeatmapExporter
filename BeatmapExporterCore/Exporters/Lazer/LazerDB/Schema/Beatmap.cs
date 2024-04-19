@@ -1,4 +1,4 @@
-using Realms;
+﻿using Realms;
 
 namespace BeatmapExporterCore.Exporters.Lazer.LazerDB.Schema
 {
@@ -99,8 +99,8 @@ namespace BeatmapExporterCore.Exporters.Lazer.LazerDB.Schema
         public string Details()
         {
             int lengthSeconds = (int)Length / 1000;
-            var diffDetail = $"{lengthSeconds} seconds - {BPM.ToString("0")}BPM AR{Difficulty.ApproachRate} CS{Difficulty.CircleSize} HP{Difficulty.DrainRate} OD{Difficulty.OverallDifficulty}";
-            return $"{Ruleset.ShortName}: {StarRating.ToString("0.00")} stars by {Metadata.Author.Username} [{DifficultyName}]\n{diffDetail}";
+            var diffDetail = $"{lengthSeconds} seconds - {BPM:0}BPM AR{Difficulty.ApproachRate} CS{Difficulty.CircleSize} HP{Difficulty.DrainRate} OD{Difficulty.OverallDifficulty}";
+            return $"{Ruleset.ShortName}: {StarRating:0.00} stars by {Metadata.Author.Username} [{DifficultyName}]\n{diffDetail}";
         }
 
         public override int GetHashCode()

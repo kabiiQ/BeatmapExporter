@@ -1,5 +1,5 @@
-using BeatmapExporterCore.Exporters.Lazer;
 using BeatmapExporterCore.Exporters;
+using BeatmapExporterCore.Exporters.Lazer;
 using BeatmapExporterCore.Filters;
 using System.Text;
 
@@ -37,7 +37,7 @@ namespace BeatmapExporterCLI.Interface
                     Console.WriteLine($"Exported beatmap set ({attempted}/{count}): {filename}");
                 } catch (Exception e)
                 {
-                    Console.WriteLine($"Unable to export {filename} :: ${e.Message}");
+                    Console.WriteLine($"Unable to export {filename} :: {e.Message}");
                 }
             };
             Console.WriteLine($"Exported {exported}/{count} beatmaps to {Configuration.FullPath}.");

@@ -1,4 +1,4 @@
-using BeatmapExporterCore.Exporters.Lazer.LazerDB;
+﻿using BeatmapExporterCore.Exporters.Lazer.LazerDB;
 using BeatmapExporterCore.Exporters.Lazer.LazerDB.Schema;
 using BeatmapExporterCore.Filters;
 using BeatmapExporterCore.Utilities;
@@ -361,10 +361,7 @@ namespace BeatmapExporterCore.Exporters.Lazer
 
             using FileStream? background = lazerDb.OpenNamedFile(mapset, metadata.BackgroundFile);
             if (background is null)
-            {
-                Console.WriteLine($"Background file {metadata.BackgroundFile} not found in beatmap {mapset.ArchiveFilename()}");
-                return;
-            }
+                throw new IOException($"Background file {metadata.BackgroundFile} not found in beatmap {mapset.ArchiveFilename()}");
 
             using FileStream output = File.Open(outputFile, FileMode.CreateNew);
             background.CopyTo(output);

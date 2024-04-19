@@ -1,5 +1,5 @@
+﻿using BeatmapExporterCore.Exporters;
 using BeatmapExporterCore.Exporters.Lazer;
-using BeatmapExporterCore.Exporters;
 using System.Diagnostics.CodeAnalysis;
 
 namespace BeatmapExporterCLI.Interface

@@ -1,9 +1,10 @@
+﻿using BeatmapExporterCore.Exporters;
 using BeatmapExporterCore.Exporters.Lazer;
 using BeatmapExporterCore.Exporters.Lazer.LazerDB.Schema;
-using BeatmapExporterCore.Exporters;
 using CommunityToolkit.Mvvm.ComponentModel;
 using System;
 using System.Collections.ObjectModel;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Input;
@@ -42,10 +43,16 @@ namespace BeatmapExporterGUI.ViewModels
         public int TotalSetCount { get; }
 
         /// <summary>
-        /// The progress towards TotalSetCount. Only beatmap sets, does not account for how many files are in each set.
+        /// The progress towards TotalCount.
         /// </summary>
         [ObservableProperty]
         private int _Progress;
+
+        /// <summary>
+        /// The total number of objects being processed, if known. Set to TotalSetCount if not accounted for in export.
+        /// </summary>
+        [ObservableProperty]
+        private int _TotalCount;
 
         /// <summary>
         /// Export operation status displayed to the user. 
@@ -94,6 +101,7 @@ namespace BeatmapExporterGUI.ViewModels
         private async Task ExportBeatmaps(CancellationToken token)
         {
             lazer.SetupExport();
+            TotalCount = TotalSetCount;
             int exported = 0;
             Description = $"{TotalSetCount} beatmap sets ({lazer.SelectedBeatmapCount} diffs) are selected for export.";
             foreach (var mapset in lazer.SelectedBeatmapSets)
@@ -125,6 +133,7 @@ namespace BeatmapExporterGUI.ViewModels
         private async Task ExportAudioFiles(CancellationToken token)
         {
             lazer.SetupExport();
+            TotalCount = TotalSetCount;
             var transcodeInfo = lazer.TranscodeAvailable ? "This operation will take longer if many selected beatmaps are not in .mp3 format."
                 : "FFmpeg runtime not found. Beatmaps that use other audio formats than .mp3 will be skipped.\nMake sure ffmpeg.exe is located on the system PATH or placed in the directory with this BeatmapExporter.exe to enable transcoding.";
             Description = $"Exporting audio from {TotalSetCount} beatmap sets as .mp3 files.\n{transcodeInfo}";
@@ -190,6 +199,7 @@ namespace BeatmapExporterGUI.ViewModels
         private async Task ExportBackgrounds(CancellationToken token)
         {
             lazer.SetupExport();
+            TotalCount = TotalSetCount;
             Description = $"Exporting beatmap background images from {TotalSetCount} beatmap sets.";
 
             int discovered = 0, exportedBackgrounds = 0;

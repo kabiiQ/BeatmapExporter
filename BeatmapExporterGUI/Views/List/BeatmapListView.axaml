@@ -20,33 +20,44 @@
         <TextBlock FontSize="24"
                    HorizontalAlignment="Center">Beatmap List</TextBlock>
 
-        <DockPanel>
+        <StackPanel Spacing="12">
+          <DockPanel>
 
-          <StackPanel DockPanel.Dock="Right"
-                      Orientation="Horizontal">
+            <StackPanel DockPanel.Dock="Right"
+                        Orientation="Horizontal">
 
-            <TextBlock VerticalAlignment="Center">Sort by:</TextBlock>
-            <ComboBox Margin="6,0"
-                      ItemsSource="{Binding SortOptionNames}"
-                      SelectedIndex="{Binding SelectedSortOption}" />
+              <TextBlock VerticalAlignment="Center">Sort by:</TextBlock>
+              <ComboBox Margin="6,0"
+                        ItemsSource="{Binding SortOptionNames}"
+                        SelectedIndex="{Binding SelectedSortOption}" />
 
-          </StackPanel>
+            </StackPanel>
 
+            <StackPanel Orientation="Horizontal">
+
+              <TextBlock VerticalAlignment="Center">View:</TextBlock>
+              <ComboBox Margin="6,0"
+                      ItemsSource="{Binding DisplayOptionNames}"
+                      SelectedIndex="{Binding SelectedDisplayOption}" />
+            
+            </StackPanel>
+
+            <Button Command="{Binding ExportSelectedBeatmapCommand}">Export Selected Beatmap Set</Button>
+
+            <Button Command="{Binding OpenExportDirectory}"
+                    Margin="6,0">Open Export Directory</Button>
+          
+          </DockPanel>
+
+          <!-- Search/Filter Box -->
           <StackPanel Orientation="Horizontal">
 
-            <TextBlock VerticalAlignment="Center">View:</TextBlock>
-            <ComboBox Margin="6,0"
-                    ItemsSource="{Binding DisplayOptionNames}"
-                    SelectedIndex="{Binding SelectedDisplayOption}" />
-            
-          </StackPanel>
-
-          <Button Command="{Binding ExportSelectedBeatmapCommand}">Export Selected Beatmap Set</Button>
-
-          <Button Command="{Binding OpenExportDirectory}"
-                  Margin="6,0">Open Export Directory</Button>
+            <TextBox Watermark="Search..." 
+                     Width="216" 
+                     Text="{Binding UserSearchInput} "/>
           
-        </DockPanel>
+          </StackPanel>
+        </StackPanel>
 
         <ListBox ItemsSource="{Binding BeatmapSetList}"
                  SelectedIndex="{Binding SelectedSetIndex}"

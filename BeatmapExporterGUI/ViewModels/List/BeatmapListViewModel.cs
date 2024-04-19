@@ -130,16 +130,32 @@ namespace BeatmapExporterGUI.ViewModels.List
 
         private async Task ApplyDisplaySetting() => await Exporter.RealmScheduler.Schedule(async () =>
         {
+            // Determine all possible displayable maps based on display setting
+            IEnumerable<BeatmapSet> displayMaps;
             if (SelectedDisplayOption == (int)BeatmapSorting.View.Selected)
             {
-                DisplayedBeatmapSets = Exporter.Lazer!.SelectedBeatmapSets.ToList();
+                displayMaps = Exporter.Lazer!.SelectedBeatmapSets;
             }
             else
             {
-                DisplayedBeatmapSets = Exporter.Lazer!.AllBeatmapSets.ToList();
+                displayMaps = Exporter.Lazer!.AllBeatmapSets;
             }
-            await ApplySorting();
+            // Then, filter displayable maps if user has a filter input specified
+            if (!string.IsNullOrWhiteSpace(UserSearchInput))
+            {
+                displayMaps = displayMaps.Where(set => set.DiffSummary().Contains(UserSearchInput, StringComparison.OrdinalIgnoreCase));
+            }
+
+            DisplayedBeatmapSets = displayMaps.ToList();
         });
+
+        [ObservableProperty]
+        private string _UserSearchInput;
+
+        partial void OnUserSearchInputChanged(string value)
+        {
+            Task.Run(() => ApplyDisplaySetting());
+        }
         #endregion
 
         #region Single Beatmap Export

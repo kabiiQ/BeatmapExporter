@@ -8,6 +8,6 @@ public partial class BeatmapListView : UserControl
     public BeatmapListView()
     {
         InitializeComponent();
-        BeatmapList.Height = SizeHelper.RemainingHeight(200);
+        BeatmapList.Height = SizeHelper.RemainingHeight(240);
     }
 }

@@ -1,4 +1,4 @@
-﻿using BeatmapExporterCore.Exporters.Lazer;
+using BeatmapExporterCore.Exporters.Lazer;
 using BeatmapExporterCore.Exporters.Lazer.LazerDB.Schema;
 using BeatmapExporterCore.Exporters;
 using CommunityToolkit.Mvvm.ComponentModel;
@@ -79,7 +79,8 @@ namespace BeatmapExporterGUI.ViewModels
             {
                 ExportFormat.Beatmap => ExportBeatmaps,
                 ExportFormat.Audio => ExportAudioFiles,
-                ExportFormat.Background => ExportBackgrounds
+                ExportFormat.Background => ExportBackgrounds,
+                ExportFormat.Replay => ExportReplays,
             };
 
             ActiveExport = true;
@@ -232,6 +233,36 @@ namespace BeatmapExporterGUI.ViewModels
                 }
             }
             return new(discovered, exportedBackgrounds);
+        }
+
+        private async Task ExportReplays(CancellationToken token)
+        {
+            lazer.SetupExport();
+
+            var selectedReplays = await Exporter.RealmScheduler.Schedule(() => lazer.GetSelectedReplays().ToList());
+            var replayCount = selectedReplays.Count();
+            TotalCount = replayCount;
+
+            Description = $"Exporting {replayCount} replays from {lazer.SelectedBeatmapCount} selected beatmaps.";
+            var exportedReplays = 0;
+            foreach (var replay in selectedReplays)
+            {
+                if (token.IsCancellationRequested)
+                    break;
+
+                string? filename = null;
+                try
+                {
+                    await Exporter.RealmScheduler.Schedule(() => lazer.ExportReplay(replay, out filename));
+                    exportedReplays++;
+                    AddExport(true, $"Exported player score replay {exportedReplays}/{replayCount}: {filename}.");
+                } catch (Exception e)
+                {
+                    AddExport(false, $"Unable to export player score replay {filename} :: {e.Message}");
+                }
+                Progress++;
+            }
+            Description = $"Exported {exportedReplays}/{replayCount} player score replays from {TotalSetCount} beatmaps to {lazer.Configuration.FullPath}.";
         }
     }
 

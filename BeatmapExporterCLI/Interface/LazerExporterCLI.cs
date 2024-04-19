@@ -1,4 +1,4 @@
-using BeatmapExporterCore.Exporters;
+﻿using BeatmapExporterCore.Exporters;
 using BeatmapExporterCore.Exporters.Lazer;
 using BeatmapExporterCore.Filters;
 using System.Text;

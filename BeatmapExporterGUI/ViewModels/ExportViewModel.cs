@@ -1,4 +1,4 @@
-using BeatmapExporterCore.Exporters;
+﻿using BeatmapExporterCore.Exporters;
 using BeatmapExporterCore.Exporters.Lazer;
 using BeatmapExporterCore.Exporters.Lazer.LazerDB.Schema;
 using CommunityToolkit.Mvvm.ComponentModel;
@@ -68,7 +68,7 @@ namespace BeatmapExporterGUI.ViewModels
         /// <summary>
         /// A collection of <see cref="ExportOperation" /> structs each representing one attempted export by this operation
         /// </summary>
-        public ObservableCollection<ExportOperation> Exported { get; }
+        internal ObservableCollection<ExportOperation> Exported { get; }
 
         /// <summary>
         /// If there is an export currently active. Used to disable navigation away until export is complete/cancelled.
@@ -287,7 +287,7 @@ namespace BeatmapExporterGUI.ViewModels
         }
     }
 
-    public record struct ExportOperation(bool Success, string Description)
+    internal record struct ExportOperation(bool Success, string Description)
     {
         public readonly string Color => Success ? "" : "Red";
 

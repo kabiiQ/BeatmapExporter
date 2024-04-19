@@ -1,4 +1,4 @@
-using BeatmapExporterCore.Exporters.Lazer.LazerDB;
+﻿using BeatmapExporterCore.Exporters.Lazer.LazerDB;
 using BeatmapExporterCore.Exporters.Lazer.LazerDB.Schema;
 using BeatmapExporterCore.Filters;
 using BeatmapExporterCore.Utilities;
@@ -232,7 +232,7 @@ namespace BeatmapExporterCore.Exporters.Lazer
                 }
 
                 // produce more meaningful filename than 'audio.mp3' 
-                string outputFilename = metadata.OutputAudioFilename(mapset.OnlineID, beatmapAudioCount);
+                string outputFilename = metadata.OutputAudioFilename(beatmapAudioCount);
 
                 beatmapAudioCount++;
                 yield return new AudioExportTask(mapset, metadata, transcodeFrom, outputFilename);
@@ -394,7 +394,7 @@ namespace BeatmapExporterCore.Exporters.Lazer
         /// <summary>
         /// Export a single RealmNamedFileUsage, using its original filename.
         /// </summary>
-        public void ExportSingleFile(BeatmapSet mapset, RealmNamedFileUsage fileUsage)
+        public void ExportSingleFile(RealmNamedFileUsage fileUsage)
         {
             var filename = Path.GetFileName(fileUsage.Filename); // exporting a single file with its original filename (but no sub-directories that were in the beatmap structure)
             string exportPath = Path.Combine(Configuration.ExportPath, filename);

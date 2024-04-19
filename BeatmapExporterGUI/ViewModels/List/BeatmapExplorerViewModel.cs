@@ -1,4 +1,4 @@
-using BeatmapExporterCore.Exporters.Lazer.LazerDB.Schema;
+﻿using BeatmapExporterCore.Exporters.Lazer.LazerDB.Schema;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using System;
@@ -170,7 +170,7 @@ namespace BeatmapExporterGUI.ViewModels.List
             {
                 var selectedFile = selectedSet.Files[SelectedFileIndex];
                 filename = selectedFile.Filename;
-                lazer.ExportSingleFile(selectedSet, selectedFile);
+                lazer.ExportSingleFile(selectedFile);
                 Exporter.AddSystemMessage($"Single file exported: {lazer.Configuration.FullPath}/{filename}");
             }
             catch (Exception e)

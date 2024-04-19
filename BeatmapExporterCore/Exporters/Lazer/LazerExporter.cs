@@ -368,7 +368,7 @@ namespace BeatmapExporterCore.Exporters.Lazer
         }
 
         public IEnumerable<Score> GetSelectedReplays() => SelectedBeatmapSets
-            .SelectMany(s => s.Beatmaps)
+            .SelectMany(s => s.SelectedBeatmaps)
             .SelectMany(b => b.Scores);
 
         /// <summary>

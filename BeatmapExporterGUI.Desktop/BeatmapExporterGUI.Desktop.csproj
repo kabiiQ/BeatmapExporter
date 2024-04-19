@@ -24,7 +24,7 @@
 
   <PropertyGroup>
     <PackageId>BeatmapExporterGUI.Desktop</PackageId>
-    <Version>2.1.0-pre</Version>
+    <Version>2.1.0-pre2</Version>
     <FileVersion>2.1.0</FileVersion>
     <Authors>kabii</Authors>
     <Title>BeatmapExporter</Title>

@@ -36,7 +36,7 @@ namespace BeatmapExporterCore.Exporters
                     ExportFormat.Beatmap => basePath,
                     ExportFormat.Audio => Path.Combine(basePath, "mp3"),
                     ExportFormat.Background => Path.Combine(basePath, "bg"),
-                    ExportFormat.Score => Path.Combine(basePath, "osr"),
+                    ExportFormat.Replay => Path.Combine(basePath, "replay"),
                     _ => throw new InvalidOperationException()
                 };
             }

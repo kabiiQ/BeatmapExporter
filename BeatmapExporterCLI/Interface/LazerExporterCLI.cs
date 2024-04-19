@@ -1,4 +1,4 @@
-﻿using BeatmapExporterCore.Exporters.Lazer;
+using BeatmapExporterCore.Exporters.Lazer;
 using BeatmapExporterCore.Exporters;
 using BeatmapExporterCore.Filters;
 using System.Text;
@@ -119,7 +119,7 @@ namespace BeatmapExporterCLI.Interface
             Console.WriteLine($"Exported {exported}/{attempted} background files from {Exporter.SelectedBeatmapCount} beatmaps to {Configuration.FullPath}.");
         }
         
-        public void ExportScores()
+        public void ExportReplays()
         {
             Exporter.SetupExport();
             int attempted = 0, exported = 0;
@@ -177,7 +177,7 @@ namespace BeatmapExporterCLI.Interface
             Console.Write("\nThe collection names as shown here can be used with the \"collection\" beatmap filter.\n");
         }
 
-        public void ExportConfiguration()
+        public void StartExportConfigurator()
         {
             while (true)
             {

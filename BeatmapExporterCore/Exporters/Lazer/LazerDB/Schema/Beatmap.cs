@@ -1,4 +1,3 @@
-﻿using Newtonsoft.Json;
 using Realms;
 
 namespace BeatmapExporterCore.Exporters.Lazer.LazerDB.Schema
@@ -17,9 +16,8 @@ namespace BeatmapExporterCore.Exporters.Lazer.LazerDB.Schema
 
         public BeatmapMetadata Metadata { get; set; } = null!;
         
-        [JsonIgnore]
-        [Backlink(nameof(ScoreInfo.BeatmapInfo))]
-        public IQueryable<ScoreInfo> Scores { get; } = null!;
+        [Backlink(nameof(Score.BeatmapInfo))]
+        public IQueryable<Score> Scores { get; } = null!;
 
         public BeatmapUserSettings UserSettings { get; set; } = null!;
 
@@ -109,13 +107,5 @@ namespace BeatmapExporterCore.Exporters.Lazer.LazerDB.Schema
         {
             return HashCode.Combine(base.GetHashCode(), ID);
         }
-        
-        //GetDisplayTitle() step in (from lazer's BeatmapInfoExtensions) to stay consistent with lazer's naming
-        public string Display()
-        {
-            return $"{this.Metadata.Display()} {GetVersionString()}".Trim();
-        }
-        //GetVersionString() step in (from lazer's BeatmapInfoExtensions)
-        private string GetVersionString() => string.IsNullOrEmpty(this.DifficultyName) ? string.Empty : $"[{this.DifficultyName}]";
     }
 }

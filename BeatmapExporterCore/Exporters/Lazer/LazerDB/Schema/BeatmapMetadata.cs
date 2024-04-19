@@ -1,4 +1,4 @@
-﻿using BeatmapExporterCore.Utilities;
+using BeatmapExporterCore.Utilities;
 using Realms;
 
 namespace BeatmapExporterCore.Exporters.Lazer.LazerDB.Schema
@@ -32,17 +32,6 @@ namespace BeatmapExporterCore.Exporters.Lazer.LazerDB.Schema
             return 
                 $"{OutputName()} ({beatmapId}){DupeString(dupeCount)}{extension}"
                 .RemoveFilenameCharacters();
-        }
-        
-        //GetDisplayTitle() step in (from lazer's BeatmapMetadataExtensions) to stay consistent with lazer's naming
-        public string Display()
-        {
-            string author = string.IsNullOrEmpty(this.Author.Username) ? string.Empty : $" ({this.Author.Username})";
-
-            string artist = string.IsNullOrEmpty(this.Artist) ? "unknown artist" : this.Artist;
-            string title = string.IsNullOrEmpty(this.Title) ? "unknown title" : this.Title;
-
-            return $"{artist} - {title}{author}".Trim();
         }
     }
 }

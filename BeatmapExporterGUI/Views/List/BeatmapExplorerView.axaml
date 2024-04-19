@@ -19,6 +19,8 @@
       <Button Command="{Binding ExportSelectedDifficultyCommand}">Export Selected Difficulty</Button>
 
       <Button Command="{Binding ExportSelectedFileCommand}">Export Selected File</Button>
+
+      <Button Command="{Binding ExportSelectedReplayCommand}">Export Selected Replay</Button>
       
     </StackPanel>
 
@@ -38,6 +40,13 @@
     <ListBox ItemsSource="{Binding FileNames}" 
              SelectedIndex="{Binding SelectedFileIndex}"
              Name="FileList"
+             Background="Transparent" />
+
+    <TextBlock FontSize="18">Player Score Replays</TextBlock>
+    
+    <ListBox ItemsSource="{Binding Replays}"
+             SelectedIndex="{Binding SelectedReplayIndex}"
+             Name="ReplayList"
              Background="Transparent" />
     
   </StackPanel>

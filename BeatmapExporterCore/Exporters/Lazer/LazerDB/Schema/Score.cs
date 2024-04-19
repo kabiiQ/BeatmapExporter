@@ -14,6 +14,7 @@ namespace BeatmapExporterCore.Exporters.Lazer.LazerDB.Schema
         public Beatmap? BeatmapInfo { get; set; }
         public string BeatmapHash { get; set; } = string.Empty;
         public IList<RealmNamedFileUsage> Files { get; } = null!;
+        public double Accuracy { get; set; }
         public DateTimeOffset Date { get; set; }
         public RealmUser User { get; set; } = null!;
         public int Rank { get; set; }
@@ -38,6 +39,15 @@ namespace BeatmapExporterCore.Exporters.Lazer.LazerDB.Schema
                 7 => "SS+",
                 _ => "_"
             };
+        }
+
+        /// <summary>
+        /// A string which distinguishes this score replay in a single beatmap set
+        /// </summary>
+        public string Details()
+        {
+            var age = DateTime.Now - Date;
+            return $"({age.Days}d) {User.Username} {Accuracy:0.00%} {RankLetter} rank on [{BeatmapInfo!.DifficultyName}]";
         }
 
         /// <summary>

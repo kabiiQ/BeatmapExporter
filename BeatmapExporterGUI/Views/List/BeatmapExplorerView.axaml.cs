@@ -9,8 +9,9 @@ public partial class BeatmapExplorerView : UserControl
     {
         InitializeComponent();
 
-        var each = SizeHelper.RemainingHeight(300) / 2;
+        var each = SizeHelper.RemainingHeight(300) / 3;
         DiffList.Height = each;
         FileList.Height = each;
+        ReplayList.Height = each;
     }
 }

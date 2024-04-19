@@ -40,6 +40,9 @@ namespace BeatmapExporterCore.Exporters.Lazer.LazerDB.Schema
             set { selected = value; }
         }
 
+        [Ignored]
+        public IList<Score> AllScores => Beatmaps.SelectMany(b => b.Scores).ToList();
+
         /// <summary>
         /// The BeatmapMetadata taken from the first diff of this mapset.
         /// Other diffs could contain different metadata - but often we need to identify a mapset as a whole.

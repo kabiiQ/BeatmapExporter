@@ -1,12 +1,11 @@
-﻿using BeatmapExporter.Exporters.Lazer.LazerDB;
-using BeatmapExporter.Exporters.Lazer.LazerDB.Schema;
-using BeatmapExporterCore.Exporters;
+﻿using BeatmapExporterCore.Exporters.Lazer.LazerDB;
+using BeatmapExporterCore.Exporters.Lazer.LazerDB.Schema;
 using BeatmapExporterCore.Filters;
 using BeatmapExporterCore.Utilities;
 using System.IO.Compression;
 using System.Text.RegularExpressions;
 
-namespace BeatmapExporter.Exporters.Lazer
+namespace BeatmapExporterCore.Exporters.Lazer
 {
     /// <summary>
     /// Exception used when an mp3 transcode operation encounters any error.
@@ -362,13 +361,34 @@ namespace BeatmapExporter.Exporters.Lazer
 
             using FileStream? background = lazerDb.OpenNamedFile(mapset, metadata.BackgroundFile);
             if (background is null)
-            {
-                Console.WriteLine($"Background file {metadata.BackgroundFile} not found in beatmap {mapset.ArchiveFilename()}");
-                return;
-            }
+                throw new IOException($"Background file {metadata.BackgroundFile} not found in beatmap {mapset.ArchiveFilename()}");
 
             using FileStream output = File.Open(outputFile, FileMode.CreateNew);
             background.CopyTo(output);
+        }
+
+        public IEnumerable<Score> GetSelectedReplays() => SelectedBeatmapSets
+            .SelectMany(s => s.Beatmaps)
+            .SelectMany(b => b.Scores);
+
+        /// <summary>
+        /// Export a player score replay 
+        /// </summary>
+        /// <param name="score">The player score to export</param>
+        /// <param name="filename">The output filename that will be used. Will be set regardless of success of export and should be used for user feedback.</param>
+        /// <exception cref="IOException">The Score export was unsuccessful and an error should be noted to the user.</exception>
+        public void ExportReplay(Score score, out string filename)
+        {
+            filename = score.OutputReplayFilename();
+            string outputFile = Path.Combine(Configuration.ExportPath, filename);
+
+            string? replayFile = score.Files.FirstOrDefault()?.File?.Hash;
+            if (replayFile == null)
+                throw new IOException($"Replay file for {outputFile} does not exist.");
+
+            using FileStream replay = lazerDb.OpenHashedFile(replayFile);
+            using FileStream output = File.Open(outputFile, FileMode.CreateNew);
+            replay.CopyTo(output);
         }
 
         /// <summary>

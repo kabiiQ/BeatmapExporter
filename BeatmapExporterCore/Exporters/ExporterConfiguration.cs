@@ -1,8 +1,7 @@
-﻿using BeatmapExporterCore.Exporters;
-using BeatmapExporterCore.Filters;
+﻿using BeatmapExporterCore.Filters;
 using System.IO.Compression;
 
-namespace BeatmapExporter.Exporters
+namespace BeatmapExporterCore.Exporters
 {
     public class ExporterConfiguration
     {
@@ -37,6 +36,7 @@ namespace BeatmapExporter.Exporters
                     ExportFormat.Beatmap => basePath,
                     ExportFormat.Audio => Path.Combine(basePath, "mp3"),
                     ExportFormat.Background => Path.Combine(basePath, "bg"),
+                    ExportFormat.Replay => Path.Combine(basePath, "replay"),
                     _ => throw new InvalidOperationException()
                 };
             }

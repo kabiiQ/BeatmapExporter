@@ -1,6 +1,6 @@
 ﻿using Realms;
 
-namespace BeatmapExporter.Exporters.Lazer.LazerDB.Schema
+namespace BeatmapExporterCore.Exporters.Lazer.LazerDB.Schema
 {
     // Original source file (modified by kabii) Copyright (c) ppy Pty Ltd <contact@ppy.sh>. Licensed under the MIT Licence.
     public class Beatmap : RealmObject
@@ -15,6 +15,9 @@ namespace BeatmapExporter.Exporters.Lazer.LazerDB.Schema
         public BeatmapDifficulty Difficulty { get; set; } = null!;
 
         public BeatmapMetadata Metadata { get; set; } = null!;
+        
+        [Backlink(nameof(Score.BeatmapInfo))]
+        public IQueryable<Score> Scores { get; } = null!;
 
         public BeatmapUserSettings UserSettings { get; set; } = null!;
 
@@ -96,8 +99,8 @@ namespace BeatmapExporter.Exporters.Lazer.LazerDB.Schema
         public string Details()
         {
             int lengthSeconds = (int)Length / 1000;
-            var diffDetail = $"{lengthSeconds} seconds - {BPM.ToString("0")}BPM AR{Difficulty.ApproachRate} CS{Difficulty.CircleSize} HP{Difficulty.DrainRate} OD{Difficulty.OverallDifficulty}";
-            return $"{Ruleset.ShortName}: {StarRating.ToString("0.00")} stars by {Metadata.Author.Username} [{DifficultyName}]\n{diffDetail}";
+            var diffDetail = $"{lengthSeconds} seconds - {BPM:0}BPM AR{Difficulty.ApproachRate} CS{Difficulty.CircleSize} HP{Difficulty.DrainRate} OD{Difficulty.OverallDifficulty}";
+            return $"{Ruleset.ShortName}: {StarRating:0.00} stars by {Metadata.Author.Username} [{DifficultyName}]\n{diffDetail}";
         }
 
         public override int GetHashCode()

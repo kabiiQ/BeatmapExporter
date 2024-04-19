@@ -1,4 +1,4 @@
-﻿using BeatmapExporter.Exporters.Lazer.LazerDB;
+﻿using BeatmapExporterCore.Exporters.Lazer.LazerDB;
 using BeatmapExporterCore.Utilities;
 using BeatmapExporterGUI.Exporter;
 using CommunityToolkit.Mvvm.Input;

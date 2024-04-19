@@ -1,9 +1,10 @@
-﻿using BeatmapExporter.Exporters.Lazer;
-using BeatmapExporter.Exporters.Lazer.LazerDB.Schema;
-using BeatmapExporterCore.Exporters;
+﻿using BeatmapExporterCore.Exporters;
+using BeatmapExporterCore.Exporters.Lazer;
+using BeatmapExporterCore.Exporters.Lazer.LazerDB.Schema;
 using CommunityToolkit.Mvvm.ComponentModel;
 using System;
 using System.Collections.ObjectModel;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Input;
@@ -42,10 +43,16 @@ namespace BeatmapExporterGUI.ViewModels
         public int TotalSetCount { get; }
 
         /// <summary>
-        /// The progress towards TotalSetCount. Only beatmap sets, does not account for how many files are in each set.
+        /// The progress towards TotalCount.
         /// </summary>
         [ObservableProperty]
         private int _Progress;
+
+        /// <summary>
+        /// The total number of objects being processed, if known. Set to TotalSetCount if not accounted for in export.
+        /// </summary>
+        [ObservableProperty]
+        private int _TotalCount;
 
         /// <summary>
         /// Export operation status displayed to the user. 
@@ -79,7 +86,8 @@ namespace BeatmapExporterGUI.ViewModels
             {
                 ExportFormat.Beatmap => ExportBeatmaps,
                 ExportFormat.Audio => ExportAudioFiles,
-                ExportFormat.Background => ExportBackgrounds
+                ExportFormat.Background => ExportBackgrounds,
+                ExportFormat.Replay => ExportReplays,
             };
 
             ActiveExport = true;
@@ -93,6 +101,7 @@ namespace BeatmapExporterGUI.ViewModels
         private async Task ExportBeatmaps(CancellationToken token)
         {
             lazer.SetupExport();
+            TotalCount = TotalSetCount;
             int exported = 0;
             Description = $"{TotalSetCount} beatmap sets ({lazer.SelectedBeatmapCount} diffs) are selected for export.";
             foreach (var mapset in lazer.SelectedBeatmapSets)
@@ -124,6 +133,7 @@ namespace BeatmapExporterGUI.ViewModels
         private async Task ExportAudioFiles(CancellationToken token)
         {
             lazer.SetupExport();
+            TotalCount = TotalSetCount;
             var transcodeInfo = lazer.TranscodeAvailable ? "This operation will take longer if many selected beatmaps are not in .mp3 format."
                 : "FFmpeg runtime not found. Beatmaps that use other audio formats than .mp3 will be skipped.\nMake sure ffmpeg.exe is located on the system PATH or placed in the directory with this BeatmapExporter.exe to enable transcoding.";
             Description = $"Exporting audio from {TotalSetCount} beatmap sets as .mp3 files.\n{transcodeInfo}";
@@ -189,6 +199,7 @@ namespace BeatmapExporterGUI.ViewModels
         private async Task ExportBackgrounds(CancellationToken token)
         {
             lazer.SetupExport();
+            TotalCount = TotalSetCount;
             Description = $"Exporting beatmap background images from {TotalSetCount} beatmap sets.";
 
             int discovered = 0, exportedBackgrounds = 0;
@@ -232,6 +243,36 @@ namespace BeatmapExporterGUI.ViewModels
                 }
             }
             return new(discovered, exportedBackgrounds);
+        }
+
+        private async Task ExportReplays(CancellationToken token)
+        {
+            lazer.SetupExport();
+
+            var selectedReplays = await Exporter.RealmScheduler.Schedule(() => lazer.GetSelectedReplays().ToList());
+            var replayCount = selectedReplays.Count();
+            TotalCount = replayCount;
+
+            Description = $"Exporting {replayCount} replays from {lazer.SelectedBeatmapCount} selected beatmaps.";
+            var exportedReplays = 0;
+            foreach (var replay in selectedReplays)
+            {
+                if (token.IsCancellationRequested)
+                    break;
+
+                string? filename = null;
+                try
+                {
+                    await Exporter.RealmScheduler.Schedule(() => lazer.ExportReplay(replay, out filename));
+                    exportedReplays++;
+                    AddExport(true, $"Exported player score replay {exportedReplays}/{replayCount}: {filename}.");
+                } catch (Exception e)
+                {
+                    AddExport(false, $"Unable to export player score replay {filename} :: {e.Message}");
+                }
+                Progress++;
+            }
+            Description = $"Exported {exportedReplays}/{replayCount} player score replays from {TotalSetCount} beatmaps to {lazer.Configuration.FullPath}.";
         }
     }
 

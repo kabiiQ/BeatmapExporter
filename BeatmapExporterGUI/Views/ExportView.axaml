@@ -16,7 +16,7 @@
                FontSize="24" />
     
     <ProgressBar Minimum="0"
-                 Maximum="{Binding TotalSetCount}"
+                 Maximum="{Binding TotalCount}"
                  Value="{Binding Progress}"
                  ShowProgressText="True"
                  Height="60"/>

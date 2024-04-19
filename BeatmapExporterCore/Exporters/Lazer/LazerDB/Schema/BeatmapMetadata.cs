@@ -1,7 +1,7 @@
 ﻿using BeatmapExporterCore.Utilities;
 using Realms;
 
-namespace BeatmapExporter.Exporters.Lazer.LazerDB.Schema
+namespace BeatmapExporterCore.Exporters.Lazer.LazerDB.Schema
 {
     // Original source file (modified by kabii) Copyright (c) ppy Pty Ltd <contact@ppy.sh>. Licensed under the MIT Licence.
     public class BeatmapMetadata : RealmObject
@@ -18,7 +18,7 @@ namespace BeatmapExporter.Exporters.Lazer.LazerDB.Schema
         public string BackgroundFile { get; set; } = string.Empty;
 
         // Author kabii
-        private string OutputName() => $"{Artist.Trunc(30)} - {Title.Trunc(60)}";
+        public string OutputName() => $"{Artist.Trunc(30)} - {Title.Trunc(60)}";
 
         private string DupeString(int dupeCount) => dupeCount > 0 ? $" ({dupeCount})" : "";
 

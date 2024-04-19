@@ -1,7 +1,7 @@
-﻿using BeatmapExporter.Exporters.Lazer;
-using BeatmapExporter.Exporters.Lazer.LazerDB;
-using BeatmapExporter.Exporters.Lazer.LazerDB.Schema;
-using BeatmapExporterCLI.Interface;
+﻿using BeatmapExporterCLI.Interface;
+using BeatmapExporterCore.Exporters.Lazer;
+using BeatmapExporterCore.Exporters.Lazer.LazerDB;
+using BeatmapExporterCore.Exporters.Lazer.LazerDB.Schema;
 using BeatmapExporterCore.Utilities;
 using Realms;
 

@@ -1,6 +1,5 @@
-﻿using BeatmapExporter.Exporters;
-using BeatmapExporter.Exporters.Lazer;
 using BeatmapExporterCore.Exporters;
+using BeatmapExporterCore.Exporters.Lazer;
 using BeatmapExporterCore.Filters;
 using System.Text;
 
@@ -38,7 +37,7 @@ namespace BeatmapExporterCLI.Interface
                     Console.WriteLine($"Exported beatmap set ({attempted}/{count}): {filename}");
                 } catch (Exception e)
                 {
-                    Console.WriteLine($"Unable to export {filename} :: ${e.Message}");
+                    Console.WriteLine($"Unable to export {filename} :: {e.Message}");
                 }
             };
             Console.WriteLine($"Exported {exported}/{count} beatmaps to {Configuration.FullPath}.");
@@ -119,6 +118,31 @@ namespace BeatmapExporterCLI.Interface
             }
             Console.WriteLine($"Exported {exported}/{attempted} background files from {Exporter.SelectedBeatmapCount} beatmaps to {Configuration.FullPath}.");
         }
+        
+        public void ExportReplays()
+        {
+            Exporter.SetupExport();
+            int exported = 0;
+
+            var selectedReplays = Exporter.GetSelectedReplays();
+            var replayCount = selectedReplays.Count();
+
+            Console.WriteLine($"Exporting {replayCount} replays from {Exporter.SelectedBeatmapCount} selected beatmaps.");
+            foreach (var replay in selectedReplays)
+            {
+                string? filename = null;
+                try
+                {
+                    Exporter.ExportReplay(replay, out filename);
+                    exported++;
+                    Console.WriteLine($"Exported replay ({exported}/{replayCount}): {filename}");
+                } catch (Exception e)
+                {
+                    Console.WriteLine($"Unable to export score replay {filename} :: {e.Message}");
+                }
+            }
+            Console.WriteLine($"Exported {exported}/{replayCount} score replays from {Exporter.SelectedBeatmapCount} beatmaps to {Configuration.FullPath}");
+        }
 
         public void DisplaySelectedBeatmaps()
         {
@@ -138,7 +162,7 @@ namespace BeatmapExporterCLI.Interface
             Console.Write("\nThe collection names as shown here can be used with the \"collection\" beatmap filter.\n");
         }
 
-        public void ExportConfiguration()
+        public void StartExportConfigurator()
         {
             while (true)
             {

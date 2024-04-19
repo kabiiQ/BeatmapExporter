@@ -3,7 +3,7 @@
     /// <summary>
     /// All available modes of exporting.
     /// </summary>
-    public enum ExportFormat { Beatmap, Audio, Background };
+    public enum ExportFormat { Beatmap, Audio, Background, Replay };
 
     public static class ExportFormatExtensions
     {
@@ -15,6 +15,7 @@
             ExportFormat.Beatmap => "osu! beatmaps (.osz)",
             ExportFormat.Audio => "audio (.mp3)",
             ExportFormat.Background => "beatmap backgrounds",
+            ExportFormat.Replay => "score replays (.osr)",
             _ => throw new NotImplementedException()
         };
 
@@ -26,6 +27,7 @@
             ExportFormat.Beatmap => "Beatmaps will be exported in osu! archive format (.osz).",
             ExportFormat.Audio => "Beatmap audio files will be renamed, tagged and exported (.mp3 format).",
             ExportFormat.Background => "Only beatmap background images will be exported (original format).",
+            ExportFormat.Replay => "Player score replays will be exported (.osr).",
             _ => throw new NotImplementedException()
         };
 

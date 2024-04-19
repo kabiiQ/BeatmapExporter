@@ -1,4 +1,4 @@
-using BeatmapExporterCore.Utilities;
+﻿using BeatmapExporterCore.Utilities;
 using Realms;
 
 namespace BeatmapExporterCore.Exporters.Lazer.LazerDB.Schema
@@ -18,7 +18,7 @@ namespace BeatmapExporterCore.Exporters.Lazer.LazerDB.Schema
         public string BackgroundFile { get; set; } = string.Empty;
 
         // Author kabii
-        private string OutputName() => $"{Artist.Trunc(30)} - {Title.Trunc(60)}";
+        public string OutputName() => $"{Artist.Trunc(30)} - {Title.Trunc(60)}";
 
         private string DupeString(int dupeCount) => dupeCount > 0 ? $" ({dupeCount})" : "";
 

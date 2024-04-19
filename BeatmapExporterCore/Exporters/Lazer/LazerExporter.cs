@@ -1,4 +1,4 @@
-﻿using BeatmapExporterCore.Exporters.Lazer.LazerDB;
+using BeatmapExporterCore.Exporters.Lazer.LazerDB;
 using BeatmapExporterCore.Exporters.Lazer.LazerDB.Schema;
 using BeatmapExporterCore.Filters;
 using BeatmapExporterCore.Utilities;
@@ -369,35 +369,29 @@ namespace BeatmapExporterCore.Exporters.Lazer
             using FileStream output = File.Open(outputFile, FileMode.CreateNew);
             background.CopyTo(output);
         }
-        
+
+        public IEnumerable<Score> GetSelectedReplays() => SelectedBeatmapSets
+            .SelectMany(s => s.Beatmaps)
+            .SelectMany(b => b.Scores);
+
         /// <summary>
-        /// Export a single score
+        /// Export a player score replay 
         /// </summary>
-        /// <param name="score">The score to export</param>
+        /// <param name="score">The player score to export</param>
         /// <param name="filename">The output filename that will be used. Will be set regardless of success of export and should be used for user feedback.</param>
-        /// <exception cref="IOException">The BeatmapSet export was unsuccessful and an error should be noted to the user.</exception>
-        public void ExportScore(ScoreInfo score, out string filename)
+        /// <exception cref="IOException">The Score export was unsuccessful and an error should be noted to the user.</exception>
+        public void ExportReplay(Score score, out string filename)
         {
-            Stream? export = null;
-            try
-            {
-                filename = score.OutputScoreFilename();
-                string exportPath = Path.Combine(Configuration.ExportPath, filename);
-                export = File.Open(exportPath, FileMode.CreateNew);
-                using ZipArchive osr = new(export, ZipArchiveMode.Create, true);
-                foreach (var namedFile in score.Files)
-                {
-                    string hash = namedFile.File.Hash;
-                    var entry = osr.CreateEntry(namedFile.Filename, Configuration.CompressionLevel);
-                    using var entryStream = entry.Open();
-                    using var file = lazerDb.OpenHashedFile(hash);
-                    file?.CopyTo(entryStream);
-                }
-            }
-            finally
-            {
-                export?.Dispose();
-            }
+            filename = score.OutputReplayFilename();
+            string outputFile = Path.Combine(Configuration.ExportPath, filename);
+
+            string? replayFile = score.Files.FirstOrDefault()?.File?.Hash;
+            if (replayFile == null)
+                throw new IOException($"Replay file for {outputFile} does not exist.");
+
+            using FileStream replay = lazerDb.OpenHashedFile(replayFile);
+            using FileStream output = File.Open(outputFile, FileMode.CreateNew);
+            replay.CopyTo(output);
         }
 
         /// <summary>

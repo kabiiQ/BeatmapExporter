@@ -122,41 +122,26 @@ namespace BeatmapExporterCLI.Interface
         public void ExportReplays()
         {
             Exporter.SetupExport();
-            int attempted = 0, exported = 0;
-            Console.WriteLine($"Exporting scores from {Exporter.SelectedBeatmapSetCount} beatmapsets.");
-            foreach (var mapset in Exporter.SelectedBeatmapSets)
+            int exported = 0;
+
+            var selectedReplays = Exporter.GetSelectedReplays();
+            var replayCount = selectedReplays.Count();
+
+            Console.WriteLine($"Exporting {replayCount} replays from {Exporter.SelectedBeatmapCount} selected beatmaps.");
+            foreach (var replay in selectedReplays)
             {
-                //filter can be placed inside the export score method (as scores have a beatmap hash), but would result in repeat filters/unable to count non-filtered score downloads without some callback
-                //it might be better to place the filter outside and only attempt selected downloads
-                var excludedHashes =
-                    from map in mapset.Beatmaps
-                    where !mapset.SelectedBeatmaps.Contains(map)
-                    select map.Hash;
-                var excluded = excludedHashes.ToList();
-                
-                foreach (var beatmap in mapset.SelectedBeatmaps)
+                string? filename = null;
+                try
                 {
-                    if (excluded.Contains(beatmap.Hash))
-                        continue;
-                    //also skips beatmaps with no scores
-                    foreach (var score in beatmap.Scores)
-                    {
-                        string? filename = null;
-                        attempted++;
-                        try
-                        {
-                            Exporter.ExportScore(score, out filename);
-                            exported++;
-                            Console.WriteLine($"Exported score ({attempted}/?): {filename}");
-                        }
-                        catch (Exception e)
-                        {
-                            Console.WriteLine($"Unable to export score: {filename} :: {e.Message}");
-                        }
-                    }
+                    Exporter.ExportReplay(replay, out filename);
+                    exported++;
+                    Console.WriteLine($"Exported replay ({exported}/{replayCount}): {filename}");
+                } catch (Exception e)
+                {
+                    Console.WriteLine($"Unable to export score replay {filename} :: {e.Message}");
                 }
             }
-            Console.WriteLine($"Exported {exported}/{attempted} scores to {Configuration.FullPath}.");
+            Console.WriteLine($"Exported {exported}/{replayCount} score replays from {Exporter.SelectedBeatmapCount} beatmaps to {Configuration.FullPath}");
         }
 
         public void DisplaySelectedBeatmaps()

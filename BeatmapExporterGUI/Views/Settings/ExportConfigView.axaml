@@ -61,8 +61,8 @@
 
               <Button Command="{Binding ExportBeatmapsCommand}"
                       Classes="accent"
-                      Margin="5">
-                Export Selected Beatmaps
+                      Margin="5"
+                      Content="{Binding ExportUnit, StringFormat=Export selected {0}}">
               </Button>
               
             </WrapPanel>

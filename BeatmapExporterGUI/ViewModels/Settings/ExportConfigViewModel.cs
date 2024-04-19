@@ -103,6 +103,11 @@ namespace BeatmapExporterGUI.ViewModels.Settings
         }
 
         /// <summary>
+        /// String containing the current type of file that will be exported
+        /// </summary>
+        public string ExportUnit => Config.ExportFormat.UnitName();
+
+        /// <summary>
         /// Reference to the Export Beatmaps command functionality for this page to allow an alternate method to begin exporting.
         /// </summary>
         public IAsyncRelayCommand ExportBeatmapsCommand => outerViewModel.MenuRow.ExportCommand;
@@ -152,6 +157,7 @@ namespace BeatmapExporterGUI.ViewModels.Settings
             {
                 Config.ExportFormat = (ExportFormat)value;
                 OnPropertyChanged(nameof(ModeDescriptor));
+                OnPropertyChanged(nameof(ExportUnit));
                 OnPropertyChanged(nameof(ExportPath));
                 OnPropertyChanged(nameof(IsBeatmapExport));
             }

@@ -18,14 +18,23 @@ namespace BeatmapExporterCore.Exporters.Lazer.LazerDB.Schema
         public string BackgroundFile { get; set; } = string.Empty;
 
         // Author kabii
+        /// <summary>
+        /// The song artist and title, truncated for filename output
+        /// </summary>
         public string OutputName() => $"{Artist.Trunc(30)} - {Title.Trunc(60)}";
 
-        private string DupeString(int dupeCount) => dupeCount > 0 ? $" ({dupeCount})" : "";
+        private static string DupeString(int dupeCount) => dupeCount > 0 ? $" ({dupeCount})" : "";
 
-        public string OutputAudioFilename(int beatmapId, int dupeCount = 0) =>
+        /// <summary>
+        /// The full filename to be used for exporting audio files associated with this beatmap
+        /// </summary>
+        public string OutputAudioFilename(int dupeCount = 0) =>
             $"{OutputName()}{DupeString(dupeCount)}.mp3"
             .RemoveFilenameCharacters();
 
+        /// <summary>
+        /// The full filename to be used for exporting background images associated with this beatmap
+        /// </summary>
         public string OutputBackgroundFilename(int beatmapId, int dupeCount = 0)
         {
             var extension = Path.GetExtension(BackgroundFile);

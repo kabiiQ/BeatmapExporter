@@ -1,4 +1,4 @@
-﻿using BeatmapExporterCore.Exporters.Lazer.LazerDB;
+using BeatmapExporterCore.Exporters.Lazer.LazerDB;
 using BeatmapExporterCore.Exporters.Lazer.LazerDB.Schema;
 using BeatmapExporterCore.Filters;
 using BeatmapExporterCore.Utilities;
@@ -392,7 +392,7 @@ namespace BeatmapExporterCore.Exporters.Lazer
         }
 
         /// <summary>
-        /// Export a single file from a Realm BeatmapSet, using its original filename.
+        /// Export a single RealmNamedFileUsage, using its original filename.
         /// </summary>
         public void ExportSingleFile(BeatmapSet mapset, RealmNamedFileUsage fileUsage)
         {

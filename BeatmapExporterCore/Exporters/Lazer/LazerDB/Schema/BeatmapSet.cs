@@ -21,8 +21,11 @@ namespace BeatmapExporterCore.Exporters.Lazer.LazerDB.Schema
         public bool Protected { get; set; }
 
         // Author kabii
-        IList<Beatmap>? selected = null;
+        IList<Beatmap>? selected = null; // backing field for SelectedBeatmaps
 
+        /// <summary>
+        /// Collection containing only the beatmaps from this set which are currently selected by the user.
+        /// </summary>
         [Ignored]
         public IList<Beatmap> SelectedBeatmaps
         {
@@ -37,9 +40,16 @@ namespace BeatmapExporterCore.Exporters.Lazer.LazerDB.Schema
             set { selected = value; }
         }
 
+        /// <summary>
+        /// The BeatmapMetadata taken from the first diff of this mapset.
+        /// Other diffs could contain different metadata - but often we need to identify a mapset as a whole.
+        /// </summary>
         [Ignored]
         public BeatmapMetadata? DiffMetadata => Beatmaps.FirstOrDefault()?.Metadata;
 
+        /// <summary>
+        /// A string which identifies this beatmap set including the beatmap id, song info, mapper name, and star rating of each difficulty.
+        /// </summary>
         public string DiffSummary()
         {
             BeatmapMetadata metadata = Beatmaps.First().Metadata;
@@ -50,6 +60,9 @@ namespace BeatmapExporterCore.Exporters.Lazer.LazerDB.Schema
                 $"{OnlineID}: {metadata.Artist} - {metadata.Title} ({metadata.Author.Username} - {difficultySpread} stars)";
         }
 
+        /// <summary>
+        /// The full filename to be used for exporting this mapset as a whole.
+        /// </summary>
         public string ArchiveFilename()
         {
             BeatmapMetadata metadata = SelectedBeatmaps.First().Metadata;

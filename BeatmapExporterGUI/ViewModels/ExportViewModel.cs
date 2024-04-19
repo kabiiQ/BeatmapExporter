@@ -1,4 +1,4 @@
-﻿using BeatmapExporterCore.Exporters;
+using BeatmapExporterCore.Exporters;
 using BeatmapExporterCore.Exporters.Lazer;
 using BeatmapExporterCore.Exporters.Lazer.LazerDB.Schema;
 using CommunityToolkit.Mvvm.ComponentModel;
@@ -196,6 +196,11 @@ namespace BeatmapExporterGUI.ViewModels
             return new(discovered, exportedAudio);
         }
 
+        /// <summary>
+        /// Exports all selected background images, updating the export description with the operation.
+        /// </summary>
+        /// <param name="token"></param>
+        /// <returns></returns>
         private async Task ExportBackgrounds(CancellationToken token)
         {
             lazer.SetupExport();
@@ -220,6 +225,9 @@ namespace BeatmapExporterGUI.ViewModels
             Description = $"Exported {exportedBackgrounds}/{discovered} background files from {TotalSetCount} beatmaps to {lazer.Configuration.FullPath}.";
         }
 
+        /// <summary>
+        /// Identifies selected beatmap's background images and exports, updating the user viewable statuses with each attempted export.
+        /// </summary>
         private ExportProgress ExportMapsetBackgrounds(BeatmapSet mapset, int totalDiscovered)
         {
             var allImages = lazer.ExtractBackgrounds(mapset);
@@ -245,6 +253,9 @@ namespace BeatmapExporterGUI.ViewModels
             return new(discovered, exportedBackgrounds);
         }
 
+        /// <summary>
+        /// Exports all selected user score replay files. Updates the export description for this operation and the user viewable statuses with each attempted export.
+        /// </summary>
         private async Task ExportReplays(CancellationToken token)
         {
             lazer.SetupExport();

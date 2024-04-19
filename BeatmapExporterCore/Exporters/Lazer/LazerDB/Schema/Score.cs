@@ -18,6 +18,10 @@ namespace BeatmapExporterCore.Exporters.Lazer.LazerDB.Schema
         public RealmUser User { get; set; } = null!;
         public int Rank { get; set; }
 
+        // Author kabii
+        /// <summary>
+        /// Produces the output-friendly letter rank for this player score
+        /// </summary>
         [Ignored]
         public string RankLetter
         {
@@ -36,6 +40,9 @@ namespace BeatmapExporterCore.Exporters.Lazer.LazerDB.Schema
             };
         }
 
+        /// <summary>
+        /// The full filename to be used for exporting this player score replay.
+        /// </summary>
         public string OutputReplayFilename() => 
             $"{User.Username} {RankLetter} rank on {BeatmapInfo!.Metadata.OutputName()} [{BeatmapInfo.DifficultyName}] ({Date.LocalDateTime:yyyy-MM-dd_HH-mm}).osr"
             .RemoveFilenameCharacters();

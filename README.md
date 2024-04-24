@@ -6,6 +6,8 @@
 
 For issues or if an update is required, you can create an issue on GitHub. Alternatively, I can be found through Discord via by [my bot's support server](https://discord.com/invite/ucVhtnh). Though it is not for BeatmapExporter specifically, I do not mind it being used for my other utilities such as this one.
 
+<hr />
+
 # Purpose/Functionality
 
 BeatmapExporter is a program/tool that can mass-export your osu! beatmap library from the modern osu!lazer storage format.
@@ -20,7 +22,11 @@ This utility allows you to export beatmaps back into `.osz` files.
 
 There is a beatmap filter system allowing you to select a portion of your library to only export certain maps (for example, above a certain star rating, specific artists/mappers, specific gamemodes, specific collections, etc). You can also simply export your entire library at once.
 
-## Audio Export
+<hr />
+
+## Alternative Export Modes
+
+### Audio Export
 
 As of version 1.2, there is an option to export only audio files. Rather than entire beatmap archives, only .mp3 audio files will be exported. 
 
@@ -28,9 +34,15 @@ The .mp3 files are tagged with basic artist/song information, and the background
 
 If a beatmap uses a non-mp3 audio format, [FFmpeg](https://ffmpeg.org/download.html) is required to transcode into mp3. ffmpeg.exe (for Windows) can be placed on your system PATH or simply alongside BeatmapExporter.exe before launching BeatmapExporter.
 
-## Background Image Export
+### Background Image Export
 
 As of version 1.3.8, there is an option to export only [beatmap background image files](https://github.com/kabiiQ/BeatmapExporter/pull/10).
+
+### User Score/Replay Export
+
+As of version 2.1.0, there is an option to export your [score replays](https://github.com/kabiiQ/BeatmapExporter/pull/17) from specific beatmaps.
+
+<hr />
 
 ## Graphical User Interface
 
@@ -43,6 +55,8 @@ All features including the format of exported files are functionally the same be
 Filtering beatmaps screenshot in the GUI:
 
 ![](https://i.imgur.com/h9TpkAD.png)
+
+<hr />
 
 # Download/Usage
 

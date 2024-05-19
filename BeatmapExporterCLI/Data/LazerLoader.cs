@@ -38,11 +38,13 @@ namespace BeatmapExporterCLI.Data
             }
             catch (Exception e)
             {
-                Console.WriteLine($"\nError opening database: {e.Message}");
                 if (e is LazerVersionException)
                 {
                     Console.WriteLine("The osu!lazer database structure has updated since the last BeatmapExporter update.");
                     Console.WriteLine($"\nYou can check {ExporterUpdater.Releases} for a new release, or file an issue there to let me know it needs updating if it's been a few days.");
+                } else
+                {
+                    Console.WriteLine($"\nError opening database: {e.Message}");
                 }
                 ExporterApp.Exit();
             }

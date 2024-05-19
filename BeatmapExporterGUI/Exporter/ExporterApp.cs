@@ -73,11 +73,13 @@ namespace BeatmapExporterGUI.Exporter
                     throw new IOException("Unable to open osu! database.");
             } catch (Exception e)
             {
-                AddSystemMessage($"Error opening database: {e.Message}", error: true);
                 if (e is LazerVersionException)
                 {
                     AddSystemMessage("The osu!lazer database structure has updated since the last BeatmapExporter update.", error: true);
-                    AddSystemMessage("You can check GitHub for a new release, or file an issue there to let me know it needs updating if it's been a few days.");
+                    AddSystemMessage("You can check GitHub for a new release, or file an issue there to let me know it needs updating if it's been a few days.", error: true);
+                } else
+                {
+                    AddSystemMessage($"Error opening database: {e.Message}", error: true);
                 }
                 return false;
             }

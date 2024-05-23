@@ -19,7 +19,8 @@
             .Replace("/", "")
             .Replace("\\", "")
             .Replace("|", "")
-            .Replace("?", "");
+            .Replace("?", "")
+            .Replace("\"", "''");
 
         /// <summary>
         /// Returns an array of strings which split the original string by comma (,)

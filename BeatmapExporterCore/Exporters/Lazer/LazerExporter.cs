@@ -169,14 +169,8 @@ namespace BeatmapExporterCore.Exporters.Lazer
         /// <exception cref="IOException">The BeatmapSet export was unsuccessful and an error should be noted to the user.</exception>
         public void ExportBeatmap(BeatmapSet mapset, out string filename)
         {
-            // build set of excluded file hashes 
-            // these are difficulties in the original beatmap but not 'selected'
-            // when doing file export, we will be iterating each file, and every file will be included except for the undesired difficulty files
-            var excludedHashes =
-                from map in mapset.Beatmaps
-                where !mapset.SelectedBeatmaps.Contains(map)
-                select map.Hash;
-            var excluded = excludedHashes.ToList();
+            // get excluded diff hashes - every file will be exported except for the undesired difficulty files
+            var excluded = mapset.ExcludedDiffHashes;
 
             Stream? export = null;
             try
@@ -389,6 +383,36 @@ namespace BeatmapExporterCore.Exporters.Lazer
             using FileStream replay = lazerDb.OpenHashedFile(replayFile);
             using FileStream output = File.Open(outputFile, FileMode.CreateNew);
             replay.CopyTo(output);
+        }
+
+        /// <summary>
+        /// Export a single BeatmapSet as a "folder" for use with osu! stable, with only the 'selected' diffs.
+        /// </summary>
+        /// <param name="mapset">The BeatmapSet to export.</param>
+        /// <param name="filename">The output directory that will be used. Will be set regardless of success of export and should be used for user feedback.</param>
+        /// <exception cref="IOException">The BeatmapSet export was unsuccessful and an error should be noted to the user.</exception>
+        public void ExportBeatmapFolder(BeatmapSet mapset, out string dirName)
+        {
+            var excluded = mapset.ExcludedDiffHashes;
+
+            dirName = mapset.SongFolderName();
+            string mapDir = Path.Combine(Configuration.ExportPath, dirName);
+            foreach (var namedFile in mapset.Files)
+            {
+                string hash = namedFile.File.Hash;
+                if (excluded.Contains(hash))
+                    continue;
+                using var file = lazerDb.OpenHashedFile(hash);
+
+                string outputFile = Path.Combine(mapDir, namedFile.Filename);
+                // mkdirs - beatmap set may contain sub directories for storyboard files etc
+                var dir = Path.GetDirectoryName(outputFile);
+                if (dir != null) 
+                    Directory.CreateDirectory(dir);
+
+                using FileStream output = File.Create(outputFile);
+                file?.CopyTo(output);
+            }
         }
 
         /// <summary>

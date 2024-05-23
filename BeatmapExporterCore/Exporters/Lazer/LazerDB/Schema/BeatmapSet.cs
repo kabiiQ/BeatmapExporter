@@ -23,6 +23,9 @@ namespace BeatmapExporterCore.Exporters.Lazer.LazerDB.Schema
         // Author kabii
         IList<Beatmap>? selected = null; // backing field for SelectedBeatmaps
 
+        [Ignored]
+        public string BeatmapID => OnlineID != -1 ? $"{OnlineID} " : "";
+
         /// <summary>
         /// Collection containing only the beatmaps from this set which are currently selected by the user.
         /// </summary>
@@ -39,6 +42,16 @@ namespace BeatmapExporterCore.Exporters.Lazer.LazerDB.Schema
             }
             set { selected = value; }
         }
+
+        /// <summary>
+        /// Collection containing only file hashes of difficulties which are not selected from this beatmap set
+        /// For beatmap set export, every arbitrary file in the set, potentially hundreds, is exported except for these difficulty files
+        /// </summary>
+        [Ignored]
+        public IList<string> ExcludedDiffHashes => Beatmaps
+            .Where(b => !SelectedBeatmaps.Contains(b))
+            .Select(b => b.Hash)
+            .ToList();
 
         [Ignored]
         public IList<Score> AllScores => Beatmaps.SelectMany(b => b.Scores).ToList();
@@ -69,10 +82,21 @@ namespace BeatmapExporterCore.Exporters.Lazer.LazerDB.Schema
         public string ArchiveFilename()
         {
             BeatmapMetadata metadata = SelectedBeatmaps.First().Metadata;
-            string beatmapId = OnlineID != -1 ? $"{OnlineID} " : "";
             return
-                $"{beatmapId}{metadata.Artist.Trunc(30)} - {metadata.Title.Trunc(40)} ({metadata.Author.Username.Trunc(30)}).osz"
+                $"{BeatmapID}{metadata.Artist.Trunc(30)} - {metadata.Title.Trunc(40)} ({metadata.Author.Username.Trunc(30)}).osz"
                 .RemoveFilenameCharacters();
+        }
+
+        /// <summary>
+        /// The filename to be used when exporting this mapset as a folder
+        /// </summary>
+        public string SongFolderName()
+        {
+            BeatmapMetadata metadata = SelectedBeatmaps.First().Metadata;
+            return
+                $"{BeatmapID} {metadata.Artist} - {metadata.Title}"
+                .RemoveFilenameCharacters()
+                .Trunc(155);
         }
     }
 }

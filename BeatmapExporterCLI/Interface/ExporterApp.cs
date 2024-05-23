@@ -83,6 +83,7 @@ namespace BeatmapExporterCLI.Interface
                     switch (Configuration.ExportFormat)
                     {
                         case ExportFormat.Beatmap:
+                        case ExportFormat.Folder:
                             CLI.ExportBeatmaps();
                             break;
                         case ExportFormat.Audio:

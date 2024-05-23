@@ -88,6 +88,7 @@ namespace BeatmapExporterGUI.ViewModels
                 ExportFormat.Audio => ExportAudioFiles,
                 ExportFormat.Background => ExportBackgrounds,
                 ExportFormat.Replay => ExportReplays,
+                ExportFormat.Folder => ExportBeatmaps,
             };
 
             ActiveExport = true;
@@ -111,7 +112,17 @@ namespace BeatmapExporterGUI.ViewModels
                 string? filename = null;
                 try
                 {
-                    await Exporter.RealmScheduler.Schedule(() => lazer.ExportBeatmap(mapset, out filename));
+                    // beatmap 'folder' export and '.osz' export are nearly identical processes
+                    if (lazer.Configuration.ExportFormat == ExportFormat.Folder)
+                    {
+                        // exporting beatmap set as unarchived folder for use directly with osu! stable
+                        await Exporter.RealmScheduler.Schedule(() => lazer.ExportBeatmapFolder(mapset, out filename));
+                    }
+                    else
+                    {
+                        // exporting beatmap set as .osz archive
+                        await Exporter.RealmScheduler.Schedule(() => lazer.ExportBeatmap(mapset, out filename));
+                    }
                     exported++;
                     AddExport(true, $"Exported beatmap set ({Progress + 1}/{TotalSetCount}): {filename}");
                 } catch (Exception e)

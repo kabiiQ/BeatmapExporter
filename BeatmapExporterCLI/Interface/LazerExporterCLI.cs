@@ -32,7 +32,16 @@ namespace BeatmapExporterCLI.Interface
                 attempted++;
                 try
                 {
-                    Exporter.ExportBeatmap(mapset, out filename);
+                    // beatmap 'folder' export and '.osz' export are nearly identical processes
+                    if (Configuration.ExportFormat == ExportFormat.Folder)
+                    {
+                        // exporting beatmap set as unarchived folder for use directly with osu! stable
+                        Exporter.ExportBeatmapFolder(mapset, out filename);
+                    } else
+                    {
+                        // exporting beatmap set as .osz archive
+                        Exporter.ExportBeatmap(mapset, out filename);
+                    }
                     exported++;
                     Console.WriteLine($"Exported beatmap set ({attempted}/{count}): {filename}");
                 } catch (Exception e)

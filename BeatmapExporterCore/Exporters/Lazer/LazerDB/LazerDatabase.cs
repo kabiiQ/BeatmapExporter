@@ -1,4 +1,4 @@
-using BeatmapExporterCore.Exporters.Lazer.LazerDB.Schema;
+﻿using BeatmapExporterCore.Exporters.Lazer.LazerDB.Schema;
 using Realms;
 using Realms.Exceptions;
 using System.Runtime.InteropServices;
@@ -55,6 +55,7 @@ namespace BeatmapExporterCore.Exporters.Lazer.LazerDB
             else
             {
                 yield return Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), ".local/share/osu");
+                yield return Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), ".var/app/sh.ppy.osu/data/osu");
             }
         }
         

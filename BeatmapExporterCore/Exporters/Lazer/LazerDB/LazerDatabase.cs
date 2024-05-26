@@ -1,4 +1,4 @@
-﻿using BeatmapExporterCore.Exporters.Lazer.LazerDB.Schema;
+using BeatmapExporterCore.Exporters.Lazer.LazerDB.Schema;
 using Realms;
 using Realms.Exceptions;
 using System.Runtime.InteropServices;
@@ -35,22 +35,33 @@ namespace BeatmapExporterCore.Exporters.Lazer.LazerDB
         /// <summary>
         /// Attempt to determine the lazer database directory.
         /// </summary>
-        public static string DefaultInstallDirectory()
+        /// <param name="userDir">A directory specified by the user on launch, prioritized in directory list</param>
+        public static IEnumerable<string> CheckDirectories(string? userDir)
         {
+            if (userDir != null)
+            {
+                // include user-provided directory first
+                yield return userDir;
+            }
             if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
             {
                 // default install location: %appdata%/osu
-                return Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "osu");
+                yield return Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "osu");
             }
             else if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
             {
-                return Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), "Library/Application Support/osu");
+                yield return Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), "Library/Application Support/osu");
             }
             else
             {
-                return Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), ".local/share/osu");
+                yield return Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), ".local/share/osu");
             }
         }
+        
+        /// <summary>
+        /// Returns the "first" directory that would be checked by the launcher.
+        /// </summary>
+        public static string DefaultInstallDirectory() => CheckDirectories(null).First();
 
         /// <summary>
         /// Loads the osu!lazer database schema and opens the database file 

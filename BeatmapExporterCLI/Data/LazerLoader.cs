@@ -12,22 +12,47 @@ namespace BeatmapExporterCLI.Data
         /// <summary>
         /// Attempt to locate and load the lazer database. May prompt user for the database path.
         /// </summary>
-        public static ExporterApp Load(string? directory)
+        public static ExporterApp Load(string? userDir)
         {
             // osu!lazer has been selected at this point. 
             // load the osu!lazer database here, can operate on lazer-specific objects
             // assume default lazer directory, prompting user if not found (or specified as arg)
-            directory ??= LazerDatabase.DefaultInstallDirectory();
+            Console.Write($" --- kabii's Lazer Exporter ---\n\nNow checking default osu!lazer storage locations. You can run this application with your lazer storage location as an argument if you have it stored somewhere different.\n\n");
 
-            Console.Write($" --- kabii's Lazer Exporter ---\n\nChecking directory: {directory}\nRun this application with your osu!lazer storage directory as an argument if this is not your osu! data location.\n");
-
-            // load beatmap information into memory
-            LazerDatabase? database = Locate(directory);
-            if (database is null)
+            var checkDirs = LazerDatabase.CheckDirectories(userDir);
+            string? dbFile = null;
+            foreach (var dir in checkDirs)
             {
+                // check each provided or default lazer directory
+                Console.WriteLine($"Checking directory: {dir}");
+                dbFile = LazerDatabase.GetDatabaseFile(dir);
+                if (dbFile is null)
+                {
+                    Console.WriteLine($"osu!lazer database not found at {dir}");
+                } else
+                {
+                    break; // database found, do not check more locations
+                }
+            }
+
+            if (dbFile is null)
+            {
+                // fallback: prompt user for directory to check
+                Console.Write("osu! song database not found. Please find and provide your osu!lazer data folder.\nThe folder should contain a \"client.realm\" file and can be opened from in-game.\n\nFolder path: ");
+                string? input = Console.ReadLine();
+                if (input is not null)
+                {
+                    dbFile = LazerDatabase.GetDatabaseFile(input);
+                }
+            }
+
+            if (dbFile is null)
+            {
+                // failed to find lazer database
                 Console.WriteLine("osu! database not found in default location or selected.");
                 ExporterApp.Exit();
             }
+            LazerDatabase database = new LazerDatabase(dbFile);
 
             Realm? realm = null;
             try
@@ -38,13 +63,11 @@ namespace BeatmapExporterCLI.Data
             }
             catch (Exception e)
             {
+                Console.WriteLine($"\nError opening database: {e.Message}");
                 if (e is LazerVersionException)
                 {
                     Console.WriteLine("The osu!lazer database structure has updated since the last BeatmapExporter update.");
                     Console.WriteLine($"\nYou can check {ExporterUpdater.Releases} for a new release, or file an issue there to let me know it needs updating if it's been a few days.");
-                } else
-                {
-                    Console.WriteLine($"\nError opening database: {e.Message}");
                 }
                 ExporterApp.Exit();
             }
@@ -61,24 +84,6 @@ namespace BeatmapExporterCLI.Data
             LazerExporter exporter = new(database, beatmaps, collections);
             LazerExporterCLI cli = new(exporter);
             return new ExporterApp(cli);
-        }
-
-        /// <summary>
-        /// Checks provided directory for the lazer database, prompting the user once if not found in that directory.
-        /// </summary>
-        public static LazerDatabase? Locate(string directory)
-        {
-            string? dbFile = LazerDatabase.GetDatabaseFile(directory);
-            if (dbFile is null)
-            {
-                Console.Write("osu! song database not found. Please find and provide your osu!lazer data folder.\nThe folder should contain a \"client.realm\" file and can be opened from in-game.\n\nFolder path: ");
-                string? input = Console.ReadLine();
-                if (input is not null)
-                {
-                    dbFile = LazerDatabase.GetDatabaseFile(input);
-                }
-            }
-            return dbFile is not null ? new LazerDatabase(dbFile) : null;
         }
     }
 }

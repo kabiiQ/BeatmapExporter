@@ -49,15 +49,31 @@ namespace BeatmapExporterGUI.Exporter
         /// </summary>
         /// <param name="directory">A user-specified directory to override the database search</param>
         /// <returns>If the database load was a success else the user should be notified to try again</returns>
-        public bool LoadDatabase(string? directory)
+        public bool LoadDatabase(string? userDir)
         {
-            directory ??= LazerDatabase.DefaultInstallDirectory();
+            // load the osu!lazer database here, check default directories
+            var checkDirs = LazerDatabase.CheckDirectories(userDir);
+            AddSystemMessage("Now checking default osu!lazer storage locations.");
+            AddSystemMessage("You can run this application with your lazer storage location as an argument if you have it stored somewhere different.");
 
-            AddSystemMessage($"Checking directory: {directory}");
-            AddSystemMessage("Run this application with your osu!lazer storage directory as an argument if this is not your osu! data location.");
+            string? dbFile = null;
+            foreach (var dir in checkDirs)
+            {
+                // check each provided or default lazer directory
+                AddSystemMessage($"Checking directory: {dir}");
+                dbFile = LazerDatabase.GetDatabaseFile(dir);
+                if (dbFile is null)
+                {
+                    AddSystemMessage($"osu! song database not found at {dir}.", error: true);
+                } else
+                {
+                    break; // database found, do not check more locations
+                }
+            }
 
-            string? dbFile = LazerDatabase.GetDatabaseFile(directory);
-            if (dbFile == null)
+            // simply not loading anything on failure for the GUI
+            // the user will be able to use a standard button for selecting the database if nothing is loaded 
+            if (dbFile is null)
             {
                 AddSystemMessage("osu! song database not found. Please find and provide your osu!lazer data folder.", error: true);
                 AddSystemMessage("The folder should contain a \"client.realm\" file and can be opened from in-game to locate it.");
@@ -73,13 +89,11 @@ namespace BeatmapExporterGUI.Exporter
                     throw new IOException("Unable to open osu! database.");
             } catch (Exception e)
             {
+                AddSystemMessage($"Error opening database: {e.Message}", error: true);
                 if (e is LazerVersionException)
                 {
                     AddSystemMessage("The osu!lazer database structure has updated since the last BeatmapExporter update.", error: true);
                     AddSystemMessage("You can check GitHub for a new release, or file an issue there to let me know it needs updating if it's been a few days.", error: true);
-                } else
-                {
-                    AddSystemMessage($"Error opening database: {e.Message}", error: true);
                 }
                 return false;
             }

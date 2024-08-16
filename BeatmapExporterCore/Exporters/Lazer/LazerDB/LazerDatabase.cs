@@ -1,4 +1,4 @@
-﻿using BeatmapExporterCore.Exporters.Lazer.LazerDB.Schema;
+using BeatmapExporterCore.Exporters.Lazer.LazerDB.Schema;
 using Realms;
 using Realms.Exceptions;
 using System.Runtime.InteropServices;
@@ -8,7 +8,10 @@ namespace BeatmapExporterCore.Exporters.Lazer.LazerDB
     /// <summary>
     /// Exception thrown when the osu!lazer database indicates a version mismatch
     /// </summary>
-    public class LazerVersionException : ExporterException { }
+    public class LazerVersionException : ExporterException
+    { 
+        public LazerVersionException(string message) : base(message) { }
+    }
 
     public class LazerDatabase
     {
@@ -100,7 +103,7 @@ namespace BeatmapExporterCore.Exporters.Lazer.LazerDB
             {
                 if(re.Message.Contains("does not equal last set version"))
                 {
-                    throw new LazerVersionException();
+                    throw new LazerVersionException(re.Message);
                 }
                 throw new IOException(re.Message);
             }

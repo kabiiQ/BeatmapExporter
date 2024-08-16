@@ -42,6 +42,10 @@ As of version 1.3.8, there is an option to export only [beatmap background image
 
 As of version 2.1.0, there is an option to export your [score replays](https://github.com/kabiiQ/BeatmapExporter/pull/17) from specific beatmaps.
 
+### Songs Folder Export
+
+As of version 2.2.0, there is an option to export as a "Songs" folder rather than seperate .osz archives. This may be more convenient if transferring directly to stable. 
+
 <hr />
 
 ## Graphical User Interface

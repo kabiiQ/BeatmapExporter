@@ -142,7 +142,7 @@ namespace BeatmapExporterCore.Exporters.Lazer.LazerDB
         public FileStream? OpenNamedFile(BeatmapSet set, string filename)
         {
             // get named file from specific beatmap - check if it exists in this beatmap
-            string? fileHash = set.Files.FirstOrDefault(f => f.Filename == filename)?.File?.Hash;
+            string? fileHash = set.NamedFiles.FirstOrDefault(f => f.Filename == filename)?.File?.Hash;
             if(fileHash is null)
             {
                 return null;

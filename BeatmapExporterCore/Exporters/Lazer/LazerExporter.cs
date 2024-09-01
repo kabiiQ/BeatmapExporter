@@ -180,7 +180,7 @@ namespace BeatmapExporterCore.Exporters.Lazer
                 export = File.Open(exportPath, FileMode.CreateNew);
 
                 using ZipArchive osz = new(export, ZipArchiveMode.Create, true);
-                foreach (var namedFile in mapset.Files)
+                foreach (var namedFile in mapset.NamedFiles)
                 {
                     string hash = namedFile.File.Hash;
                     if (excluded.Contains(hash))
@@ -397,7 +397,7 @@ namespace BeatmapExporterCore.Exporters.Lazer
 
             dirName = mapset.SongFolderName();
             string mapDir = Path.Combine(Configuration.ExportPath, dirName);
-            foreach (var namedFile in mapset.Files)
+            foreach (var namedFile in mapset.NamedFiles)
             {
                 string hash = namedFile.File.Hash;
                 if (excluded.Contains(hash))

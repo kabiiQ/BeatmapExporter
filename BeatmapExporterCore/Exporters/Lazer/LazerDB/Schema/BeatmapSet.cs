@@ -76,6 +76,9 @@ namespace BeatmapExporterCore.Exporters.Lazer.LazerDB.Schema
                 $"{OnlineID}: {metadata.Artist} - {metadata.Title} ({metadata.Author.Username} - {difficultySpread} stars)";
         }
 
+        [Ignored]
+        public IList<RealmNamedFileUsage> NamedFiles => Files.Where(f => !string.IsNullOrWhiteSpace(f.Filename)).ToList();
+
         /// <summary>
         /// The full filename to be used for exporting this mapset as a whole.
         /// </summary>

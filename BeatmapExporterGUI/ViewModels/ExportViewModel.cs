@@ -155,9 +155,9 @@ namespace BeatmapExporterGUI.ViewModels
                 if (token.IsCancellationRequested)
                     break;
 
-                await Exporter.RealmScheduler.Schedule(async () =>
+                await Exporter.RealmScheduler.Schedule(() =>
                 {
-                    var (stepDiscover, stepSuccess) = await ExportMapsetAudio(mapset, discovered);
+                    var (stepDiscover, stepSuccess) = ExportMapsetAudio(mapset, discovered);
                     // These states are used for UI info/progress, it seems better to update them async and be potentially desynced rather than waiting for slow exports just to maintain order
                     discovered += stepDiscover;
                     exportedAudio += stepSuccess;
@@ -170,7 +170,7 @@ namespace BeatmapExporterGUI.ViewModels
         /// <summary>
         /// Identifies selected beatmap's audio files and exports, updating the user viewable statuses with each attempted export.
         /// </summary>
-        private async Task<ExportProgress> ExportMapsetAudio(BeatmapSet mapset, int totalDiscovered)
+        private ExportProgress ExportMapsetAudio(BeatmapSet mapset, int totalDiscovered)
         {
             var allAudio = lazer.ExtractAudio(mapset);
 
@@ -192,7 +192,7 @@ namespace BeatmapExporterGUI.ViewModels
                     AddExport(true, $"({totalDiscovered}/?) Exporting {audioExport.OutputFilename}{transcodeNotice}");
 
                     void metadataFailure(Exception e) => AddExport(false, $"Unable to set metadata for {audioExport.OutputFilename} :: {e.Message}. Exporting will continue.");
-                    await lazer.ExportAudio(audioExport, metadataFailure);
+                    lazer.ExportAudio(audioExport, metadataFailure);
                     exportedAudio++;
                 }
                 catch (TranscodeException te)

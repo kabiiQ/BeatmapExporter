@@ -2,6 +2,7 @@
 using BeatmapExporterCore.Exporters.Lazer.LazerDB.Schema;
 using BeatmapExporterCore.Filters;
 using BeatmapExporterCore.Utilities;
+using Nito.AsyncEx;
 using System.IO.Compression;
 using System.Text.RegularExpressions;
 
@@ -241,7 +242,7 @@ namespace BeatmapExporterCore.Exporters.Lazer
         /// <param name="metadataFailure">An optional callback to notify users on metadata assignment failure. As metadata is non-critical, export will always continue.</param>
         /// <exception cref="TranscodeException">Audio transcode is required for this file and has failed.</exception>
         /// <exception cref="Exception">General audio file export has failed.</exception>
-        public async Task ExportAudio(AudioExportTask export, Action<Exception>? metadataFailure)
+        public void ExportAudio(AudioExportTask export, Action<Exception>? metadataFailure)
         {            
             var (mapset, metadata, transcodeFrom, outputFilename) = export;
             string outputFile = Path.Combine(Configuration.ExportPath, outputFilename);
@@ -262,8 +263,12 @@ namespace BeatmapExporterCore.Exporters.Lazer
                 }
                 try
                 {
-                    await Task.Run(() => transcoder.TranscodeMP3(audio, outputFile));
-                    // transcoder.TranscodeMP3(audio, outputFile);
+                    AsyncContext.Run(() =>
+                    {
+                        transcoder.TranscodeMP3(audio, outputFile);
+                    });
+                    // await Task.Run(() => transcoder.TranscodeMP3(audio, outputFile)); -> changes thread context, breaking realm access later
+                    // transcoder.TranscodeMP3(audio, outputFile); -> blocks main thread, breaking UI updates until completion
                 }
                 catch (Exception e)
                 {

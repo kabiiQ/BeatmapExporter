@@ -82,7 +82,7 @@ namespace BeatmapExporterCLI.Interface
                         }
 
                         void metadataFailure(Exception e) => Console.WriteLine($"Unable to set metadata for {audioExport.OutputFilename} :: {e.Message}\nExporting will continue.");
-                        Exporter.ExportAudio(audioExport, metadataFailure).Wait();
+                        Exporter.ExportAudio(audioExport, metadataFailure);
                         exportedAudio++;
 
                     } catch (TranscodeException te)

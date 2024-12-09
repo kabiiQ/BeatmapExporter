@@ -2,8 +2,8 @@
 {
     public static class ExporterUpdater
     {
-        public const string Version = "2.2.2"; // raw version, user is notified if their version is different than the online latest
-        public const string FeatureVersion = "2.2.3"; // version with prerelease flag etc.
+        public const string Version = "2.2.4"; // raw version, user is notified if their version is different than the online latest
+        public const string FeatureVersion = "2.2.4"; // version with prerelease flag etc.
 
         public const string Project = "https://github.com/kabiiQ/BeatmapExporter";
         public const string Releases = $"{Project}/releases";

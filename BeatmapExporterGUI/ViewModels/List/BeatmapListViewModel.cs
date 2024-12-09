@@ -128,7 +128,7 @@ namespace BeatmapExporterGUI.ViewModels.List
             Task.Run(() => ApplyDisplaySetting());
         }
 
-        private async Task ApplyDisplaySetting() => await Exporter.RealmScheduler.Schedule(async () =>
+        private async Task ApplyDisplaySetting() => await Exporter.RealmScheduler.Schedule(() =>
         {
             // Determine all possible displayable maps based on display setting
             IEnumerable<BeatmapSet> displayMaps;

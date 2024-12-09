@@ -49,11 +49,17 @@
       <ScrollViewer Name="SystemMessages">
         <ItemsControl ItemsSource="{Binding Exporter.SystemMessages}">
 
+          <ItemsControl.Styles>
+            <Style Selector="TextBlock.error">
+              <Setter Property="Foreground" Value="Red" />
+            </Style>
+          </ItemsControl.Styles>
+
           <ItemsControl.ItemTemplate>
             <DataTemplate>
-            
               <TextBlock Text="{Binding}"
                          Margin="6,12"
+                         Classes.error="{Binding IsError}"
                          TextWrapping="Wrap" />
             
             </DataTemplate>

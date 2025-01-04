@@ -72,6 +72,19 @@ If you are not on Windows, I included default directories for OSX and Linux and 
 
 You can alternatively launch the program with the database folder as the launch argument if you already know it will be in an unusual location. The database folder needed contains a "files" folder. This folder can also be opened from in-game if you moved it and are unsure where it is located. If you did not move it, it should just automatically work.
 
+## Running on macOS/Linux
+
+macOS makes running random (non app-store) programs like this a bit more involved. You will need to use your system's Terminal to make the program executable and then run it. 
+
+If you are not familiar with Terminal, you may need to look up how to open Terminal in the specific folder you have downloaded BeatmapExporter into. 
+
+Then, run the following command:
+`chmod +x osx-BeatmapExporter.app` - this marks osx-BeatmapExporter.app as executable so that you can run it.
+
+Then, you can either run the program with `./osx-BeatmapExporter.app` from the same Terminal window or you can try just clicking the file now (though it may make you also allow it in Security settings if you click it)
+
+Linux terminal commands have the same usage.
+
 # Basic Export Task Screenshot
 
 Exporting beatmaps with a tag with the original CLI program version:

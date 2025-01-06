@@ -11,10 +11,11 @@
     
     <!-- This panel is required (or some other workaround) to keep the top bar able to move the window -->
     <StackPanel Orientation="Horizontal"
-                DockPanel.Dock="Top">
-      
+                DockPanel.Dock="Top"
+                Margin="{OnPlatform Default='0', macOS='0,24,0,0'}">
+
       <ContentControl Content="{Binding MenuRow}" />
-      
+
     </StackPanel>
 
     <TransitioningContentControl Content="{Binding CurrentOperation}" />

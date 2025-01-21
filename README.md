@@ -68,7 +68,7 @@ Executables are available from the [Releases](https://github.com/kabiiQ/BeatmapE
 
 If you are on a Windows system and your osu! database is in the default location (%appdata%\osu), you should be able to simply run the application. If you changed the database location when install osu!lazer, the program will be unable to locate it and will prompt you to enter it. 
 
-If you are not on Windows, I included default directories for OSX and Linux and it should automatically work, but it is untested on these platforms. 
+If you are not on Windows, I included default directories for macOS and Linux and it should automatically work, but it is untested on these platforms. 
 
 You can alternatively launch the program with the database folder as the launch argument if you already know it will be in an unusual location. The database folder needed contains a "files" folder. This folder can also be opened from in-game if you moved it and are unsure where it is located. If you did not move it, it should just automatically work.
 
@@ -79,9 +79,9 @@ macOS makes running random (non app-store) programs like this a bit more involve
 If you are not familiar with Terminal, you may need to look up how to open Terminal in the specific folder you have downloaded BeatmapExporter into. 
 
 Then, run the following command:
-`chmod +x osx-BeatmapExporter.app` - this marks osx-BeatmapExporter.app as executable so that you can run it.
+`chmod +x mac-BeatmapExporter.app` - this marks mac-BeatmapExporter.app as executable so that you can run it.
 
-Then, you can either run the program with `./osx-BeatmapExporter.app` from the same Terminal window or you can try just clicking the file now (though it may make you also allow it in Security settings if you click it)
+Then, you can either run the program with `./mac-BeatmapExporter.app` from the same Terminal window or you can try just clicking the file now (though it may make you also allow it in Security settings if you click it)
 
 Linux terminal commands have the same usage.
 

@@ -8,7 +8,11 @@ echo f | xcopy /Y "BeatmapExporterCLI\bin\Release\net6.0\win-x64\publish\Beatmap
 echo f | xcopy /Y "BeatmapExporterCLI\bin\Release\net6.0\osx-x64\publish\BeatmapExporterCLI" "BuildOutput\mac-BeatmapExporterCLI"
 echo f | xcopy /Y "BeatmapExporterCLI\bin\Release\net6.0\linux-x64\publish\BeatmapExporterCLI" "BuildOutput\linux-BeatmapExporterCLI"
 echo f | xcopy /Y "BeatmapExporterGUI.Desktop\bin\Release\net6.0\win-x64\publish\BeatmapExporterGUI.Desktop.exe" "BuildOutput\BeatmapExporter.exe"
-echo f | xcopy /Y "BeatmapExporterGUI.Desktop\bin\Release\net6.0\osx-x64\publish\BeatmapExporterGUI.Desktop" "BuildOutput\mac-BeatmapExporter.app"
+echo f | xcopy /Y "BeatmapExporterGUI.Desktop\bin\Release\net6.0\osx-x64\publish\BeatmapExporterGUI.Desktop" "BuildOutput\BeatmapExporter.app"
 echo f | xcopy /Y "BeatmapExporterGUI.Desktop\bin\Release\net6.0\linux-x64\publish\BeatmapExporterGUI.Desktop" "BuildOutput\linux-BeatmapExporter"
+
+cd BuildOutput
+tar -avcf "mac-BeatmapExporter.zip" "BeatmapExporter.app"
+del BeatmapExporter.app
 
 pause

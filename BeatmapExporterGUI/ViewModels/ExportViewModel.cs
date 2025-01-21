@@ -92,7 +92,13 @@ namespace BeatmapExporterGUI.ViewModels
             };
 
             ActiveExport = true;
-            await operation(token);
+            try
+            {
+                await operation(token);
+            } catch (Exception e)
+            {
+                AddExport(false, $"Export process cancelled due to error: {e}");
+            }
             ActiveExport = false;
         }
 

@@ -16,7 +16,7 @@ namespace BeatmapExporterCore.Exporters.Lazer.LazerDB
     public class LazerDatabase
     {
         public const int LazerSchemaVersion = 46;
-        public const string FirstLazerVersion = "2025.101.0";
+        public const string FirstLazerVersion = "2025.118.0";
 
         readonly string database;
         readonly string filesDirectory;
@@ -101,7 +101,7 @@ namespace BeatmapExporterCore.Exporters.Lazer.LazerDB
             }
             catch (RealmException re)
             {
-                if(re.Message.Contains("does not equal last set version"))
+                if(re.Message.Contains("does not equal last set version") || re.Message.Contains("requires an upgrade"))
                 {
                     throw new LazerVersionException(re.Message);
                 }

@@ -54,7 +54,6 @@
               </Button>
 
               <Button Command="{Binding ListBeatmapsCommand}"
-                      Classes="accent"
                       Margin="5">
                 View Beatmap List
               </Button>
@@ -112,7 +111,12 @@
         <TextBlock>Export Path</TextBlock>
         <TextBlock Text="{Binding ExportPath}"
                    TextWrapping="Wrap" />
-        <Button Command="{Binding SelectExportPath}">Change Export Location</Button>
+        
+        <StackPanel Orientation="Horizontal"
+                    Spacing="5">
+          <Button Command="{Binding SelectExportPath}">Change Export Location</Button>
+          <Button Command="{Binding OpenExportDirectory}">Open Export Directory</Button>
+        </StackPanel>
 
       </StackPanel>
 

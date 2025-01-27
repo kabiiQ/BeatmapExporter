@@ -13,10 +13,12 @@ namespace BeatmapExporterGUI.ViewModels.List
     /// </summary>
     public partial class BeatmapListViewModel : ViewModelBase
     {
+        private readonly OuterViewModel outerViewModel;
         private bool hasExported = false; // if this list view has exported beatmaps already
 
-        public BeatmapListViewModel()
+        public BeatmapListViewModel(OuterViewModel outer)
         {
+            outerViewModel = outer;
             hasExported = false;
 
             BeatmapSetList = new();
@@ -203,7 +205,7 @@ namespace BeatmapExporterGUI.ViewModels.List
         /// <summary>
         /// User-requested input to manually open the export directory.
         /// </summary>
-        public void OpenExportDirectory() => Exporter.Lazer!.SetupExport(openDir: true);
+        public void OpenExportDirectory() => outerViewModel.OpenExportDirectory();
         #endregion
     }
 }

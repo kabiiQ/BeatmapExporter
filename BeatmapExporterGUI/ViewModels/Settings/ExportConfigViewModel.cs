@@ -265,6 +265,8 @@ namespace BeatmapExporterGUI.ViewModels.Settings
                 OnPropertyChanged(nameof(ExportPath));
             }
         }
+
+        public void OpenExportDirectory() => outerViewModel.OpenExportDirectory();
         #endregion
     }
 }

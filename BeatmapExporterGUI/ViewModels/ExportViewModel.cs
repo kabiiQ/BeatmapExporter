@@ -3,6 +3,7 @@ using BeatmapExporterCore.Exporters.Lazer;
 using BeatmapExporterCore.Exporters.Lazer.LazerDB.Schema;
 using CommunityToolkit.Mvvm.ComponentModel;
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading;
@@ -171,7 +172,9 @@ namespace BeatmapExporterGUI.ViewModels
                     Progress++;
                 });
             }
-            Description = $"Exported {exportedAudio}/{discovered} audio files from {TotalSetCount} beatmaps to {lazer.Configuration.FullPath}.";
+            var status = $"Exported {exportedAudio}/{discovered} audio files from {TotalSetCount} beatmaps to {lazer.Configuration.FullPath}.";
+            Description = status;
+            Exporter.AddSystemMessage(status);
         }
 
         /// <summary>
@@ -240,7 +243,9 @@ namespace BeatmapExporterGUI.ViewModels
                     Progress++;
                 });
             }
-            Description = $"Exported {exportedBackgrounds}/{discovered} background files from {TotalSetCount} beatmaps to {lazer.Configuration.FullPath}.";
+            var status = $"Exported {exportedBackgrounds}/{discovered} background files from {TotalSetCount} beatmaps to {lazer.Configuration.FullPath}.";
+            Description = status;
+            Exporter.AddSystemMessage(status);
         }
 
         /// <summary>
@@ -301,7 +306,9 @@ namespace BeatmapExporterGUI.ViewModels
                 }
                 Progress++;
             }
-            Description = $"Exported {exportedReplays}/{replayCount} player score replays from {TotalSetCount} beatmaps to {lazer.Configuration.FullPath}.";
+            var status = $"Exported {exportedReplays}/{replayCount} player score replays from {TotalSetCount} beatmaps to {lazer.Configuration.FullPath}.";
+            Description = status;
+            Exporter.AddSystemMessage(status);
         }
 
         private async Task ExportCollectionDb(CancellationToken _)

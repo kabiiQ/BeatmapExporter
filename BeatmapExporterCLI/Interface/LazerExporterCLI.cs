@@ -161,7 +161,7 @@ namespace BeatmapExporterCLI.Interface
                 var steps = Exporter.ExportCollectionDb();
                 foreach (var step in steps)
                 {
-                    Console.WriteLine($"Adding \"{step.Name}\" to collectionl.db with {step.IncludedDiffs}/{step.OriginalDiffs} included.");
+                    Console.WriteLine($"Adding \"{step.Name}\" to collectionl.db with {step.IncludedDiffs}/{step.OriginalDiffs} included after applying filters.");
                 }
                 Console.WriteLine($"Exported collection.db file with {steps.Count} collections included.");
             } catch (Exception e)

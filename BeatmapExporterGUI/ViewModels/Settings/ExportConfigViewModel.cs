@@ -103,16 +103,6 @@ namespace BeatmapExporterGUI.ViewModels.Settings
         }
 
         /// <summary>
-        /// String containing the current type of file that will be exported
-        /// </summary>
-        public string ExportUnit => Config.ExportFormat.UnitName();
-
-        /// <summary>
-        /// Reference to the Export Beatmaps command functionality for this page to allow an alternate method to begin exporting.
-        /// </summary>
-        public IAsyncRelayCommand ExportBeatmapsCommand => outerViewModel.MenuRow.ExportCommand;
-
-        /// <summary>
         /// User-requested action to change the application view to the beatmap list.
         /// </summary>
         [RelayCommand]
@@ -182,6 +172,21 @@ namespace BeatmapExporterGUI.ViewModels.Settings
         /// Reference to the current full file export directory.
         /// </summary>
         public string ExportPath => Config.FullPath;
+
+        /// <summary>
+        /// User-requested action to change the current export path. Opens an additional dialog for directory selection.
+        /// </summary>
+        public async Task SelectExportPath()
+        {
+            var selectDir = await App.Current.DialogService.SelectDirectoryAsync(ExportPath);
+            if (selectDir != null)
+            {
+                Config.ExportPath = selectDir;
+                OnPropertyChanged(nameof(ExportPath));
+            }
+        }
+
+        public void OpenExportDirectory() => Exporter.Lazer.SetupExport();
 
         /// <summary>
         /// If the export mode is currently set to export whole beatmaps, the default export mode.
@@ -254,19 +259,14 @@ namespace BeatmapExporterGUI.ViewModels.Settings
         public string MergeCaseDescriptor => MergeCaseInsensitive ? "Collections with the same name with different capitalization will be merged." : "Collections will not be merged, all collections are preserved.";
 
         /// <summary>
-        /// User-requested action to change the current export path. Opens an additional dialog for directory selection.
+        /// String containing the current type of file that will be exported
         /// </summary>
-        public async Task SelectExportPath()
-        {
-            var selectDir = await App.Current.DialogService.SelectDirectoryAsync(ExportPath);
-            if (selectDir != null)
-            {
-                Config.ExportPath = selectDir;
-                OnPropertyChanged(nameof(ExportPath));
-            }
-        }
+        public string ExportUnit => Config.ExportFormat.UnitName();
 
-        public void OpenExportDirectory() => Exporter.Lazer.SetupExport();
+        /// <summary>
+        /// Reference to the Export Beatmaps command functionality for this page to allow an alternate method to begin exporting.
+        /// </summary>
+        public IAsyncRelayCommand ExportBeatmapsCommand => outerViewModel.MenuRow.ExportCommand;
         #endregion
     }
 }

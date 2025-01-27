@@ -330,7 +330,7 @@ namespace BeatmapExporterGUI.ViewModels
             Progress = included;
             foreach (var step in steps)
             {
-                AddExport(true, $"Adding \"{step.Name}\" to collection.db with {step.IncludedDiffs}/{step.OriginalDiffs} included.");
+                AddExport(true, $"Adding \"{step.Name}\" to collection.db with {step.IncludedDiffs}/{step.OriginalDiffs} included after applying filters.");
             }
             var status = $"Exported collection.db file with {included} collections included.";
             Description = status;

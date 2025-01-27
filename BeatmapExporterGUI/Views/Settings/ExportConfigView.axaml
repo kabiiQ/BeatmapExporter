@@ -57,12 +57,6 @@
                       Margin="5">
                 View Beatmap List
               </Button>
-
-              <Button Command="{Binding ExportBeatmapsCommand}"
-                      Classes="accent"
-                      Margin="5"
-                      Content="{Binding ExportUnit, StringFormat=Export selected as {0}}">
-              </Button>
               
             </WrapPanel>
 
@@ -169,6 +163,12 @@
         <TextBlock Text="{Binding MergeCaseDescriptor}" />
 
       </StackPanel>
+
+      <Button Command="{Binding ExportBeatmapsCommand}"
+              Classes="accent"
+              FontSize="18"
+              Content="{Binding ExportUnit, StringFormat=Export filtered selection as {0}}">
+      </Button>
       
     </StackPanel>
     

@@ -66,6 +66,11 @@ namespace BeatmapExporterCore.Exporters
         public bool MergeCollections { get; set; } = true;
 
         /// <summary>
+        /// If collection.db export should merge in a case-insensitive manner, merging duplicates.
+        /// </summary>
+        public bool MergeCaseInsensitive { get; set; } = true;
+
+        /// <summary>
         /// The current export mode.
         /// </summary>
         public ExportFormat ExportFormat { get; set; } = ExportFormat.Beatmap;

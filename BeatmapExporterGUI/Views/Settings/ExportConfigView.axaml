@@ -145,6 +145,21 @@
         <TextBlock Text="{Binding MergeCollectionsDescriptor}" />
         
       </StackPanel>
+
+      <!-- Collection Export Capitalization setting -->
+      <StackPanel Spacing="6"
+                  IsVisible="{Binding ShouldDisplayMergeOptions}">
+
+        <StackPanel Orientation="Horizontal"
+                    Spacing="12">
+
+          <TextBlock VerticalAlignment="Center">Case-Insensitive Merge</TextBlock>
+          <CheckBox IsChecked="{Binding MergeCaseInsensitive}" />
+
+        </StackPanel>
+        <TextBlock Text="{Binding MergeCaseDescriptor}" />
+
+      </StackPanel>
       
     </StackPanel>
     

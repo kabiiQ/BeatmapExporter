@@ -452,7 +452,7 @@ namespace BeatmapExporterCore.Exporters.Lazer
             if (Configuration.MergeCollections && File.Exists(Configuration.ExportPath))
             {
                 // Attempt to open an existing collection.db file for merging
-                return CollectionDb.Open(Configuration.ExportPath);
+                return CollectionDb.Open(Configuration.ExportPath, Configuration.MergeCaseInsensitive);
             } else
             {
                 // Create a clean new collection db for export

@@ -161,6 +161,7 @@ namespace BeatmapExporterGUI.ViewModels.Settings
                 OnPropertyChanged(nameof(ExportPath));
                 OnPropertyChanged(nameof(IsBeatmapExport));
                 OnPropertyChanged(nameof(IsCollectionDbExport));
+                OnPropertyChanged(nameof(ShouldDisplayMergeOptions));
             }
         }
 
@@ -220,6 +221,7 @@ namespace BeatmapExporterGUI.ViewModels.Settings
             {
                 Config.MergeCollections = value;
                 OnPropertyChanged(nameof(MergeCollectionsDescriptor));
+                OnPropertyChanged(nameof(ShouldDisplayMergeOptions));
             }
         }
 
@@ -227,6 +229,29 @@ namespace BeatmapExporterGUI.ViewModels.Settings
         /// Description of the current <see cref="MergeCollectionsEnabled" /> setting, suitable for user display.
         /// </summary>
         public string MergeCollectionsDescriptor => MergeCollectionsEnabled ? "(merges collections into existing collection.db at export location)" : "(does not merge, always fully overwrites any collection.db at export location)";
+
+        /// <summary>
+        /// If additional options for collection.db export should be displayed
+        /// </summary>
+        public bool ShouldDisplayMergeOptions => IsCollectionDbExport && MergeCollectionsEnabled;
+
+        /// <summary>
+        /// If collection.db export is set as case insensitive by the user.
+        /// </summary>
+        public bool MergeCaseInsensitive
+        {
+            get => Config.MergeCaseInsensitive;
+            set
+            {
+                Config.MergeCaseInsensitive = value;
+                OnPropertyChanged(nameof(MergeCaseDescriptor));
+            }
+        }
+
+        /// <summary>
+        /// Description of the current <see cref="MergeCaseInsensitive" /> setting, suitable for user display.
+        /// </summary>
+        public string MergeCaseDescriptor => MergeCaseInsensitive ? "(collections with the same name with different capitalization are merged)" : "(all collections are preserved)";
 
         /// <summary>
         /// User-requested action to change the current export path. Opens an additional dialog for directory selection.

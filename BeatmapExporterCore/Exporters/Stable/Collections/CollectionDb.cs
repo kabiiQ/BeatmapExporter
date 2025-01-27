@@ -20,10 +20,12 @@ namespace BeatmapExporterCore.Exporters.Stable.Collections
         /// <summary>
         /// Construct a CollectionDb from an existing database
         /// </summary>
-        private CollectionDb(int osuVersion, Dictionary<string, Collection> collections)
+        private CollectionDb(int osuVersion, bool ignoreCase)
         {
             Version = osuVersion;
-            Collections = collections;
+            // Create collection ignoring case if coming from existing db to allow natural merge of duplicate stable/lazer collections
+            var comparer = ignoreCase ? StringComparer.OrdinalIgnoreCase : StringComparer.Ordinal;
+            Collections = new(comparer);
         }
 
         /// <summary>
@@ -48,16 +50,16 @@ namespace BeatmapExporterCore.Exporters.Stable.Collections
         /// Opens a collection.db file at the provided path and parses the osu! stable binary format
         /// </summary>
         /// <exception cref="IOException">The collection could not be opened and a warning should be noted to the user.</exception>
-        public static CollectionDb Open(string path)
+        public static CollectionDb Open(string path, bool ignoreCase)
         {
             using var file = File.Open(path, FileMode.Open);
             using var reader = new SerializationReader(file);
 
             var dbVersion = reader.ReadInt32();
             var count = reader.ReadInt32();
-            var collections = new Dictionary<string, Collection>();
-
-            for (int iColl = 0; iColl < count; iColl++)
+ 
+            var collections = new CollectionDb(dbVersion, ignoreCase);
+            for (int i = 0; i < count; i++)
             {
                 // Parse each collection
                 var name = reader.ReadString();
@@ -66,13 +68,13 @@ namespace BeatmapExporterCore.Exporters.Stable.Collections
                 var diffCount = reader.ReadInt32();
                 var hashes = Enumerable
                     .Range(0, diffCount)
-                    .Select(_ => reader.ReadString());
+                    .Select(_ => reader.ReadString())
+                    .ToList();
 
-                var coll = hashes.ToHashSet();
-                collections.Add(name, coll);
+                collections.MergeCollection(name, hashes);
             }
 
-            return new CollectionDb(dbVersion, collections);
+            return collections;
         }
 
         /// <summary>
@@ -81,7 +83,7 @@ namespace BeatmapExporterCore.Exporters.Stable.Collections
         /// <exception cref="=IOException">The collection.db export was unsuccessful and an error should be reported to the user.</exception>
         public void ExportFile(string path)
         {
-            using var file = File.Open(path, FileMode.OpenOrCreate & FileMode.Truncate);
+            using var file = File.Open(path, FileMode.Create);
             using var writer = new SerializationWriter(file);
 
             writer.Write(Version);

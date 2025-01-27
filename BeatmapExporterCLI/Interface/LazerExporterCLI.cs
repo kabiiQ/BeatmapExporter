@@ -226,6 +226,12 @@ namespace BeatmapExporterCLI.Interface
                         settings.Append("collection.db merging is enabled (merges collections into an existing collection.db at the export location)");
                     else
                         settings.Append("collection.db merging is disabled (does not merge, always fully overwrites any collection.db at export location)*");
+
+                    settings.Append("\n4. ");
+                    if (Configuration.MergeCaseInsensitive)
+                        settings.Append("collection.db merging is case-insensitive (collections with the same name with different capitalization are merged)");
+                    else
+                        settings.Append("collection.db merging is case-sensitive (all collections are preserved)*");
                 }
 
                 settings.Append("\n\nEdit setting # (Blank to save settings): ");
@@ -274,6 +280,21 @@ namespace BeatmapExporterCLI.Interface
                             {
                                 Console.WriteLine("- CHANGED: collection.db merging has been enabled.");
                                 Configuration.MergeCollections = true;
+                            }
+                        }
+                        break;
+                    case 4:
+                        if (exportCollectionDb)
+                        {
+                            if (Configuration.MergeCaseInsensitive)
+                            {
+                                Console.WriteLine("- CHANGED: collection merging is now case-sensitive.");
+                                Configuration.MergeCaseInsensitive = false;
+                            }
+                            else
+                            {
+                                Console.WriteLine("- CHANGED: collection merging is now case-insensitive.");
+                                Configuration.MergeCaseInsensitive = true;
                             }
                         }
                         break;

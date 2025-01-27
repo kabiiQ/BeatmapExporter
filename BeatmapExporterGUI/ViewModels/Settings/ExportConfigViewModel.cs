@@ -228,7 +228,7 @@ namespace BeatmapExporterGUI.ViewModels.Settings
         /// <summary>
         /// Description of the current <see cref="MergeCollectionsEnabled" /> setting, suitable for user display.
         /// </summary>
-        public string MergeCollectionsDescriptor => MergeCollectionsEnabled ? "(merges collections into existing collection.db at export location)" : "(does not merge, always fully overwrites any collection.db at export location)";
+        public string MergeCollectionsDescriptor => MergeCollectionsEnabled ? "Will merge collections into existing collection.db at export location, if it is found.\nPlace collection.db in export directory before export if merge is desired." : "Will not merge collection, will instead fully overwrite any collection.db at export location.";
 
         /// <summary>
         /// If additional options for collection.db export should be displayed
@@ -251,7 +251,7 @@ namespace BeatmapExporterGUI.ViewModels.Settings
         /// <summary>
         /// Description of the current <see cref="MergeCaseInsensitive" /> setting, suitable for user display.
         /// </summary>
-        public string MergeCaseDescriptor => MergeCaseInsensitive ? "(collections with the same name with different capitalization are merged)" : "(all collections are preserved)";
+        public string MergeCaseDescriptor => MergeCaseInsensitive ? "Collections with the same name with different capitalization will be merged." : "Collections will not be merged, all collections are preserved.";
 
         /// <summary>
         /// User-requested action to change the current export path. Opens an additional dialog for directory selection.

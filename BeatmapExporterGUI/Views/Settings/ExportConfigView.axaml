@@ -62,7 +62,7 @@
               <Button Command="{Binding ExportBeatmapsCommand}"
                       Classes="accent"
                       Margin="5"
-                      Content="{Binding ExportUnit, StringFormat=Export selected {0}}">
+                      Content="{Binding ExportUnit, StringFormat=Export selected as {0}}">
               </Button>
               
             </WrapPanel>
@@ -129,6 +129,21 @@
         </StackPanel>
         <TextBlock Text="{Binding CompressionDescriptor}" />
       
+      </StackPanel>
+      
+      <!-- Collection Export Merge setting -->
+      <StackPanel Spacing="6"
+                  IsVisible="{Binding IsCollectionDbExport}">
+
+        <StackPanel Orientation="Horizontal"
+                    Spacing="12">
+
+          <TextBlock VerticalAlignment="Center">Merge Existing collection.db</TextBlock>
+          <CheckBox IsChecked="{Binding MergeCollectionsEnabled}" />
+          
+        </StackPanel>
+        <TextBlock Text="{Binding MergeCollectionsDescriptor}" />
+        
       </StackPanel>
       
     </StackPanel>

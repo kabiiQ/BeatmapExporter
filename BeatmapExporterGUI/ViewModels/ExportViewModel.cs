@@ -89,6 +89,7 @@ namespace BeatmapExporterGUI.ViewModels
                 ExportFormat.Background => ExportBackgrounds,
                 ExportFormat.Replay => ExportReplays,
                 ExportFormat.Folder => ExportBeatmaps,
+                ExportFormat.CollectionDb => ExportCollectionDb
             };
 
             ActiveExport = true;
@@ -301,6 +302,32 @@ namespace BeatmapExporterGUI.ViewModels
                 Progress++;
             }
             Description = $"Exported {exportedReplays}/{replayCount} player score replays from {TotalSetCount} beatmaps to {lazer.Configuration.FullPath}.";
+        }
+
+        private async Task ExportCollectionDb(CancellationToken _)
+        {
+            lazer.SetupParentDirectory();
+            // collection.db export is simpler and performs operation all at once and then reports collection merge steps
+            List<LazerExporter.CollectionMergeStep> steps;
+            try
+            {
+                steps = await Exporter.RealmScheduler.Schedule(() => lazer.ExportCollectionDb());
+            } catch (Exception e)
+            {
+                AddExport(false, $"Unable to export collection.db file :: {e.Message}");
+                return;
+            }
+
+            var included = steps.Count;
+            TotalCount = included;
+            Progress = included;
+            foreach (var step in steps)
+            {
+                AddExport(true, $"Adding \"{step.Name}\" to collection.db with {step.IncludedDiffs}/{step.OriginalDiffs} included.");
+            }
+            var status = $"Exported collection.db file with {included} collections included.";
+            Description = status;
+            Exporter.AddSystemMessage(status);
         }
     }
 

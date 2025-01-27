@@ -1,5 +1,6 @@
 ﻿using BeatmapExporterCore.Exporters.Lazer.LazerDB;
 using BeatmapExporterCore.Exporters.Lazer.LazerDB.Schema;
+using BeatmapExporterCore.Exporters.Stable.Collections;
 using BeatmapExporterCore.Filters;
 using BeatmapExporterCore.Utilities;
 using Nito.AsyncEx;
@@ -160,6 +161,13 @@ namespace BeatmapExporterCore.Exporters.Lazer
             Directory.CreateDirectory(Configuration.ExportPath);
             if (openDir) 
                 PlatformUtil.OpenExportDirectory(Configuration.ExportPath);
+        }
+
+        public void SetupParentDirectory()
+        {
+            var parent = Directory.GetParent(Configuration.ExportPath)!;
+            Directory.CreateDirectory(parent.FullName);
+            PlatformUtil.OpenExportDirectory(parent.FullName);
         }
 
         /// <summary>
@@ -431,6 +439,60 @@ namespace BeatmapExporterCore.Exporters.Lazer
             using var export = File.Open(exportPath, FileMode.CreateNew);
             using var file = lazerDb.OpenHashedFile(fileUsage.File.Hash);
             file.CopyTo(export);
+        }
+
+        public record struct CollectionMergeStep(string Name, int OriginalDiffs, int IncludedDiffs);
+
+        /// <summary>
+        /// Return the export target CollectionDb, opening an existing file or creating a clean instance
+        /// </summary>
+        /// <returns></returns>
+        private CollectionDb OpenCollectionDb()
+        {
+            if (Configuration.MergeCollections && File.Exists(Configuration.ExportPath))
+            {
+                // Attempt to open an existing collection.db file for merging
+                return CollectionDb.Open(Configuration.ExportPath);
+            } else
+            {
+                // Create a clean new collection db for export
+                return new CollectionDb();
+            }
+        }
+
+        /// <summary>
+        /// Perform a merge of any existing data in the CollectionDb object with the selected beatmaps in osu!lazer collections
+        /// </summary>
+        private IEnumerable<CollectionMergeStep> MergeCollections(CollectionDb collectionDb)
+        {
+            foreach (var (name, maps) in Collections)
+            {
+                // With each lazer collection, apply beatmap filters again for this specific export as selected beatmap diffs are not cached
+                var collMaps = maps.Beatmaps
+                    .Where(b => Configuration.Filters.All(f => f.Includes(b)))
+                    .Select(b => b.MD5Hash)
+                    .ToList();
+
+                collectionDb.MergeCollection(name, collMaps);
+                yield return new CollectionMergeStep(name, maps.Beatmaps.Count, collMaps.Count);
+            }
+        }
+
+        /// <summary>
+        /// Perform export of the 'selected' beatmaps which also belong to osu!lazer collections into an osu! stable collection.db file.
+        /// </summary>
+        public List<CollectionMergeStep> ExportCollectionDb()
+        {
+            // Open or create collection.db file
+            var collectionDb = OpenCollectionDb();
+
+            // Merge collections with selected beatmaps
+            var mergeSteps = MergeCollections(collectionDb).ToList();
+
+            // Perform actual collection.db file export
+            collectionDb.ExportFile(Configuration.ExportPath);
+
+            return mergeSteps;
         }
 
         private readonly Regex idCollection = new("#([0-9]+)", RegexOptions.Compiled);

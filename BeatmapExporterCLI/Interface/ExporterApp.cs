@@ -95,6 +95,9 @@ namespace BeatmapExporterCLI.Interface
                         case ExportFormat.Replay:
                             CLI.ExportReplays();
                             break;
+                        case ExportFormat.CollectionDb:
+                            CLI.ExportCollectionDb();
+                            break;
                     }
                     break;
                 case 2:

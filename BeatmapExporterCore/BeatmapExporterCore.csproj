@@ -9,6 +9,7 @@
   <ItemGroup>
     <PackageReference Include="FFMpegCore" Version="5.1.0" />
     <PackageReference Include="Nito.AsyncEx.Context" Version="5.1.2" />
+    <PackageReference Include="osu.Shared" Version="1.0.3" />
     <PackageReference Include="Realm" Version="20.1.0" />
     <PackageReference Include="TagLibSharp" Version="2.3.0" />
   </ItemGroup>

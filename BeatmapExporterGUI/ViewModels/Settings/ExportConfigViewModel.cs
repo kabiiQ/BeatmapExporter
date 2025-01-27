@@ -160,6 +160,7 @@ namespace BeatmapExporterGUI.ViewModels.Settings
                 OnPropertyChanged(nameof(ExportUnit));
                 OnPropertyChanged(nameof(ExportPath));
                 OnPropertyChanged(nameof(IsBeatmapExport));
+                OnPropertyChanged(nameof(IsCollectionDbExport));
             }
         }
 
@@ -167,11 +168,6 @@ namespace BeatmapExporterGUI.ViewModels.Settings
         /// List of all supported export formats in user friendly form
         /// </summary>
         public IEnumerable<string> ExportModes { get; }
-
-        /// <summary>
-        /// If the export mode is currently set to export whole beatmaps, the default export mode.
-        /// </summary>
-        public bool IsBeatmapExport => Config.ExportFormat == ExportFormat.Beatmap;
 
         /// <summary>
         /// Descriptor string for the currently selected export format 
@@ -185,6 +181,11 @@ namespace BeatmapExporterGUI.ViewModels.Settings
         /// Reference to the current full file export directory.
         /// </summary>
         public string ExportPath => Config.FullPath;
+
+        /// <summary>
+        /// If the export mode is currently set to export whole beatmaps, the default export mode.
+        /// </summary>
+        public bool IsBeatmapExport => Config.ExportFormat == ExportFormat.Beatmap;
 
         /// <summary>
         /// If beatmap export compression is currently enabled by the user.
@@ -203,6 +204,29 @@ namespace BeatmapExporterGUI.ViewModels.Settings
         /// Description of the current <see cref="CompressionEnabled" /> setting, suitable for user display.
         /// </summary>
         public string CompressionDescriptor => CompressionEnabled ? "(slow export, smaller file sizes)" : "(fastest export, no compression)";
+
+        /// <summary>
+        /// If the export mode is currently set to export a collection.db file.
+        /// </summary>
+        public bool IsCollectionDbExport => Config.ExportFormat == ExportFormat.CollectionDb;
+
+        /// <summary>
+        /// If collection.db export merging is currently enabled by the user.
+        /// </summary>
+        public bool MergeCollectionsEnabled
+        {
+            get => Config.MergeCollections;
+            set
+            {
+                Config.MergeCollections = value;
+                OnPropertyChanged(nameof(MergeCollectionsDescriptor));
+            }
+        }
+
+        /// <summary>
+        /// Description of the current <see cref="MergeCollectionsEnabled" /> setting, suitable for user display.
+        /// </summary>
+        public string MergeCollectionsDescriptor => MergeCollectionsEnabled ? "(merges collections into existing collection.db at export location)" : "(does not merge, always fully overwrites any collection.db at export location)";
 
         /// <summary>
         /// User-requested action to change the current export path. Opens an additional dialog for directory selection.

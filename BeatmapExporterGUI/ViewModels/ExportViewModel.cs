@@ -313,7 +313,7 @@ namespace BeatmapExporterGUI.ViewModels
 
         private async Task ExportCollectionDb(CancellationToken _)
         {
-            lazer.SetupParentDirectory();
+            lazer.SetupExport();
             // collection.db export is simpler and performs operation all at once and then reports collection merge steps
             List<LazerExporter.CollectionMergeStep> steps;
             try

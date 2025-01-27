@@ -266,7 +266,7 @@ namespace BeatmapExporterGUI.ViewModels.Settings
             }
         }
 
-        public void OpenExportDirectory() => outerViewModel.OpenExportDirectory();
+        public void OpenExportDirectory() => Exporter.Lazer.SetupExport();
         #endregion
     }
 }

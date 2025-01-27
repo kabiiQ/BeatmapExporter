@@ -158,16 +158,18 @@ namespace BeatmapExporterCore.Exporters.Lazer
         /// </summary>
         public void SetupExport(bool openDir = true)
         {
-            Directory.CreateDirectory(Configuration.ExportPath);
-            if (openDir) 
-                PlatformUtil.OpenExportDirectory(Configuration.ExportPath);
-        }
-
-        public void SetupParentDirectory()
-        {
-            var parent = Directory.GetParent(Configuration.ExportPath)!;
-            Directory.CreateDirectory(parent.FullName);
-            PlatformUtil.OpenExportDirectory(parent.FullName);
+            string path;
+            if (Configuration.ExportFormat == ExportFormat.CollectionDb)
+            {
+                var parent = Directory.GetParent(Configuration.ExportPath)!;
+                path = parent.FullName;
+            } else
+            {
+                path = Configuration.ExportPath;
+            }
+            Directory.CreateDirectory(path);
+            if (openDir)
+                PlatformUtil.OpenExportDirectory(path);
         }
 
         /// <summary>

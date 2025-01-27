@@ -44,7 +44,7 @@ public partial class OuterViewModel : ViewModelBase
     /// <summary>
     /// Changes the active operation to the beatmap list page.
     /// </summary>
-    public void ListBeatmaps() => CurrentOperation = new BeatmapListViewModel(this);
+    public void ListBeatmaps() => CurrentOperation = new BeatmapListViewModel();
 
     /// <summary>
     /// Changes the active operation to the collection list page.
@@ -65,11 +65,6 @@ public partial class OuterViewModel : ViewModelBase
         CurrentOperation = export;
         await export.StartExport(token);
     }
-
-    /// <summary>
-    /// Manually opens the current export target directory.
-    /// </summary>
-    public void OpenExportDirectory() => Exporter.Lazer!.SetupExport(openDir: true);
     
     /// <summary>
     /// If the current operation is an actively running export.

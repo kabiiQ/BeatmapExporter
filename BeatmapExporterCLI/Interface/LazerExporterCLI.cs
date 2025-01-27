@@ -155,7 +155,7 @@ namespace BeatmapExporterCLI.Interface
 
         public void  ExportCollectionDb()
         {
-            Exporter.SetupParentDirectory();
+            Exporter.SetupExport();
             try
             {
                 var steps = Exporter.ExportCollectionDb();

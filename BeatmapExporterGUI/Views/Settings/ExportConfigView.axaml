@@ -114,8 +114,13 @@
         
         <StackPanel Orientation="Horizontal"
                     Spacing="5">
-          <Button Command="{Binding SelectExportPath}">Change Export Location</Button>
-          <Button Command="{Binding OpenExportDirectory}">Open Export Directory</Button>
+          <Button Command="{Binding SelectExportPath}">
+            Change Export Location
+          </Button>
+          <Button Command="{Binding OpenExportDirectory}"
+                  Classes.accent="{Binding ShouldDisplayMergeOptions}">
+            Open Export Directory
+          </Button>
         </StackPanel>
 
       </StackPanel>

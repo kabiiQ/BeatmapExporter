@@ -57,15 +57,6 @@ This allows you to add your osu!lazer collections into an existing `collection.d
 
 While I experienced no scenario that would cause data loss in testing, any time you are messing with a file like this you should definitely back up your original `collection.db` in a different location first.
 
-<hr />
-
-## Graphical User Interface
-
-As of version 2.0, I have developed a more complete GUI application for BeatmapExporter. It has been built in a way to allow the older CLI (command line) program to still be fully functional and receive the same features. 
-When viewing releases, the original CLI versions are named BeatmapExporterCLI, while the newer GUI versions are named simply BeatmapExporter.
-
-All features including the format of exported files are functionally the same between the versions.
-
 # Download/Usage
 
 Executables are available from the [Releases](https://github.com/kabiiQ/BeatmapExporter/releases) section on GitHub. 

@@ -156,6 +156,6 @@ namespace BeatmapExporterGUI.Exporter
         /// </summary>
         /// <param name="message">The message content</param>
         /// <param name="error">If this message represents an error. May be formatted differently for the user.</param>
-        public void AddSystemMessage(string message, bool error = false) => SystemMessages.Insert(0, new(error, message, DateTime.Now));
+        public void AddSystemMessage(string message, bool error = false) => SystemMessages.Add(new(error, message, DateTime.Now));
     }
 }

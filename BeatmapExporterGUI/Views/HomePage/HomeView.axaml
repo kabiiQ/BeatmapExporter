@@ -47,7 +47,8 @@
                  HorizontalAlignment="Center">System Messages</TextBlock>
 
       <ScrollViewer Name="SystemMessages">
-        <ItemsControl ItemsSource="{Binding Exporter.SystemMessages}">
+        <ItemsControl ItemsSource="{Binding Exporter.SystemMessages}"
+                      Name="MessageList">
 
           <ItemsControl.Styles>
             <Style Selector="TextBlock.error">
@@ -66,6 +67,7 @@
           </ItemsControl.ItemTemplate>
         
         </ItemsControl>
+        
       </ScrollViewer>
       
       </StackPanel>

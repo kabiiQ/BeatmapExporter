@@ -1,8 +1,8 @@
 ﻿using BeatmapExporterCLI.Interface;
+using BeatmapExporterCore.Exporters;
 using BeatmapExporterCore.Exporters.Lazer;
 using BeatmapExporterCore.Exporters.Lazer.LazerDB;
 using BeatmapExporterCore.Exporters.Lazer.LazerDB.Schema;
-using BeatmapExporterCore.Utilities;
 using Realms;
 
 namespace BeatmapExporterCLI.Data
@@ -64,10 +64,16 @@ namespace BeatmapExporterCLI.Data
             catch (Exception e)
             {
                 Console.WriteLine($"\nError opening database: {e.Message}");
-                if (e is LazerVersionException)
+                if (e is LazerVersionException version)
                 {
-                    Console.WriteLine("The osu!lazer database structure has updated since the last BeatmapExporter update.");
-                    Console.WriteLine($"\nYou can check {ExporterUpdater.Releases} for a new release, or file an issue there to let me know it needs updating if it's been a few days.");
+                    foreach (var message in version.Details)
+                    {
+                        Console.Write($"\n(!) {message}\n");
+                    }
+                }
+                else
+                {
+                    Console.WriteLine("\nThis is an abnormal error, and you may need to open a GitHub issue for further assistance.");
                 }
                 ExporterApp.Exit();
             }

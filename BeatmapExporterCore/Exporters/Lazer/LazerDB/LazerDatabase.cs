@@ -2,17 +2,10 @@
 using Realms;
 using Realms.Exceptions;
 using System.Runtime.InteropServices;
+using System.Text.RegularExpressions;
 
 namespace BeatmapExporterCore.Exporters.Lazer.LazerDB
 {
-    /// <summary>
-    /// Exception thrown when the osu!lazer database indicates a version mismatch
-    /// </summary>
-    public class LazerVersionException : ExporterException
-    { 
-        public LazerVersionException(string message) : base(message) { }
-    }
-
     public class LazerDatabase
     {
         public const int LazerSchemaVersion = 47;
@@ -101,10 +94,23 @@ namespace BeatmapExporterCore.Exporters.Lazer.LazerDB
             }
             catch (RealmException re)
             {
-                if(re.Message.Contains("does not equal last set version") || re.Message.Contains("requires an upgrade"))
+                // Parse common Realm version errors into more friendly exceptions with details for the user
+                var versionPattern = new Regex("schema version (\\d+) does not equal last set version");
+                var versionMatch = versionPattern.Match(re.Message);
+                if (versionMatch.Success)
                 {
-                    throw new LazerVersionException(re.Message);
+                    var fileVersion = int.Parse(versionMatch.Groups[1].Value);
+                    throw LazerVersionException.Schema(fileVersion, re.Message);
                 }
+
+                var upgradePattern = new Regex("file format version \\((\\d+)\\) which requires an upgrade");
+                var updateMatch = upgradePattern.Match(re.Message);
+                if (updateMatch.Success)
+                {
+                    var formatVersion = int.Parse(updateMatch.Groups[1].Value);
+                    throw LazerVersionException.FileFormat(formatVersion, re.Message);
+                }
+
                 throw new IOException(re.Message);
             }
         }

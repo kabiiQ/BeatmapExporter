@@ -24,8 +24,8 @@
 
   <PropertyGroup>
     <PackageId>BeatmapExporterGUI.Desktop</PackageId>
-    <Version>2.4.0</Version>
-    <FileVersion>2.4.0</FileVersion>
+    <Version>2.5.0</Version>
+    <FileVersion>2.5.0</FileVersion>
     <Authors>kabii</Authors>
     <Title>BeatmapExporter</Title>
     <Description>Beatmap exporter utility for osu!lazer</Description>

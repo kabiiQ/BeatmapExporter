@@ -14,8 +14,8 @@
 
   <PropertyGroup>
     <PackageId>BeatmapExporterCLI</PackageId>
-    <Version>2.4.0</Version>
-    <FileVersion>2.4.0</FileVersion>
+    <Version>2.5.0</Version>
+    <FileVersion>2.5.0</FileVersion>
     <Authors>kabii</Authors>
     <Title>BeatmapExporter</Title>
     <Description>Command-line beatmap exporter utility for osu!lazer</Description>

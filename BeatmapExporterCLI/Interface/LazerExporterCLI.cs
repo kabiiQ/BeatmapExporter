@@ -327,6 +327,7 @@ Examples:
 - Beatmap status: status graveyard/leaderboard/ranked/approved/qualified/loved
 - Beatmap played in the last 30 days: played 30
 - Beatmap has ever been played: everplayed yes
+- Beatmap has ever been played (include all diffs in set): everplayed set
 - Contained in a specific collection called ""songs"": collection songs
 - Contained in a specific collection labeled #1 in the collection list: collection #1
 - Remove a specific filter (using line number from list above): remove 1

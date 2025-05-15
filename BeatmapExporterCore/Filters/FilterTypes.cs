@@ -38,7 +38,7 @@ namespace BeatmapExporterCore.Filters
         /// The type of data that this filter template will collect from the user. 
         /// May be used to determine if there is a superior interface available than text input.
         /// </summary>
-        public enum Input { RawText, YesNo, Gamemode, Status, Collection };
+        public enum Input { RawText, Played, Gamemode, Status, Collection };
 
         private FilterTemplate(string shortName, string fullName, string normalInput, string negatedInput, string detail, Input inputType, FilterConstructor constructor)
         {
@@ -333,7 +333,7 @@ namespace BeatmapExporterCore.Filters
             "in the last",
             "not since",
             "Selected beatmaps using the time that you last played them.\nFor example, input 12:00 to only export beatmaps that you played within the last 12 hours."
-            + "\nInput '30' to only export beatmaps you have played within the last 30 days, or negate this filter to export all beatmaps which you have not played in the last 30 days.\nUse the \"everplayed\" filter instead if you want to select all played/unplayed beatmaps.",
+            + "\nInput '30' to only export beatmaps you have played within the last 30 days, or negate this filter to export all beatmaps which you have not played in the last 30 days.\nUse the \"Beatmap played ever\" filter instead if you want to select all played/unplayed beatmaps.",
             Input.RawText,
             (input, negate) =>
             {
@@ -356,22 +356,38 @@ namespace BeatmapExporterCore.Filters
             "Beatmap played ever",
             "",
             "(negated)",
-            "Selects beatmaps that have been played at least once (yes), or only unplayed beatmaps (no).",
-            Input.YesNo,
+            "Selects beatmaps that have been played at least once (yes), or only unplayed beatmaps (no)."
+            + "\nThe \"yes, with all diffs\" option will export ALL difficulties of a beatmap set if any difficulty has been played.",
+            Input.Played,
             (input, negate) =>
             {
-                bool? played = input.ToLower() switch
+                var lower = input.ToLower();
+                // Override flag - exports all difficulties if any were played
+                if (lower.Contains("set") || lower.Contains("diff"))
                 {
-                    "yes" => true,
-                    "no" => false,
-                    _ => null
-                };
-                if (played == null)
-                    throw new ArgumentException("Invalid beatmap played selection. Use \"yes\" for played beatmaps, or \"no\" for unplayed beatmaps.");
+                    return new(input, negate,
+                        b =>
+                        {
+                            var beatmapSet = b.BeatmapSet;
+                            return beatmapSet != null && beatmapSet.Beatmaps.Any(b => b.LastPlayed != null);
+                        },
+                        Played!);
+                }
+                else
+                {
+                    bool? played = lower switch
+                    {
+                        "yes" => true,
+                        "no" => false,
+                        _ => null
+                    };
+                    if (played == null)
+                        throw new ArgumentException("Invalid beatmap played selection. Use \"yes\" for played beatmaps, or \"no\" for unplayed beatmaps.");
 
-                return new(input, negate,
-                    b => (b.LastPlayed != null) == played,
-                    Played!);
+                    return new(input, negate,
+                        b => (b.LastPlayed != null) == played,
+                        Played!);
+                }
             });
 
         public static FilterTemplate Collections = new(

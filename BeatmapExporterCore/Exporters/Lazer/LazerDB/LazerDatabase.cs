@@ -1,4 +1,5 @@
 ﻿using BeatmapExporterCore.Exporters.Lazer.LazerDB.Schema;
+using Nito.Disposables.Internals;
 using Realms;
 using Realms.Exceptions;
 using System.Runtime.InteropServices;
@@ -34,11 +35,37 @@ namespace BeatmapExporterCore.Exporters.Lazer.LazerDB
         /// <param name="userDir">A directory specified by the user on launch, prioritized in directory list</param>
         public static IEnumerable<string> CheckDirectories(string? userDir)
         {
-            if (userDir != null)
-            {
-                // include user-provided directory first
-                yield return userDir;
-            }
+			if (userDir != null)
+			{
+				// include user-provided directory first
+				yield return userDir;
+			}
+
+            // check default data-dir
+			IEnumerable<string> defaultPaths = CheckDefaultDirectories(userDir);
+
+            // see if storage overridden config file present
+            IEnumerable<string> additionalPath = defaultPaths
+                .AsParallel()
+                .Select(dir =>
+                {
+                    string overriddenConfigPath = Path.Combine(dir, "storage.ini");
+                    if (!File.Exists(overriddenConfigPath))
+                        return null;
+
+                    string[] lines = File.ReadAllLines(overriddenConfigPath);
+                    string overriddenStorageDir = lines.Last(lines => lines.StartsWith("FullPath = "))
+                                                       .Substring("FullPath = ".Length);
+
+                    return overriddenStorageDir;
+                }).WhereNotNull();
+
+            foreach (string candidateDir in defaultPaths.Concat(additionalPath))
+                yield return candidateDir;
+        }
+
+        private static IEnumerable<string> CheckDefaultDirectories(string? userDir)
+        {
             if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
             {
                 // default install location: %appdata%/osu

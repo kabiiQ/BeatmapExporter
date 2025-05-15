@@ -77,7 +77,7 @@ If you are not familiar with Terminal, you may need to look up how to open Termi
 Then, run the following command:
 `chmod +x mac-BeatmapExporter.app` - this marks mac-BeatmapExporter.app as executable so that you can run it.
 
-Then, you can either run the program with `./mac-BeatmapExporter.app` from the same Terminal window or you can try just clicking the file now (though it may make you also allow it in Security settings if you click it)
+Then, you can run the program with `./mac-BeatmapExporter.app` from the Terminal window. You may be able to just click the file now, but would not recommend running the program without the Terminal as it seems to restrict the program from accessing the osu! files.
 
 Linux terminal commands have the same usage.
 

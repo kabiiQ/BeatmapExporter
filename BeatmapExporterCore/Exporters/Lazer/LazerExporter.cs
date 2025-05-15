@@ -169,7 +169,7 @@ namespace BeatmapExporterCore.Exporters.Lazer
             }
             Directory.CreateDirectory(path);
             if (openDir)
-                PlatformUtil.OpenExportDirectory(path);
+                PlatformUtil.Open(path);
         }
 
         /// <summary>

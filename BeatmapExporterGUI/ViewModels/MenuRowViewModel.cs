@@ -78,9 +78,9 @@ public partial class MenuRowViewModel : ViewModelBase
 
     // The below commands are all web links available for the user to open in browser.
 
-    public void GitHub() => PlatformUtil.OpenUrl(ExporterUpdater.Project);
+    public void GitHub() => PlatformUtil.Open(ExporterUpdater.Project);
 
-    public void Releases() => PlatformUtil.OpenUrl(ExporterUpdater.Releases);
+    public void Releases() => PlatformUtil.Open(ExporterUpdater.Releases);
 
-    public void Osu() => PlatformUtil.OpenUrl("https://github.com/ppy/osu/releases");
+    public void Osu() => PlatformUtil.Open("https://github.com/ppy/osu/releases");
 }

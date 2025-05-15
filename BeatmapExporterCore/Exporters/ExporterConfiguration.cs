@@ -51,6 +51,11 @@ namespace BeatmapExporterCore.Exporters
         public string FullPath => Path.GetFullPath(ExportPath);
 
         /// <summary>
+        /// If filters should be applied with AND logic where beatmaps must match all filters.
+        /// </summary>
+        public bool CombineFilterMode { get; set; } = true;
+
+        /// <summary>
         /// If compression is enabled for this exporter, disabled by default. Check <see cref="CompressionLevel"/> for actual compression level when creating archives.
         /// </summary>
         public bool CompressionEnabled { get; set; } = false;

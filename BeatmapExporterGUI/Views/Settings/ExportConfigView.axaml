@@ -59,11 +59,20 @@
               </Button>
               
             </WrapPanel>
+            
+            <StackPanel Orientation="Horizontal"
+                        Spacing="12"
+                        IsVisible="{Binding ShouldDisplayFilterMode}">
+
+              <TextBlock VerticalAlignment="Center">Maps must match ALL filters:</TextBlock>
+              <CheckBox IsChecked="{Binding CombineFilterMode}" />
+
+            </StackPanel>
 
             <ListBox ItemsSource="{Binding BeatmapFilters}"
                       SelectedIndex="{Binding SelectedFilterIndex}"
                       Background="Transparent" />
-            
+          
           </StackPanel>
 
           <!-- New filter area -->

@@ -2,7 +2,6 @@ using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Threading;
 using BeatmapExporterGUI.Utilities;
-using BeatmapExporterGUI.ViewModels.HomePage;
 
 namespace BeatmapExporterGUI.Views.HomePage;
 

@@ -53,9 +53,10 @@ namespace BeatmapExporterGUI.ViewModels.Settings
                 Exporter.Lazer.UpdateSelectedBeatmaps();
             });
 
-            RemoveSelectedFilterCommand.NotifyCanExecuteChanged();
-            ResetFiltersCommand.NotifyCanExecuteChanged();
+            OnPropertyChanged(nameof(ShouldDisplayFilterMode));
             OnPropertyChanged(nameof(SelectionSummary));
+            ResetFiltersCommand.NotifyCanExecuteChanged();
+            RemoveSelectedFilterCommand.NotifyCanExecuteChanged();
         }
 
         /// <summary>
@@ -125,7 +126,7 @@ namespace BeatmapExporterGUI.ViewModels.Settings
         public void CancelFilterBuilder() => CurrentFilterCreationControl = null;
 
         /// <summary>
-        /// User-requesterd action to save the current filter 'builder' as a real active beatmap filter.
+        /// User-requested action to save the current filter 'builder' as a real active beatmap filter.
         /// </summary>
         public async Task ApplyFilterBuilder(BeatmapFilter filter)
         {
@@ -133,6 +134,21 @@ namespace BeatmapExporterGUI.ViewModels.Settings
             await UpdateBeatmapFilters();
             CancelFilterBuilder();
         }
+
+        /// <summary>
+        /// If the beatmap filter logic mode is currently set to AND by the user.
+        /// </summary>
+        public bool CombineFilterMode
+        {
+            get => Config.CombineFilterMode;
+            set
+            {
+                Config.CombineFilterMode = value;
+                Task.Run(() => UpdateBeatmapFilters());
+            }
+        }
+
+        public bool ShouldDisplayFilterMode => Config.Filters.Count > 1;
         #endregion
 
         #region Advanced Export Settings

@@ -580,10 +580,21 @@ namespace BeatmapExporterCore.Exporters.Lazer
             List<BeatmapSet> selectedSets = new();
             foreach (var set in AllBeatmapSets)
             {
-                var filteredMaps =
-                    from map in set.Beatmaps
-                    where Configuration.Filters.All(f => f.Includes(map))   
-                    select map;
+                var filteredMaps = set.Beatmaps
+                    .Where(map =>
+                    {
+                        if (Configuration.CombineFilterMode)
+                        {
+                            // Combine filter mode enabled, AND logic
+                            return Configuration.Filters.All(f => f.Includes(map));
+                        }
+                        else
+                        {
+                            // OR logic
+                            return Configuration.Filters.Any(f => f.Includes(map)); // OR logic
+                        }
+                    });
+
                 var selected = filteredMaps.ToList();
 
                 set.SelectedBeatmaps = selected;

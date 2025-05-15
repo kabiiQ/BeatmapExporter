@@ -2,6 +2,7 @@
 using BeatmapExporterCore.Exporters.Lazer;
 using BeatmapExporterCore.Exporters.Lazer.LazerDB.Schema;
 using CommunityToolkit.Mvvm.ComponentModel;
+using Microsoft.CodeAnalysis;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -17,6 +18,8 @@ namespace BeatmapExporterGUI.ViewModels
     /// </summary>
     public partial class ExportViewModel : ViewModelBase
     {
+        private static readonly NLog.Logger Logger = NLog.LogManager.GetCurrentClassLogger();
+
         private readonly LazerExporter lazer;
         private readonly OuterViewModel outer;
 
@@ -100,6 +103,7 @@ namespace BeatmapExporterGUI.ViewModels
             } catch (Exception e)
             {
                 AddExport(false, $"Export process cancelled due to error: {e}");
+                Logger.Error(e);
             }
             ActiveExport = false;
         }
@@ -136,6 +140,7 @@ namespace BeatmapExporterGUI.ViewModels
                 } catch (Exception e)
                 {
                     AddExport(false, $"Unable to export {filename} :: {e.Message}");
+                    Logger.Error(e);
                 }
                 Progress++;
             }
@@ -212,6 +217,7 @@ namespace BeatmapExporterGUI.ViewModels
                 catch (Exception e)
                 {
                     AddExport(false, $"Unable to export audio: {audioFile} :: {e.Message}");
+                    Logger.Error(e);
                 }
             }
             return new(discovered, exportedAudio);
@@ -271,6 +277,7 @@ namespace BeatmapExporterGUI.ViewModels
                 catch (Exception e)
                 {
                     AddExport(false, $"Unable to export background image {backgroundFile} :: {e.Message}");
+                    Logger.Error(e);
                 }
             }
             return new(discovered, exportedBackgrounds);
@@ -303,6 +310,7 @@ namespace BeatmapExporterGUI.ViewModels
                 } catch (Exception e)
                 {
                     AddExport(false, $"Unable to export player score replay {filename} :: {e.Message}");
+                    Logger.Error(e);
                 }
                 Progress++;
             }
@@ -322,6 +330,7 @@ namespace BeatmapExporterGUI.ViewModels
             } catch (Exception e)
             {
                 AddExport(false, $"Unable to export collection.db file :: {e.Message}");
+                Logger.Error(e);
                 return;
             }
 

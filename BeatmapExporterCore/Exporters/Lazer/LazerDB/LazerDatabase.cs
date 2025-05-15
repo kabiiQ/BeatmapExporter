@@ -135,8 +135,8 @@ namespace BeatmapExporterCore.Exporters.Lazer.LazerDB
                 return File.Open(path, FileMode.Open);
             } catch(Exception e)
             {
-                throw new IOException($"Unable to open file: {hash}", e);
-            } 
+                throw new IOException($"Unable to open file: {hash} :: {e.Message}", e);
+            }
         }
 
         /// <summary>

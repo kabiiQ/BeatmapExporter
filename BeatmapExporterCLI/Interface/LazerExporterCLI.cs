@@ -11,6 +11,8 @@ namespace BeatmapExporterCLI.Interface
     /// </summary>
     public class LazerExporterCLI
     {
+        private static readonly NLog.Logger Logger = NLog.LogManager.GetCurrentClassLogger();
+
         public LazerExporterCLI(LazerExporter exporter)
         {
             Exporter = exporter;
@@ -47,6 +49,7 @@ namespace BeatmapExporterCLI.Interface
                 } catch (Exception e)
                 {
                     Console.WriteLine($"Unable to export {filename} :: {e.Message}");
+                    Logger.Error(e);
                 }
             };
             Console.WriteLine($"Exported {exported}/{count} beatmaps to {Configuration.FullPath}.");
@@ -92,6 +95,7 @@ namespace BeatmapExporterCLI.Interface
                     catch (Exception e)
                     {
                         Console.WriteLine($"Unable to export audio: {audioFile} :: {e.Message}");
+                        Logger.Error(e);
                     }
                 }
             }
@@ -122,6 +126,7 @@ namespace BeatmapExporterCLI.Interface
                     catch (Exception e)
                     {
                         Console.WriteLine($"Unable to export background image {backgroundFile} :: {e.Message}");
+                        Logger.Error(e);
                     }
                 }
             }
@@ -148,6 +153,7 @@ namespace BeatmapExporterCLI.Interface
                 } catch (Exception e)
                 {
                     Console.WriteLine($"Unable to export score replay {filename} :: {e.Message}");
+                    Logger.Error(e);
                 }
             }
             Console.WriteLine($"Exported {exported}/{replayCount} score replays from {Exporter.SelectedBeatmapCount} beatmaps to {Configuration.FullPath}");
@@ -167,6 +173,7 @@ namespace BeatmapExporterCLI.Interface
             } catch (Exception e)
             {
                 Console.WriteLine($"Unable to export collection.db file :: {e.Message}");
+                Logger.Error(e);
                 return;
             }
         }

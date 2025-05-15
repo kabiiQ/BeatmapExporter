@@ -1,4 +1,5 @@
 ﻿using BeatmapExporterCore.Filters;
+using NLog;
 using System.IO.Compression;
 
 namespace BeatmapExporterCore.Exporters
@@ -12,6 +13,15 @@ namespace BeatmapExporterCore.Exporters
             DefaultExportPath = defaultExportPath;
             Filters = new();
         }
+        
+        static ExporterConfiguration()
+        {
+            NLog.LogManager.Setup().LoadConfiguration(builder =>
+            {
+                builder.ForLogger().FilterMinLevel(LogLevel.Error).WriteToFile(Path.Combine(Environment.CurrentDirectory, "exporter.error.log"));
+            });
+        }
+
 
         /// <summary>
         /// The beatmap filters currently applied to this exporter.

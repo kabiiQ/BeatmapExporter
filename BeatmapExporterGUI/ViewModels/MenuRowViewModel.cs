@@ -83,4 +83,28 @@ public partial class MenuRowViewModel : ViewModelBase
     public void Releases() => PlatformUtil.Open(ExporterUpdater.Releases);
 
     public void Osu() => PlatformUtil.Open("https://github.com/ppy/osu/releases");
+
+
+    /// <summary>
+    /// User-requested action to view the BeatmapExporter application data
+    /// </summary>
+    public void ApplicationData() => PlatformUtil.Open(ClientSettings.APPDIR);
+
+    /// <summary>
+    /// User-requested action to reset the program preferences to defaults
+    /// </summary>
+    [RelayCommand(CanExecute = nameof(CanNavigate))]
+    private void Reset()
+    {
+        var defaults = new ClientSettings();
+        // Overwrite config on disk with defaults
+        defaults.TrySave();
+
+        Exporter.AddSystemMessage("BeatmapExporter settings/filters have been reset to defaults and the database has been unloaded.");
+
+        if (DatabaseLoaded)
+        {
+            Close();
+        }
+    }
 }

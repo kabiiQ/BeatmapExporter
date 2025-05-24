@@ -32,13 +32,8 @@ namespace BeatmapExporterCore.Exporters.Lazer.LazerDB
         /// Attempt to determine the lazer database directory.
         /// </summary>
         /// <param name="userDir">A directory specified by the user on launch, prioritized in directory list</param>
-        public static IEnumerable<string> CheckDirectories(string? userDir)
+        public static IEnumerable<string> GetDefaultDirectories()
         {
-            if (userDir != null)
-            {
-                // include user-provided directory first
-                yield return userDir;
-            }
             if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
             {
                 // default install location: %appdata%/osu
@@ -54,11 +49,11 @@ namespace BeatmapExporterCore.Exporters.Lazer.LazerDB
                 yield return Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), ".var/app/sh.ppy.osu/data/osu");
             }
         }
-        
+
         /// <summary>
         /// Returns the "first" directory that would be checked by the launcher.
         /// </summary>
-        public static string DefaultInstallDirectory() => CheckDirectories(null).First();
+        public static string DefaultInstallDirectory() => GetDefaultDirectories().First();
 
         /// <summary>
         /// Loads the osu!lazer database schema and opens the database file 

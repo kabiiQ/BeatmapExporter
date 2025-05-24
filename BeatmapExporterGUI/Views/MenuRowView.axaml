@@ -31,7 +31,7 @@
                 Command="{Binding ExportCommand}" />
     </MenuItem>
     
-    <MenuItem Header="_Version">
+    <MenuItem Header="_About">
       <MenuItem Header="{Binding ProgramVersion, StringFormat=BeatmapExporter version: {0}}"
                 IsEnabled="False" />
       <MenuItem Header="{Binding LazerVersion, StringFormat=Built for osu!lazer release: {0}}"
@@ -44,6 +44,11 @@
                 Command="{Binding Releases}" />
       <MenuItem Header="osu! GitHub Releases"
                 Command="{Binding Osu}" />
+      <Separator />
+      <MenuItem Header="_View BeatmapExporter AppData"
+                Command="{Binding ApplicationData}" />
+      <MenuItem Header="_Reset BeatmapExporter Settings"
+                Command="{Binding ResetCommand}" />
     </MenuItem>
   </Menu>
 

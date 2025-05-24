@@ -1,27 +1,54 @@
 ﻿using BeatmapExporterCore.Filters;
+using BeatmapExporterCore.Utilities;
 using NLog;
+using System.Diagnostics.CodeAnalysis;
 using System.IO.Compression;
 
 namespace BeatmapExporterCore.Exporters
 {
     public class ExporterConfiguration
     {
-        private string? exportPath = null;
+        private ClientSettings settings;
 
-        public ExporterConfiguration(string defaultExportPath)
+        private string? exportPath = null;
+        private bool combineFilterMode;
+        private ExportFormat exportFormat;
+        private bool mergeCollections;
+        private bool caseInsensitiveMerge;
+
+        public ExporterConfiguration(ClientSettings settings)
         {
-            DefaultExportPath = defaultExportPath;
-            Filters = new();
+            ApplySettings(settings);
         }
         
         static ExporterConfiguration()
         {
             NLog.LogManager.Setup().LoadConfiguration(builder =>
             {
-                builder.ForLogger().FilterMinLevel(LogLevel.Error).WriteToFile(Path.Combine(Environment.CurrentDirectory, "exporter.error.log"));
+                builder.ForLogger().FilterMinLevel(LogLevel.Error).WriteToFile(Path.Combine(ClientSettings.APPDIR, "exporter.error.log"));
             });
         }
 
+        /// <summary>
+        /// Applies the settings from a <see cref="ClientSettings" /> profile to this exporter configuration.
+        /// </summary>
+        /// <param name="settings"></param>
+        [MemberNotNull(nameof(settings), nameof(exportFormat), nameof(Filters))]
+        public void ApplySettings(ClientSettings settings)
+        {
+            this.settings = settings;
+            exportPath = settings.ExportPath;
+            exportFormat = settings.ExportFormat;
+            combineFilterMode = settings.MatchAllFilters;
+            mergeCollections = settings.MergeCollections;
+            caseInsensitiveMerge = settings.MergeCaseInsensitive;
+
+            Filters = settings.AppliedFilters
+                .Select(f => f.ToBeatmapFilter())
+                .Where(f => f != null)
+                .Select(f => f!)
+                .ToList();
+        }
 
         /// <summary>
         /// The beatmap filters currently applied to this exporter.
@@ -29,9 +56,14 @@ namespace BeatmapExporterCore.Exporters
         public List<BeatmapFilter> Filters { get; set; }
 
         /// <summary>
+        /// Notify the user settings container to update the currently persisted filters.
+        /// </summary>
+        public void SaveFilters() => settings.SaveFilters([.. Filters]);
+
+        /// <summary>
         /// The default export path for this type of exporter.
         /// </summary>
-        public string DefaultExportPath { get; }
+        public string DefaultExportPath { get; } = "lazerexport";
 
         /// <summary>
         /// The currently set export path, equal to <see cref="DefaultExportPath"/> if not changed by the user.
@@ -40,7 +72,7 @@ namespace BeatmapExporterCore.Exporters
         {
             get
             {
-                string basePath = exportPath is not null ? exportPath : DefaultExportPath;
+                string basePath = exportPath ?? DefaultExportPath;
                 return ExportFormat switch
                 {
                     ExportFormat.Beatmap => basePath,
@@ -52,7 +84,11 @@ namespace BeatmapExporterCore.Exporters
                     _ => throw new InvalidOperationException()
                 };
             }
-            set => exportPath = value;
+            set
+            {
+                exportPath = value;
+                settings.SaveExportPath(value);
+            }
         }
 
         /// <summary>
@@ -63,7 +99,15 @@ namespace BeatmapExporterCore.Exporters
         /// <summary>
         /// If filters should be applied with AND logic where beatmaps must match all filters.
         /// </summary>
-        public bool CombineFilterMode { get; set; } = true;
+        public bool CombineFilterMode
+        {
+            get => combineFilterMode;
+            set
+            {
+                combineFilterMode = value;
+                settings.SaveFilterMode(value);
+            }
+        }
 
         /// <summary>
         /// If compression is enabled for this exporter, disabled by default. Check <see cref="CompressionLevel"/> for actual compression level when creating archives.
@@ -78,16 +122,40 @@ namespace BeatmapExporterCore.Exporters
         /// <summary>
         /// If collection.db export should merge with an existing file, enabled by default. If false, output file will always be overwritten instead.
         /// </summary>
-        public bool MergeCollections { get; set; } = true;
+        public bool MergeCollections
+        {
+            get => mergeCollections;
+            set
+            {
+                mergeCollections = value;
+                settings.SaveMerge(value);
+            }
+        }
 
         /// <summary>
         /// If collection.db export should merge in a case-insensitive manner, merging duplicates.
         /// </summary>
-        public bool MergeCaseInsensitive { get; set; } = true;
+        public bool MergeCaseInsensitive
+        {
+            get => caseInsensitiveMerge;
+            set
+            {
+                caseInsensitiveMerge = value;
+                settings.SaveCaseInsensitive(value);
+            }
+        }
 
         /// <summary>
         /// The current export mode.
         /// </summary>
-        public ExportFormat ExportFormat { get; set; } = ExportFormat.Beatmap;
+        public ExportFormat ExportFormat
+        { 
+            get => exportFormat;
+            set
+            {
+                exportFormat = value;
+                settings.SaveExportFormat(value);
+            }
+        }
     }
 }

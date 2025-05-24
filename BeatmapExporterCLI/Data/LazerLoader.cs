@@ -3,12 +3,15 @@ using BeatmapExporterCore.Exporters;
 using BeatmapExporterCore.Exporters.Lazer;
 using BeatmapExporterCore.Exporters.Lazer.LazerDB;
 using BeatmapExporterCore.Exporters.Lazer.LazerDB.Schema;
+using BeatmapExporterCore.Utilities;
 using Realms;
 
 namespace BeatmapExporterCLI.Data
 {
     public static class LazerLoader
     {
+        private static readonly NLog.Logger Logger = NLog.LogManager.GetCurrentClassLogger();
+
         /// <summary>
         /// Attempt to locate and load the lazer database. May prompt user for the database path.
         /// </summary>
@@ -16,14 +19,28 @@ namespace BeatmapExporterCLI.Data
         {
             // osu!lazer has been selected at this point. 
             // load the osu!lazer database here, can operate on lazer-specific objects
-            // assume default lazer directory, prompting user if not found (or specified as arg)
-            Console.Write($" --- kabii's Lazer Exporter ---\n\nNow checking default osu!lazer storage locations. You can run this application with your lazer storage location as an argument if you have it stored somewhere different.\n\n");
+            Console.Write(" --- BeatmapExporter for osu!lazer ---\n\nNow checking known osu!lazer storage locations.\n\n");
+            Console.Write($"BeatmapExporter application data and error logs located in {ClientSettings.APPDIR}\n\n");
 
-            var checkDirs = LazerDatabase.CheckDirectories(userDir);
+            ClientSettings settings;
+            try
+            {
+                // Load any previous user settings from file, or use defaults if this file does not exist.
+                settings = ClientSettings.LoadFromFile() ?? new();
+            } catch (Exception e)
+            {
+                Console.WriteLine($"Unable to load application settings: {e.Message}");
+                Console.WriteLine($"Loading will continue with default settings.");
+                settings = new();
+            }
+
+            List<string?> userDirs = [userDir, settings.DatabasePath];
+            var checkDirs = userDirs.Concat(LazerDatabase.GetDefaultDirectories());
             string? dbFile = null;
             foreach (var dir in checkDirs)
             {
                 // check each provided or default lazer directory
+                if (dir is null) continue;
                 Console.WriteLine($"Checking directory: {dir}");
                 dbFile = LazerDatabase.GetDatabaseFile(dir);
                 if (dbFile is null)
@@ -64,6 +81,7 @@ namespace BeatmapExporterCLI.Data
             catch (Exception e)
             {
                 Console.WriteLine($"\nError opening database: {e.Message}");
+                Logger.Error("Error opening database", e);
                 if (e is LazerVersionException version)
                 {
                     foreach (var message in version.Details)
@@ -79,6 +97,7 @@ namespace BeatmapExporterCLI.Data
             }
 
             Console.Write("\nosu! database opened successfully.\nLoading beatmaps...\n");
+            settings.SaveDatabase(dbFile);
 
             // load beatmaps into memory for filtering/export later
             List<BeatmapSet> beatmaps = realm!.All<BeatmapSet>().ToList();
@@ -87,7 +106,7 @@ namespace BeatmapExporterCLI.Data
             List<BeatmapCollection> collections = realm.All<BeatmapCollection>().ToList();
 
             // start console i/o loop
-            LazerExporter exporter = new(database, beatmaps, collections);
+            LazerExporter exporter = new(database, settings, beatmaps, collections);
             LazerExporterCLI cli = new(exporter);
             return new ExporterApp(cli);
         }

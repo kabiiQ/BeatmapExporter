@@ -25,9 +25,10 @@ namespace BeatmapExporterCore.Exporters.Lazer
         readonly List<Beatmap> allBeatmapDiffs;
 
         /// <param name="lazerDb">The lazer database, referenced for opening files later.</param>
+        /// <param name="settings">The user's last known <see cref="ClientSettings"/></param>
         /// <param name="beatmapSets">All beatmap sets loaded into memory.</param>
         /// <param name="lazerCollections">If available, all collections into memory.</param>
-        public LazerExporter(LazerDatabase lazerDb, List<BeatmapSet> beatmapSets, List<BeatmapCollection> lazerCollections)
+        public LazerExporter(LazerDatabase lazerDb, ClientSettings settings, List<BeatmapSet> beatmapSets, List<BeatmapCollection> lazerCollections)
         {
             this.lazerDb = lazerDb;
 
@@ -44,8 +45,6 @@ namespace BeatmapExporterCore.Exporters.Lazer
             TotalBeatmapCount = allBeatmapDiffs.Count;
             SelectedBeatmapCount = TotalBeatmapCount;
 
-            Configuration = new ExporterConfiguration("lazerexport");
-
             var colCount = 0;
             Collections = new();
             foreach (var coll in lazerCollections)
@@ -57,6 +56,12 @@ namespace BeatmapExporterCore.Exporters.Lazer
                 Collections[coll.Name] = new MapCollection(colCount, colMaps);
             }
             CollectionCount = colCount;
+
+            Configuration = new ExporterConfiguration(settings);
+            if (settings.AppliedFilters.Count > 0)
+            {
+                UpdateSelectedBeatmaps();
+            }
 
             transcoder = new Transcoder();
         }
@@ -572,7 +577,8 @@ namespace BeatmapExporterCore.Exporters.Lazer
             }
 
             // Apply rebuilt collection filter
-            Configuration.Filters = beatmapFilters;
+            Configuration.Filters = new(beatmapFilters);
+            Configuration.SaveFilters();
 
             // compute and cache 'selected' beatmaps based on current filters
             int selectedCount = 0;

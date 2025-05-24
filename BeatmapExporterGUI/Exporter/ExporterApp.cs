@@ -51,15 +51,29 @@ namespace BeatmapExporterGUI.Exporter
         /// <returns>If the database load was a success else the user should be notified to try again</returns>
         public bool LoadDatabase(string? userDir)
         {
+            ClientSettings settings;
+            try
+            {
+                // Load any previous user settings from file, or use defaults if this file does not exist.
+                settings = ClientSettings.LoadFromFile() ?? new();
+            } catch (Exception e)
+            {
+                // Display error to user and use default settings
+                AddSystemMessage($"Unable to load application settings: {e.Message}", error: true);
+                settings = new();
+            }
+
             // load the osu!lazer database here, check default directories
-            var checkDirs = LazerDatabase.CheckDirectories(userDir);
-            AddSystemMessage("Now checking default osu!lazer storage locations.");
+            List<string?> userDirs = [userDir, settings.DatabasePath];
+            var checkDirs = userDirs.Concat(LazerDatabase.GetDefaultDirectories());
+            AddSystemMessage("Now checking known osu!lazer storage locations.");
             AddSystemMessage("You can run this application with your lazer storage location as an argument if you have it stored somewhere different.");
 
             string? dbFile = null;
             foreach (var dir in checkDirs)
             {
                 // check each provided or default lazer directory
+                if (dir is null) continue;
                 AddSystemMessage($"Checking directory: {dir}");
                 dbFile = LazerDatabase.GetDatabaseFile(dir);
                 if (dbFile is null)
@@ -105,6 +119,7 @@ namespace BeatmapExporterGUI.Exporter
             }
 
             AddSystemMessage("osu! database opened successfully. Loading beatmaps...");
+            settings.SaveDatabase(dbFile);
 
             // load beatmaps into memory for filtering/export later
             List<BeatmapSet> beatmaps = realm!.All<BeatmapSet>().ToList();
@@ -113,7 +128,7 @@ namespace BeatmapExporterGUI.Exporter
             List<BeatmapCollection> collections = realm.All<BeatmapCollection>().ToList();
 
             // replace any current exporter for this ExporterApp instance with the newly loaded database
-            Lazer = new(database, beatmaps, collections);
+            Lazer = new(database, settings, beatmaps, collections);
             AddSystemMessage($"Loaded osu!lazer database: {dbFile}");
             return true;
         }

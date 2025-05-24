@@ -75,9 +75,9 @@ macOS makes running random (non app-store) programs like this a bit more involve
 If you are not familiar with Terminal, you may need to look up how to open Terminal in the specific folder you have downloaded BeatmapExporter into. 
 
 Then, run the following command:
-`chmod +x mac-BeatmapExporter.app` - this marks mac-BeatmapExporter.app as executable so that you can run it.
+`chmod +x BeatmapExporter.app` - this marks BeatmapExporter.app as executable so that you can run it.
 
-Then, you can run the program with `./mac-BeatmapExporter.app` from the Terminal window. You may be able to just click the file now, but would not recommend running the program without the Terminal as it seems to restrict the program from accessing the osu! files.
+Then, you can run the program with `./BeatmapExporter.app` from the Terminal window. You may be able to just click the file now, but would not recommend running the program without the Terminal as it seems to restrict the program from accessing the osu! files.
 
 Linux terminal commands have the same usage.
 

@@ -26,7 +26,7 @@ namespace BeatmapExporterCLI.Data
             try
             {
                 // Load any previous user settings from file, or use defaults if this file does not exist.
-                settings = ClientSettings.LoadFromFile() ?? new();
+                settings = ClientSettings.LoadFromFile();
             } catch (Exception e)
             {
                 Console.WriteLine($"Unable to load application settings: {e.Message}");

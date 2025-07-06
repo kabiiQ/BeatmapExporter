@@ -8,8 +8,8 @@ namespace BeatmapExporterCore.Exporters.Lazer.LazerDB
 {
     public class LazerDatabase
     {
-        public const int LazerSchemaVersion = 48;
-        public const string FirstLazerVersion = "2025.321.0";
+        public const int LazerSchemaVersion = 49;
+        public const string FirstLazerVersion = "2025.702.0-tachyon";
 
         readonly string database;
         readonly string filesDirectory;
@@ -90,7 +90,7 @@ namespace BeatmapExporterCore.Exporters.Lazer.LazerDB
             catch (RealmException re)
             {
                 // Parse common Realm version errors into more friendly exceptions with details for the user
-                var versionPattern = new Regex("schema version (\\d+) does not equal last set version");
+                var versionPattern = new Regex("schema version \\d+ does not equal last set version (\\d+)");
                 var versionMatch = versionPattern.Match(re.Message);
                 if (versionMatch.Success)
                 {

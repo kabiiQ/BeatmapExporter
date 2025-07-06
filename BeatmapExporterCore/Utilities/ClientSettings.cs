@@ -56,7 +56,7 @@ namespace BeatmapExporterCore.Utilities
         /// Any exception encountered during loading will be propagated to caller, as it will likely be displayed to the user but loading should continue.
         /// </summary>
         /// <exception cref="Exception" />
-        public static ClientSettings? LoadFromFile()
+        public static ClientSettings LoadFromFile()
         {
             if (!Directory.Exists(APPDIR))
             {
@@ -65,7 +65,7 @@ namespace BeatmapExporterCore.Utilities
 
             if (!File.Exists(configPath))
             {
-                return null;
+                return new();
             }
 
             var json = File.ReadAllText(configPath);

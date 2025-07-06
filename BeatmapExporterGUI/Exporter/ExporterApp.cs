@@ -55,7 +55,7 @@ namespace BeatmapExporterGUI.Exporter
             try
             {
                 // Load any previous user settings from file, or use defaults if this file does not exist.
-                settings = ClientSettings.LoadFromFile() ?? new();
+                settings = ClientSettings.LoadFromFile();
             } catch (Exception e)
             {
                 // Display error to user and use default settings

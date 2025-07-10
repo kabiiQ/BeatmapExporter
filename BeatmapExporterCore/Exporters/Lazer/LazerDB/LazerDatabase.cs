@@ -9,7 +9,7 @@ namespace BeatmapExporterCore.Exporters.Lazer.LazerDB
     public class LazerDatabase
     {
         public const int LazerSchemaVersion = 49;
-        public const string FirstLazerVersion = "2025.702.0-tachyon";
+        public const string FirstLazerVersion = "2025.710.0-lazer";
 
         readonly string database;
         readonly string filesDirectory;

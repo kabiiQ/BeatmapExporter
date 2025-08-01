@@ -17,6 +17,9 @@ namespace BeatmapExporterCore.Exporters.Lazer.LazerDB.Schema
         public double Accuracy { get; set; }
         public DateTimeOffset Date { get; set; }
         public RealmUser User { get; set; } = null!;
+        public string Mods { get; set; } = string.Empty;
+        public string Statistics { get; set; } = string.Empty;
+        public IList<int> Pauses { get; } = null!;
         public int Rank { get; set; }
 
         // Author kabii

@@ -84,7 +84,7 @@ Some older versions of macOS may allow the program to run right away but instead
 
 The macOS build works and I am immediately able to get it working on macOS VMs (13/15), but I understand many users have issues getting it running. The different versions of macOS respond very differently to "unknown" programs like this and it is difficult to keep it all straight. I do not own any Mac systems and am unlikely to be able to help you troubleshoot beyond guessing. 
 
-### For Linux:
+### Linux/macOS Terminal:
 
 > You will need to use your system's Terminal to make the program executable and then run it. If you are not familiar with Terminal, you may need to look up how to open Terminal in the specific folder you have downloaded BeatmapExporter into. 
 >

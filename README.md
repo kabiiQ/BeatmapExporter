@@ -70,16 +70,28 @@ If you did not move it, you should not need to worry about this.
 
 ## Running on macOS/Linux
 
-macOS makes running random (non app-store) programs like this a bit more involved. You will need to use your system's Terminal to make the program executable and then run it. 
+### For macOS (especially 15), the best method seems to be:
+> - Download `mac-BeatmapExporter.zip` from the Releases section
+> - Click on the downloaded zip to extract `BeatmapExporter` (.app file)
+> - Click on `BeatmapExporter`, the program will be blocked, close the security warning
+> - Go to System Settings -> Privacy & Security -> scroll to the bottom
+> - BeatmapExporter should appear as a blocked program with an "Open Anyway" button available. 
+> - Another prompt may come up allowing you to press "Open Anyway" again.
 
-If you are not familiar with Terminal, you may need to look up how to open Terminal in the specific folder you have downloaded BeatmapExporter into. 
+If you are not able to do this (for example, you do not have administrator access to the computer), you may be out of luck. Other versions of macOS may have better luck following the Linux method instead. 
 
-Then, run the following command:
+Some older versions of macOS may allow the program to run right away but instead restrict its access to your osu! files or to creating exports. In this case, use the Linux method to launch via Terminal instead. 
+
+The macOS build works and I am immediately able to get it working on macOS VMs (13/15), but I understand many users have issues getting it running. The different versions of macOS respond very differently to "unknown" programs like this and it is difficult to keep it all straight. I do not own any Mac systems and am unlikely to be able to help you troubleshoot beyond guessing. 
+
+### For Linux:
+
+> You will need to use your system's Terminal to make the program executable and then run it. If you are not familiar with Terminal, you may need to look up how to open Terminal in the specific folder you have downloaded BeatmapExporter into. 
+>
+> Then, run the following command:
 `chmod +x BeatmapExporter.app` - this marks BeatmapExporter.app as executable so that you can run it.
-
-Then, you can run the program with `./BeatmapExporter.app` from the Terminal window. You may be able to just click the file now, but would not recommend running the program without the Terminal as it seems to restrict the program from accessing the osu! files.
-
-Linux terminal commands have the same usage.
+>
+> Then, you can run the program with `./BeatmapExporter.app` from the Terminal window.
 
 ## Note on Windows DPI Scaling
 

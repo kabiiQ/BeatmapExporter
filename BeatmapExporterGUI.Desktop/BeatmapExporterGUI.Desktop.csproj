@@ -9,6 +9,7 @@
     <IncludeNativeLibrariesForSelfExtract>true</IncludeNativeLibrariesForSelfExtract>
     <EnableCompressionInSingleFile>true</EnableCompressionInSingleFile>
     <IncludeAllContentForSelfExtract>true</IncludeAllContentForSelfExtract>
+    <CETCompat>false</CETCompat>
   </PropertyGroup>
   <ItemGroup>
     <Content Include="bmex.ico" />

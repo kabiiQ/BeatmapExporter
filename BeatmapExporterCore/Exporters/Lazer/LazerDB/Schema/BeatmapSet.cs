@@ -23,8 +23,11 @@ namespace BeatmapExporterCore.Exporters.Lazer.LazerDB.Schema
         // Author kabii
         IList<Beatmap>? selected = null; // backing field for SelectedBeatmaps
 
+        /// <summary>
+        /// Online beatmap ID with fallback to GUID
+        /// </summary>
         [Ignored]
-        public string BeatmapID => OnlineID != -1 ? $"{OnlineID} " : "";
+        public string BeatmapID => OnlineID != -1 ? OnlineID.ToString() : ID.ToString();
 
         /// <summary>
         /// Collection containing only the beatmaps from this set which are currently selected by the user.
@@ -76,6 +79,10 @@ namespace BeatmapExporterCore.Exporters.Lazer.LazerDB.Schema
                 $"{OnlineID}: {metadata.Artist} - {metadata.Title} ({metadata.Author.Username} - {difficultySpread} stars)";
         }
 
+        /// <summary>
+        /// Returns all files within a beatmap set that provide a filename
+        /// This should be all files, but some users had issues with "blank" filenames in their lazer realm.
+        /// </summary>
         [Ignored]
         public IList<RealmNamedFileUsage> NamedFiles => Files.Where(f => !string.IsNullOrWhiteSpace(f.Filename)).ToList();
 
@@ -84,9 +91,9 @@ namespace BeatmapExporterCore.Exporters.Lazer.LazerDB.Schema
         /// </summary>
         public string ArchiveFilename()
         {
-            BeatmapMetadata metadata = SelectedBeatmaps.First().Metadata;
+            BeatmapMetadata metadata = Beatmaps.First().Metadata;
             return
-                $"{BeatmapID}{metadata.Artist.Trunc(30)} - {metadata.Title.Trunc(40)} ({metadata.Author.Username.Trunc(30)}).osz"
+                $"{BeatmapID.Trunc(6)} {metadata.Artist.Trunc(30)} - {metadata.Title.Trunc(40)} ({metadata.Author.Username.Trunc(30)}).osz"
                 .RemoveFilenameCharacters();
         }
 

@@ -28,9 +28,11 @@ namespace BeatmapExporterCore.Exporters.Lazer
         /// <param name="settings">The user's last known <see cref="ClientSettings"/></param>
         /// <param name="beatmapSets">All beatmap sets loaded into memory.</param>
         /// <param name="lazerCollections">If available, all collections into memory.</param>
-        public LazerExporter(LazerDatabase lazerDb, ClientSettings settings, List<BeatmapSet> beatmapSets, List<BeatmapCollection> lazerCollections)
+        /// <param name="transcoder">The Transcoder instance to use for mp3 conversions</param>
+        public LazerExporter(LazerDatabase lazerDb, ClientSettings settings, List<BeatmapSet> beatmapSets, List<BeatmapCollection> lazerCollections, Transcoder transcoder)
         {
             this.lazerDb = lazerDb;
+            this.transcoder = transcoder;
 
             AllBeatmapSets = beatmapSets
                 .Where(set => set.Beatmaps.Count > 0)
@@ -62,8 +64,6 @@ namespace BeatmapExporterCore.Exporters.Lazer
             {
                 UpdateSelectedBeatmaps();
             }
-
-            transcoder = new Transcoder();
         }
 
 

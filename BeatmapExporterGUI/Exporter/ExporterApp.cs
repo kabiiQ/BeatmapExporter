@@ -62,6 +62,12 @@ namespace BeatmapExporterGUI.Exporter
                 AddSystemMessage($"Unable to load application settings: {e.Message}", error: true);
                 settings = new();
             }
+            
+            // Attempt to load FFmpeg transcoder
+            var transcoder = new Transcoder();
+            AddSystemMessage(transcoder.Available
+                ? "FFmpeg successfully loaded! .mp3 export for beatmaps that use other audio formats will be available."
+                : "FFmpeg not found. Conversion to .mp3 for beatmap audio export will not be available. This is not required and you can ignore this warning if you are not trying to output mp3 files.");
 
             // load the osu!lazer database here, check default directories
             List<string?> userDirs = [userDir, settings.DatabasePath];
@@ -128,7 +134,7 @@ namespace BeatmapExporterGUI.Exporter
             List<BeatmapCollection> collections = realm.All<BeatmapCollection>().ToList();
 
             // replace any current exporter for this ExporterApp instance with the newly loaded database
-            Lazer = new(database, settings, beatmaps, collections);
+            Lazer = new(database, settings, beatmaps, collections, transcoder);
             AddSystemMessage($"Loaded osu!lazer database: {dbFile}");
             return true;
         }

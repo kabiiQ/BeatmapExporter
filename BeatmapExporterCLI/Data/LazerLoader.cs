@@ -19,8 +19,8 @@ namespace BeatmapExporterCLI.Data
         {
             // osu!lazer has been selected at this point. 
             // load the osu!lazer database here, can operate on lazer-specific objects
-            Console.Write(" --- BeatmapExporter for osu!lazer ---\n\nNow checking known osu!lazer storage locations.\n\n");
-            Console.Write($"BeatmapExporter application data and error logs located in {ClientSettings.APPDIR}\n\n");
+            Console.Write(" --- BeatmapExporter for osu!lazer ---\n\n");
+            Console.Write($"BeatmapExporter application data and error logs located in {ClientSettings.APPDIR}\n");
 
             ClientSettings settings;
             try
@@ -29,11 +29,19 @@ namespace BeatmapExporterCLI.Data
                 settings = ClientSettings.LoadFromFile();
             } catch (Exception e)
             {
-                Console.WriteLine($"Unable to load application settings: {e.Message}");
-                Console.WriteLine($"Loading will continue with default settings.");
+                Console.Write($"\nUnable to load application settings: {e.Message}\n");
+                Console.Write("Loading will continue with default settings.\n\n");
                 settings = new();
             }
+            
+            // Attempt to load FFmpeg transcoder
+            var transcoder = new Transcoder();
+            Console.Write(transcoder.Available
+                ? "FFmpeg successfully loaded! .mp3 export for beatmaps that use other audio formats will be available.\n\n"
+                : "FFmpeg not found. Conversion to .mp3 for beatmap audio export will not be available. This is not required and you can ignore this warning if you are not trying to output mp3 files.\n\n");
+            
 
+            Console.Write("Now checking known osu!lazer storage locations.\n\n");
             List<string?> userDirs = [userDir, settings.DatabasePath];
             var checkDirs = userDirs.Concat(LazerDatabase.GetDefaultDirectories());
             string? dbFile = null;
@@ -106,7 +114,7 @@ namespace BeatmapExporterCLI.Data
             List<BeatmapCollection> collections = realm.All<BeatmapCollection>().ToList();
 
             // start console i/o loop
-            LazerExporter exporter = new(database, settings, beatmaps, collections);
+            LazerExporter exporter = new(database, settings, beatmaps, collections, transcoder);
             LazerExporterCLI cli = new(exporter);
             return new ExporterApp(cli);
         }

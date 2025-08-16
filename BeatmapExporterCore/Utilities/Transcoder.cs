@@ -11,12 +11,10 @@ namespace BeatmapExporterCore.Utilities
             try
             {
                 var _ = FFMpeg.GetAudioCodecs();
-                Console.WriteLine("FFmpeg successfully loaded! .mp3 export for beatmaps that use other audio formats will be available.");
                 Available = true;
             }
             catch (Exception)
             {
-                Console.WriteLine("FFmpeg not found. Conversion to .mp3 for beatmap audio export will not be available.");
                 Available = false;
             }
         }

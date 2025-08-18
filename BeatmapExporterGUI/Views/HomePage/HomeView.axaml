@@ -44,7 +44,7 @@
       </Border>
 
       <TextBlock FontSize="24"
-                 HorizontalAlignment="Center">System Messages</TextBlock>
+                 HorizontalAlignment="Center">Status Messages</TextBlock>
 
       <ScrollViewer Name="SystemMessages">
         <ItemsControl ItemsSource="{Binding Exporter.SystemMessages}"

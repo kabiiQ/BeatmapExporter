@@ -15,8 +15,8 @@
 
   <PropertyGroup>
     <PackageId>BeatmapExporterCLI</PackageId>
-    <Version>2.6.0-tachyon-51</Version>
-    <FileVersion>2.6.0</FileVersion>
+    <Version>2.6.1</Version>
+    <FileVersion>2.6.1</FileVersion>
     <Authors>kabii</Authors>
     <Title>BeatmapExporter</Title>
     <Description>Command-line beatmap exporter utility for osu!lazer</Description>

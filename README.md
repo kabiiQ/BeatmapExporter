@@ -76,7 +76,7 @@ If you did not move it, you should not need to worry about this.
 
 ### For macOS (especially 15), the best method seems to be:
 > - Download the latest macOS build from the Releases section. 
->    - `mac-BeatmapExporter_arm64.zip` for Apple silicon (M1, M2 etc)
+>    - `mac-BeatmapExporter-arm64.zip` for Apple processors (M1, M2 etc)
 >    - `mac-BeatmapExporter-x86-64.zip` for Intel-based Macs.
 > - Click on the downloaded zip to extract `BeatmapExporter` (.app file)
 > - Click on `BeatmapExporter`, the program will be blocked, close the security warning

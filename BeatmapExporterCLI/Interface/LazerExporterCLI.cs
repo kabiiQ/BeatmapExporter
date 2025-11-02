@@ -159,7 +159,33 @@ namespace BeatmapExporterCLI.Interface
             Console.WriteLine($"Exported {exported}/{replayCount} score replays from {Exporter.SelectedBeatmapCount} beatmaps to {Configuration.FullPath}");
         }
 
-        public void  ExportCollectionDb()
+        public void ExportSkins()
+        {
+            Exporter.SetupExport();
+            int exported = 0;
+            var skins = Exporter.Skins;
+            var skinCount = skins.Count;
+            
+            Console.WriteLine($"Exporting {skinCount} skins.");
+            foreach (var skin in skins)
+            {
+                string? filename = null;
+                try
+                {
+                    Exporter.ExportSkin(skin, out filename);
+                    exported++;
+                    Console.WriteLine($"Exported skin ({exported}/{skinCount}): {filename}).");
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine($"Unable to export skin {filename} :: {e.Message}");
+                    Logger.Error(e);
+                }
+            }
+            Console.WriteLine($"Exported {exported}/{skinCount} skins to {Configuration.FullPath}.");
+        }
+
+        public void ExportCollectionDb()
         {
             Exporter.SetupExport();
             try

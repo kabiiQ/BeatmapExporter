@@ -79,6 +79,7 @@ namespace BeatmapExporterCore.Exporters
                     ExportFormat.Audio => Path.Combine(basePath, "mp3"),
                     ExportFormat.Background => Path.Combine(basePath, "bg"),
                     ExportFormat.Replay => Path.Combine(basePath, "replay"),
+                    ExportFormat.Skins => Path.Combine(basePath, "skins"),
                     ExportFormat.Folder => Path.Combine(basePath, "Songs"),
                     ExportFormat.CollectionDb => Path.Combine(basePath, "collection.db"),
                     _ => throw new InvalidOperationException()

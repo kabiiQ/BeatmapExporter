@@ -176,7 +176,7 @@
       <Button Command="{Binding ExportBeatmapsCommand}"
               Classes="accent"
               FontSize="18"
-              Content="{Binding ExportUnit, StringFormat=Export filtered selection as {0}}">
+              Content="{Binding ExportUnit, StringFormat=Export selection as {0}}">
       </Button>
       
     </StackPanel>

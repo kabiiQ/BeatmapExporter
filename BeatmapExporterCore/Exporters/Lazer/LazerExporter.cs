@@ -27,9 +27,10 @@ namespace BeatmapExporterCore.Exporters.Lazer
         /// <param name="lazerDb">The lazer database, referenced for opening files later.</param>
         /// <param name="settings">The user's last known <see cref="ClientSettings"/></param>
         /// <param name="beatmapSets">All beatmap sets loaded into memory.</param>
-        /// <param name="lazerCollections">If available, all collections into memory.</param>
+        /// <param name="lazerCollections">All collections into memory.</param>
+        /// <param name="skins">All user skins loaded into memory.</param>
         /// <param name="transcoder">The Transcoder instance to use for mp3 conversions</param>
-        public LazerExporter(LazerDatabase lazerDb, ClientSettings settings, List<BeatmapSet> beatmapSets, List<BeatmapCollection> lazerCollections, Transcoder transcoder)
+        public LazerExporter(LazerDatabase lazerDb, ClientSettings settings, List<BeatmapSet> beatmapSets, List<BeatmapCollection> lazerCollections, List<Skin> skins, Transcoder transcoder)
         {
             this.lazerDb = lazerDb;
             this.transcoder = transcoder;
@@ -58,6 +59,11 @@ namespace BeatmapExporterCore.Exporters.Lazer
                 Collections[coll.Name] = new MapCollection(colCount, colMaps);
             }
             CollectionCount = colCount;
+
+            Skins = skins
+                .Where(s => !s.Protected && s.NamedFiles.Count > 0)
+                .OrderBy(s => s.Name)
+                .ToList();
 
             Configuration = new ExporterConfiguration(settings);
             if (settings.AppliedFilters.Count > 0)
@@ -130,6 +136,14 @@ namespace BeatmapExporterCore.Exporters.Lazer
         /// Count of all collections discovered
         /// </summary>
         public int CollectionCount
+        {
+            get;
+        }
+
+        /// <summary>
+        /// All player skins.
+        /// </summary>
+        public List<Skin> Skins
         {
             get;
         }
@@ -403,6 +417,40 @@ namespace BeatmapExporterCore.Exporters.Lazer
             using FileStream replay = lazerDb.OpenHashedFile(replayFile);
             using FileStream output = File.Open(outputFile, FileMode.CreateNew);
             replay.CopyTo(output);
+        }
+        
+        /// <summary>
+        /// Export a single osu!lazer skin
+        /// </summary>
+        /// <param name="skin">The Skin to export</param>
+        /// <param name="filename">The output filename that will be used. Will be set regardless of success of export and should be used for user feedback.</param>
+        /// /// <exception cref="IOException">The Skin export was unsuccessful and an error should be noted to the user.</exception>
+        public void ExportSkin(Skin skin, out string filename)
+        {
+            Stream? export = null;
+            try
+            {
+                filename = skin.OutputFilename();
+                if (skin.Protected || skin.NamedFiles.Count == 0)
+                    throw new IOException("This skin can not be exported");
+                string exportPath = Path.Combine(Configuration.ExportPath, filename);
+                export = File.Open(exportPath, FileMode.CreateNew);
+
+                using ZipArchive osk = new(export, ZipArchiveMode.Create, true);
+                // Export all files in the skin as-is, very similar operation to a beatmap export
+                foreach (var namedFile in skin.NamedFiles)
+                {
+                    string hash = namedFile.File.Hash;
+                    var entry = osk.CreateEntry(namedFile.Filename, Configuration.CompressionLevel);
+                    using var entryStream = entry.Open();
+                    using var file = lazerDb.OpenHashedFile(hash);
+                    file.CopyTo(entryStream);
+                }
+            }
+            finally
+            {
+                export?.Dispose();
+            }
         }
 
         /// <summary>

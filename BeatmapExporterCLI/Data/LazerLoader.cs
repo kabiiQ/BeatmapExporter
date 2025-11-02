@@ -112,9 +112,12 @@ namespace BeatmapExporterCLI.Data
 
             Console.WriteLine("Loading osu!lazer collections...");
             List<BeatmapCollection> collections = realm.All<BeatmapCollection>().ToList();
+            
+            Console.WriteLine("Loading osu!lazer skins...");
+            List<Skin> skins = realm.All<Skin>().ToList();
 
             // start console i/o loop
-            LazerExporter exporter = new(database, settings, beatmaps, collections, transcoder);
+            LazerExporter exporter = new(database, settings, beatmaps, collections, skins, transcoder);
             LazerExporterCLI cli = new(exporter);
             return new ExporterApp(cli);
         }

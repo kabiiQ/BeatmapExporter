@@ -2,7 +2,6 @@
 using BeatmapExporterCore.Exporters.Lazer;
 using BeatmapExporterCore.Exporters.Lazer.LazerDB.Schema;
 using CommunityToolkit.Mvvm.ComponentModel;
-using Microsoft.CodeAnalysis;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -92,6 +91,7 @@ namespace BeatmapExporterGUI.ViewModels
                 ExportFormat.Audio => ExportAudioFiles,
                 ExportFormat.Background => ExportBackgrounds,
                 ExportFormat.Replay => ExportReplays,
+                ExportFormat.Skins => ExportSkins,
                 ExportFormat.Folder => ExportBeatmaps,
                 ExportFormat.CollectionDb => ExportCollectionDb
             };
@@ -315,6 +315,39 @@ namespace BeatmapExporterGUI.ViewModels
                 Progress++;
             }
             var status = $"Exported {exportedReplays}/{replayCount} player score replays from {TotalSetCount} beatmaps to {lazer.Configuration.FullPath}.";
+            Description = status;
+            Exporter.AddSystemMessage(status);
+        }
+
+        private async Task ExportSkins(CancellationToken token)
+        {
+            lazer.SetupExport();
+            var skins = lazer.Skins;
+            TotalCount = skins.Count;
+            Description = $"Exporting {TotalCount} skins.";
+
+            var exported = 0;
+            foreach (var skin in skins)
+            {
+                if (token.IsCancellationRequested)
+                    break;
+                
+                string? filename = null;
+                try
+                {
+                    await Exporter.RealmScheduler.Schedule(() => lazer.ExportSkin(skin, out filename));
+                    exported++;
+                    AddExport(true, $"Exported skin {exported}/{TotalCount}: {filename}.");
+                }
+                catch (Exception e)
+                {
+                    AddExport(false, $"Unable to export skin {filename} :: ${e.Message}");
+                    Logger.Error(e);
+                }
+                Progress++;
+            }
+
+            var status = $"Exported {exported}/{TotalCount} skins to {lazer.Configuration.FullPath}.";
             Description = status;
             Exporter.AddSystemMessage(status);
         }

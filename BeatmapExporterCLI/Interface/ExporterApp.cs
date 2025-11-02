@@ -60,7 +60,8 @@ namespace BeatmapExporterCLI.Interface
         void ApplicationLoop()
         {
             // output main application menu
-            Console.Write($"\n1. Export selected {Configuration.ExportFormat.UnitName()} ({Exporter.SelectedBeatmapSetCount} beatmap sets, {Exporter.SelectedBeatmapCount} beatmaps)\n2. Display selected beatmap sets ({Exporter.SelectedBeatmapSetCount}/{Exporter.TotalBeatmapSetCount} beatmap sets)\n3. Display {Exporter.CollectionCount} beatmap collections\n4. Advanced export settings (mp3/image/replay export, compression, export location)\n5. Edit beatmap selection/filters\n\n0. Exit\nSelect operation: ");
+            var exportMode = Configuration.ExportFormat == ExportFormat.Skins ? $"all skins (.osk) ({Exporter.Skins.Count} skin files)" : $"selected {Configuration.ExportFormat.UnitName()} ({Exporter.SelectedBeatmapSetCount} beatmap sets, {Exporter.SelectedBeatmapCount} beatmaps)";
+            Console.Write($"\n1. Export {exportMode}\n2. Display selected beatmap sets ({Exporter.SelectedBeatmapSetCount}/{Exporter.TotalBeatmapSetCount} beatmap sets)\n3. Display {Exporter.CollectionCount} beatmap collections\n4. Advanced export settings (mp3/image/replay export, compression, export location)\n5. Edit beatmap selection/filters\n\n0. Exit\nSelect operation: ");
 
             string? input = Console.ReadLine();
             if (input is null)
@@ -69,7 +70,7 @@ namespace BeatmapExporterCLI.Interface
             }
 
             if (!int.TryParse(input, out int op) || op is < 0 or > 5)
-            { 
+            {
                 Console.WriteLine("\nInvalid operation selected.");
                 return;
             }
@@ -94,6 +95,9 @@ namespace BeatmapExporterCLI.Interface
                             break;
                         case ExportFormat.Replay:
                             CLI.ExportReplays();
+                            break;
+                        case ExportFormat.Skins:
+                            CLI.ExportSkins();
                             break;
                         case ExportFormat.CollectionDb:
                             CLI.ExportCollectionDb();

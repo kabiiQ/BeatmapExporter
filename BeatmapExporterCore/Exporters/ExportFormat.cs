@@ -3,7 +3,7 @@
     /// <summary>
     /// All available modes of exporting.
     /// </summary>
-    public enum ExportFormat { Beatmap, Audio, Background, Replay, Folder, CollectionDb };
+    public enum ExportFormat { Beatmap, Audio, Background, Replay, Skins, Folder, CollectionDb };
 
     public static class ExportFormatExtensions
     {
@@ -16,6 +16,7 @@
             ExportFormat.Audio => "audio (.mp3)",
             ExportFormat.Background => "beatmap backgrounds",
             ExportFormat.Replay => "score replays (.osr)",
+            ExportFormat.Skins => "osu! skins (.osk)",
             ExportFormat.Folder => "osu!stable \"Songs\" folder",
             ExportFormat.CollectionDb => "osu!stable \"collection.db\"",
             _ => throw new NotImplementedException()
@@ -30,6 +31,7 @@
             ExportFormat.Audio => "Beatmap audio files will be renamed, tagged and exported (.mp3 format).",
             ExportFormat.Background => "Only beatmap background images will be exported (original format).",
             ExportFormat.Replay => "Player score replays will be exported (.osr).",
+            ExportFormat.Skins => "ALL skins will be exported (.osk). Filters will not be checked.",
             ExportFormat.Folder => "Beatmaps will be exported as an unarchived \"Songs\" folder ready for use with osu! stable.",
             ExportFormat.CollectionDb => "Collections will be exported as the collection.db file used by osu! stable. Beatmap filters will still be applied.",
             _ => throw new NotImplementedException() 

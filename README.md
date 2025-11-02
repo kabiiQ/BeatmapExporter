@@ -57,6 +57,10 @@ This allows you to add your osu!lazer collections into an existing `collection.d
 
 While I experienced no scenario that would cause data loss in testing, any time you are messing with a file like this you should definitely back up your original `collection.db` in a different location first.
 
+### Skin Export
+
+As of version 2.7.0, there is an option to export your osu! skins. This was added by request to enable recovery of skins from a different lazer folder.
+
 # Download/Usage
 
 Executables are available from the [Releases](https://github.com/kabiiQ/BeatmapExporter/releases) section on GitHub. 

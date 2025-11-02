@@ -71,7 +71,9 @@ If you did not move it, you should not need to worry about this.
 ## Running on macOS/Linux
 
 ### For macOS (especially 15), the best method seems to be:
-> - Download `mac-BeatmapExporter.zip` from the Releases section
+> - Download the latest macOS build from the Releases section. 
+>    - `mac-BeatmapExporter_arm64.zip` for Apple silicon (M1, M2 etc)
+>    - `mac-BeatmapExporter-x86-64.zip` for Intel-based Macs.
 > - Click on the downloaded zip to extract `BeatmapExporter` (.app file)
 > - Click on `BeatmapExporter`, the program will be blocked, close the security warning
 > - Go to System Settings -> Privacy & Security -> scroll to the bottom
@@ -85,6 +87,8 @@ Some older versions of macOS may allow the program to run right away but instead
 The macOS build works and I am immediately able to get it working on macOS VMs (13/15), but I understand many users have issues getting it running. The different versions of macOS respond very differently to "unknown" programs like this and it is difficult to keep it all straight. I do not own any Mac systems and am unlikely to be able to help you troubleshoot beyond guessing. 
 
 ### Linux/macOS Terminal:
+
+Modern Linux distros may allow you to simply click on the file and run it after a warning, otherwise:
 
 > You will need to use your system's Terminal to make the program executable and then run it. If you are not familiar with Terminal, you may need to look up how to open Terminal in the specific folder you have downloaded BeatmapExporter into. 
 >

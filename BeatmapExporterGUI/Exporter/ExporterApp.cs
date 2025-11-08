@@ -73,7 +73,6 @@ namespace BeatmapExporterGUI.Exporter
             List<string?> userDirs = [userDir, settings.DatabasePath];
             var checkDirs = userDirs.Concat(LazerDatabase.GetDefaultDirectories());
             AddSystemMessage("Now checking known osu!lazer storage locations.");
-            AddSystemMessage("You can run this application with your lazer storage location as an argument if you have it stored somewhere different.");
 
             string? dbFile = null;
             foreach (var dir in checkDirs)
@@ -124,21 +123,18 @@ namespace BeatmapExporterGUI.Exporter
                 return false;
             }
 
-            AddSystemMessage("osu! database opened successfully. Loading beatmaps...");
+            AddSystemMessage($"Opened osu! database: {dbFile}");
+            AddSystemMessage("Loading database...");
             settings.SaveDatabase(dbFile);
 
             // load beatmaps into memory for filtering/export later
             List<BeatmapSet> beatmaps = realm!.All<BeatmapSet>().ToList();
-
-            AddSystemMessage("Loading osu!lazer collections...");
             List<BeatmapCollection> collections = realm.All<BeatmapCollection>().ToList();
-            
-            AddSystemMessage("Loading osu!lazer skins...");
             List<Skin> skins =  realm.All<Skin>().ToList();
 
             // replace any current exporter for this ExporterApp instance with the newly loaded database
             Lazer = new(database, settings, beatmaps, collections, skins, transcoder);
-            AddSystemMessage($"Loaded osu!lazer database: {dbFile}");
+            AddSystemMessage($"Load complete. Found {beatmaps.Count} beatmaps, {collections.Count} collections, {skins.Count} skins.");
             return true;
         }
 

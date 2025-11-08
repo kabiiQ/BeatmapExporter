@@ -104,17 +104,14 @@ namespace BeatmapExporterCLI.Data
                 ExporterApp.Exit();
             }
 
-            Console.Write("\nosu! database opened successfully.\nLoading beatmaps...\n");
+            Console.Write("\nosu! database opened successfully.\nLoading content...\n");
             settings.SaveDatabase(dbFile);
 
             // load beatmaps into memory for filtering/export later
             List<BeatmapSet> beatmaps = realm!.All<BeatmapSet>().ToList();
-
-            Console.WriteLine("Loading osu!lazer collections...");
             List<BeatmapCollection> collections = realm.All<BeatmapCollection>().ToList();
-            
-            Console.WriteLine("Loading osu!lazer skins...");
             List<Skin> skins = realm.All<Skin>().ToList();
+            Console.WriteLine($"Load complete. Found {beatmaps.Count} beatmaps, {collections.Count} collections, {skins.Count} skins.");
 
             // start console i/o loop
             LazerExporter exporter = new(database, settings, beatmaps, collections, skins, transcoder);

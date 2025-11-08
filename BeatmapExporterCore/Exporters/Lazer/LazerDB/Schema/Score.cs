@@ -57,7 +57,7 @@ namespace BeatmapExporterCore.Exporters.Lazer.LazerDB.Schema
         /// The full filename to be used for exporting this player score replay.
         /// </summary>
         public string OutputReplayFilename() => 
-            $"{User.Username} {RankLetter} rank on {BeatmapInfo!.Metadata.OutputName()} [{BeatmapInfo.DifficultyName}] ({Date.LocalDateTime:yyyy-MM-dd_HH-mm}).osr"
+            $"{User.Username} {RankLetter} rank on {BeatmapInfo!.Metadata.OutputName()} [{BeatmapInfo.DifficultyName}] ({Date.LocalDateTime:yyyy-MM-dd HH-mm-ss}).osr"
             .RemoveFilenameCharacters();
     }
 }

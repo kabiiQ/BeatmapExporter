@@ -231,7 +231,7 @@ namespace BeatmapExporterCLI.Interface
                     .Append("\n--- Advanced export settings ---\n* indicates a setting that has been changed.\n")
                     .Append("\n1. ");
 
-                bool exportBeatmaps = Configuration.ExportFormat == ExportFormat.Beatmap;
+                var exportBeatmaps = Configuration.ExportFormat == ExportFormat.Beatmap;
                 var formatId = (int)Configuration.ExportFormat + 1;
                 var edited = exportBeatmaps ? "" : "*";
 
@@ -242,16 +242,16 @@ namespace BeatmapExporterCLI.Interface
                 if (Configuration.ExportPath != Configuration.DefaultExportPath)
                     settings.Append('*');
 
-                if (exportBeatmaps)
+                if (Configuration.CompressionAvailable)
                 {
                     settings.Append("\n3. ");
                     if (Configuration.CompressionEnabled)
-                        settings.Append(".osz compression is enabled (slow export, smaller file sizes)*");
+                        settings.Append(".osz/.osk compression is enabled (slow export, smaller file sizes)*");
                     else
-                        settings.Append(".osz compression is disabled (fastest export)");
+                        settings.Append(".osz/.osk compression is disabled (fastest export)");
                 }
 
-                bool exportCollectionDb = Configuration.ExportFormat == ExportFormat.CollectionDb;
+                var exportCollectionDb = Configuration.ExportFormat == ExportFormat.CollectionDb;
                 if (exportCollectionDb)
                 {
                     settings.Append("\n3. ");
@@ -291,7 +291,7 @@ namespace BeatmapExporterCLI.Interface
                         Console.WriteLine($"- CHANGED: Export location set to {Path.GetFullPath(Configuration.ExportPath)}");
                         break;
                     case 3:
-                        if (exportBeatmaps)
+                        if (Configuration.CompressionAvailable)
                         {
                             if (Configuration.CompressionEnabled)
                             {

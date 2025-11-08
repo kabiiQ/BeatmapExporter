@@ -130,12 +130,12 @@
 
       <!-- Compression setting -->
       <StackPanel Spacing="6"
-                  IsVisible="{Binding IsBeatmapExport}">
+                  IsVisible="{Binding CompressionAvailable}">
         
         <StackPanel Orientation="Horizontal"
                     Spacing="12">
 
-          <TextBlock VerticalAlignment="Center">.osz compression</TextBlock>
+          <TextBlock VerticalAlignment="Center">.osz/.osk compression</TextBlock>
           <CheckBox IsChecked="{Binding CompressionEnabled}" />
         
         </StackPanel>

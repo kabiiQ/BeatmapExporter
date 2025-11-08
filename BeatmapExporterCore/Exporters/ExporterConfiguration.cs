@@ -3,6 +3,7 @@ using BeatmapExporterCore.Utilities;
 using NLog;
 using System.Diagnostics.CodeAnalysis;
 using System.IO.Compression;
+using System.Runtime.InteropServices;
 
 namespace BeatmapExporterCore.Exporters
 {
@@ -13,6 +14,7 @@ namespace BeatmapExporterCore.Exporters
         private string? exportPath = null;
         private bool combineFilterMode;
         private ExportFormat exportFormat;
+        private bool compressionEnabled;
         private bool mergeCollections;
         private bool caseInsensitiveMerge;
 
@@ -40,6 +42,7 @@ namespace BeatmapExporterCore.Exporters
             exportPath = settings.ExportPath;
             exportFormat = settings.ExportFormat;
             combineFilterMode = settings.MatchAllFilters;
+            compressionEnabled = settings.CompressionEnabled;
             mergeCollections = settings.MergeCollections;
             caseInsensitiveMerge = settings.MergeCaseInsensitive;
 
@@ -111,9 +114,24 @@ namespace BeatmapExporterCore.Exporters
         }
 
         /// <summary>
+        /// If compression is an option that can be used with the current exporter state.
+        /// </summary>
+        /// <returns></returns>
+        public bool CompressionAvailable => ExportFormat is ExportFormat.Beatmap or ExportFormat.Skins 
+                                            && !RuntimeInformation.IsOSPlatform(OSPlatform.OSX);
+
+        /// <summary>
         /// If compression is enabled for this exporter, disabled by default. Check <see cref="CompressionLevel"/> for actual compression level when creating archives.
         /// </summary>
-        public bool CompressionEnabled { get; set; } = false;
+        public bool CompressionEnabled
+        {
+            get => compressionEnabled;
+            set
+            {
+                compressionEnabled = value;
+                settings.SaveCompression(value);
+            }
+        }
 
         /// <summary>
         /// The compression level set for this exporter. 

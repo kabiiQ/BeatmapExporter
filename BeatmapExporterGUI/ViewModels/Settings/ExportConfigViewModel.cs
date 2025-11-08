@@ -165,7 +165,7 @@ namespace BeatmapExporterGUI.ViewModels.Settings
                 OnPropertyChanged(nameof(ModeDescriptor));
                 OnPropertyChanged(nameof(ExportUnit));
                 OnPropertyChanged(nameof(ExportPath));
-                OnPropertyChanged(nameof(IsBeatmapExport));
+                OnPropertyChanged(nameof(CompressionAvailable));
                 OnPropertyChanged(nameof(IsCollectionDbExport));
                 OnPropertyChanged(nameof(ShouldDisplayMergeOptions));
             }
@@ -205,9 +205,9 @@ namespace BeatmapExporterGUI.ViewModels.Settings
         public void OpenExportDirectory() => Exporter.Lazer.SetupExport();
 
         /// <summary>
-        /// If the export mode is currently set to export whole beatmaps, the default export mode.
+        /// If compression is an available option for the current export mode.
         /// </summary>
-        public bool IsBeatmapExport => Config.ExportFormat == ExportFormat.Beatmap;
+        public bool CompressionAvailable => Config.CompressionAvailable;
 
         /// <summary>
         /// If beatmap export compression is currently enabled by the user.
@@ -225,7 +225,7 @@ namespace BeatmapExporterGUI.ViewModels.Settings
         /// <summary>
         /// Description of the current <see cref="CompressionEnabled" /> setting, suitable for user display.
         /// </summary>
-        public string CompressionDescriptor => CompressionEnabled ? "(slow export, smaller file sizes)" : "(fastest export, no compression)";
+        public string CompressionDescriptor => CompressionEnabled ? "(slow export, smaller file sizes)" : "(fast export, no compression)";
 
         /// <summary>
         /// If the export mode is currently set to export a collection.db file.

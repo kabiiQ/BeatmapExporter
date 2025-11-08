@@ -43,6 +43,8 @@ namespace BeatmapExporterCore.Utilities
 
         public bool MatchAllFilters { get; set; } = true;
 
+        public bool CompressionEnabled { get; set; } = false;
+        
         public bool MergeCollections { get; set; } = true;
 
         public bool MergeCaseInsensitive { get; set; } = true;
@@ -131,6 +133,15 @@ namespace BeatmapExporterCore.Utilities
         public void SaveFilterMode(bool mode)
         {
             MatchAllFilters = mode;
+            TrySave();
+        }
+
+        /// <summary>
+        /// Saves the preference for if osk/osz file output should be compressed.
+        /// </summary>
+        public void SaveCompression(bool enabled)
+        {
+            CompressionEnabled = enabled;
             TrySave();
         }
 

@@ -1,4 +1,4 @@
-# BeatmapExporter (for osu!lazer)
+# BeatmapExporter (for osu! Lazer)
 
 ### Support the Developer
 
@@ -10,9 +10,18 @@ For issues or if an update is required, you can create an issue on GitHub. Alter
 
 # Purpose/Functionality
 
-BeatmapExporter is a program/tool that can mass-export your osu! beatmap library from the modern osu!lazer storage format.
+BeatmapExporter is a program/tool that can mass-export your osu! beatmap library from the modern osu! Lazer storage format.
 
-osu!lazer does not have a "Songs/" folder as "stable" osu! does. Lazer's files are stored under hashed filenames and other information about the beatmap is contained in a local "Realm" database on your PC.
+osu! Lazer does not have a "Songs/" folder as "stable" osu! does. Lazer's files are stored under hashed filenames and other information about the beatmap is contained in a local "Realm" database on your PC.
+
+# Download/Usage
+
+Executables are available from the [Releases section here GitHub](https://github.com/kabiiQ/BeatmapExporter/releases), also found on the right of the main page (underneath About). 
+
+If your Lazer database is in the default location (%appdata%\osu), you should be able to simply run the application. If you changed the database location when installing osu! (Lazer), the program will be unable to locate it and will prompt you to enter it the first time.
+
+The directory needed in the Lazer storage is the one containing another directory named "files". This folder can also be opened from in-game if you moved it and are unsure where it is located. 
+If you did not move it, you should not need to worry about this.
 
 ## Beatmap Export
 
@@ -48,31 +57,20 @@ As of version 2.2.0, there is an option to export as a "Songs" folder rather tha
 
 ### `collection.db` Export / Merge
 
-As of version 2.4.0, there is an option to export your osu!lazer beatmap collections into the `collection.db` file format supported by osu! stable.
+As of version 2.4.0, there is an option to export your osu! beatmap collections into the `collection.db` file format supported by osu! stable.
 
-Only beatmaps that are in an osu!lazer collection (and also selected by the filters you may apply) are included in the collection file.
+Only beatmaps that are in an osu! collection (and also selected by the filters you may apply) are included in the collection file.
 
 This export mode is also capable of merging with an existing `collection.db` file, if you place it into the export location before running the export. 
-This allows you to add your osu!lazer collections into an existing `collection.db` from osu! stable.
+This allows you to add your osu! Lazer collections into an existing `collection.db` from osu! (stable).
 
 While I experienced no scenario that would cause data loss in testing, any time you are messing with a file like this you should definitely back up your original `collection.db` in a different location first.
 
 ### Skin Export
 
-As of version 2.7.0, there is an option to export your osu! skins. This was added by request to enable recovery of skins from a different lazer folder.
+As of version 2.7.0, there is an option to export your osu! skins. This was added by request to enable recovery of skins from a different Lazer install.
 
-# Download/Usage
-
-Executables are available from the [Releases](https://github.com/kabiiQ/BeatmapExporter/releases) section on GitHub. 
-
-If you are on a Windows system and your osu! database is in the default location (%appdata%\osu), you should be able to simply run the application. If you changed the database location when install osu!lazer, the program will be unable to locate it and will prompt you to enter it. 
-
-If you are not on Windows, I included default directories for macOS and Linux and it should automatically work, though I am not personally testing the other platforms.
-
-You can alternatively run the program with the database folder as the launch argument if you already know it will be in an unusual location and want it to work on launch. The database folder needed contains a "files" folder. This folder can also be opened from in-game if you moved it and are unsure where it is located. 
-If you did not move it, you should not need to worry about this.
-
-## Running on macOS/Linux
+# Running on macOS/Linux
 
 ### For macOS (especially 15), the best method seems to be:
 > - Download the latest macOS build from the Releases section. 
@@ -92,21 +90,14 @@ The macOS build works and I am immediately able to get it working on macOS VMs (
 
 ### Linux/macOS Terminal:
 
-Modern Linux distros may allow you to simply click on the file and run it after a warning, otherwise:
+Modern Linux distros may allow you to simply click on the file and run it after a warning, otherwise you may need to use your system's Terminal to make the program executable and then run it. 
 
-> You will need to use your system's Terminal to make the program executable and then run it. If you are not familiar with Terminal, you may need to look up how to open Terminal in the specific folder you have downloaded BeatmapExporter into. 
->
-> Then, run the following command:
-`chmod +x BeatmapExporter.app` - this marks BeatmapExporter.app as executable so that you can run it.
->
-> Then, you can run the program with `./BeatmapExporter.app` from the Terminal window.
+If you are not familiar with Terminal, you may need to look up how to open Terminal in the specific folder you have downloaded BeatmapExporter into. 
 
-## Note on Windows DPI Scaling
-
-It has been observed that the GUI application does not look as intended when using Windows DPI scaling. 
-If you have a Windows laptop, especially a high resolution display, it is likely you are using Windows DPI scaling by default.
-
-While I have made some changes to improve this as well as handling low resolution environments, if the scale is high enough it is very likely the program will not look like the screenshot.
+> Run the following command:
+`chmod +x linux-BeatmapExporter` - this marks BeatmapExporter.app as executable so that you can run it.
+> 
+> Then you can run the program with `./linux-BeatmapExporter` from the Terminal window.
 
 If your setup is so extreme that buttons are cut off, you may need to override the scaling settings for this program.
 
@@ -115,3 +106,10 @@ If your setup is so extreme that buttons are cut off, you may need to override t
 Exporting beatmaps with a tag in the GUI:
 
 ![](https://i.imgur.com/A6SFsR6.png)
+
+## Note on Windows DPI Scaling
+
+It has been observed that the GUI application does not look as intended when using Windows DPI scaling. 
+If you have a Windows laptop, especially a high resolution display, it is likely you are using Windows DPI scaling by default.
+
+While I have made some changes to improve this as well as handling low resolution environments, if the scale is high enough it is very likely the program will not look like the screenshot.

@@ -44,7 +44,7 @@ namespace BeatmapExporterGUI.ViewModels.List
         /// The currently selected beatmap set by the user.
         /// </summary>
         [ObservableProperty]
-        [NotifyCanExecuteChangedFor(nameof(ExportSelectedBeatmapCommand))]
+        [NotifyCanExecuteChangedFor(nameof(ExportEntireBeatmapSetCommand))]
         private int _SelectedSetIndex;
 
         /// <summary>
@@ -180,9 +180,33 @@ namespace BeatmapExporterGUI.ViewModels.List
         public bool CanExportBeatmapSet => SelectedSetIndex != -1;
 
         /// <summary>
-        /// Export a single user-selected beatmap
+        /// Export the entire currently user-selected beatmap set, ignoring other filters
         /// </summary>
         [RelayCommand(CanExecute = nameof(CanExportBeatmapSet))]
+        private async Task ExportEntireBeatmapSet()
+        {
+            var selectedSet = DisplayedBeatmapSets[SelectedSetIndex];
+            var initialSelection = selectedSet.SelectedBeatmaps.ToList();
+            
+            if (BeatmapExplorer?.SelectedDisplayOption == (int)BeatmapSorting.View.All)
+            {
+                // Temporarily select all difficulties for this set for export
+                selectedSet.SelectedBeatmaps = selectedSet.Beatmaps;
+            }
+
+            try
+            {
+                await ExportSelectedBeatmap();
+            }
+            finally
+            {
+                selectedSet.SelectedBeatmaps = initialSelection;
+            }
+        }
+
+        /// <summary>
+        /// Exports a single user-selected beatmap set
+        /// </summary>
         public async Task ExportSelectedBeatmap()
         {
             var exportSet = DisplayedBeatmapSets[SelectedSetIndex];

@@ -42,7 +42,7 @@
             
             </StackPanel>
 
-            <Button Command="{Binding ExportSelectedBeatmapCommand}">Export Selected Beatmap Set</Button>
+            <Button Command="{Binding ExportEntireBeatmapSetCommand}">Export Selected Beatmap Set</Button>
 
             <Button Command="{Binding OpenExportDirectory}"
                     Margin="6,0">Open Export Directory</Button>

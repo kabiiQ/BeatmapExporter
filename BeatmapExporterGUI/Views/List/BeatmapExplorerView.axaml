@@ -12,7 +12,7 @@
     <StackPanel Orientation="Horizontal"
                 Spacing="6">
       
-      <TextBlock VerticalAlignment="Center">View:</TextBlock>
+      <TextBlock VerticalAlignment="Center">View/Export:</TextBlock>
       <ComboBox ItemsSource="{Binding DisplayOptionNames}"
                 SelectedIndex="{Binding SelectedDisplayOption}" />
 

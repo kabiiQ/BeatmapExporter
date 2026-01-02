@@ -19,6 +19,8 @@ namespace BeatmapExporterCore.Exporters.Lazer
 
     public class LazerExporter : IBeatmapExporter
     {
+        private static readonly NLog.Logger Logger = NLog.LogManager.GetCurrentClassLogger();
+        
         readonly LazerDatabase lazerDb;
         readonly Transcoder transcoder;
 
@@ -188,7 +190,16 @@ namespace BeatmapExporterCore.Exporters.Lazer
             }
             Directory.CreateDirectory(path);
             if (openDir)
-                PlatformUtil.Open(path);
+            {
+                try
+                {
+                    PlatformUtil.Open(path);
+                }
+                catch (Exception e)
+                {
+                    Logger.Error(e);
+                }
+            }
         }
 
         /// <summary>

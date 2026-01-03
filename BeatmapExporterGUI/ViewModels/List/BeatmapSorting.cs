@@ -88,7 +88,7 @@ namespace BeatmapExporterGUI.ViewModels.List
         /// </summary>
         public static string SetName(this View display) => display switch
         {
-            View.Selected => "Selected Beatmaps",
+            View.Selected => "Filtered Beatmaps",
             View.All => "All Beatmaps"
         };
 
@@ -97,7 +97,7 @@ namespace BeatmapExporterGUI.ViewModels.List
         /// </summary>
         public static string DiffName(this View display) => display switch
         {
-            View.Selected => "Selected Difficulties Only",
+            View.Selected => "Filtered Difficulties Only",
             View.All => "All Difficulties"
         };
     }

@@ -20,14 +20,14 @@
     </MenuItem>
     
     <MenuItem Header="_Export">
-      <MenuItem Header="View _Beatmaps"
+      <MenuItem Header="Search _Beatmaps"
                 Command="{Binding BeatmapsCommand}" />
       <MenuItem Header="View _Collections"
                 Command="{Binding CollectionsCommand}" />
-      <MenuItem Header="_Filter Beatmaps/Export Settings" 
-                Command="{Binding ConfigurationCommand}" />
       <Separator />
-      <MenuItem Header="Export _Now"
+      <MenuItem Header="_Filter/Export Beatmaps" 
+                Command="{Binding ConfigurationCommand}" />
+      <MenuItem Header="Begin Export _Now"
                 Command="{Binding ExportCommand}" />
     </MenuItem>
     

@@ -16,12 +16,11 @@ osu! Lazer does not have a "Songs/" folder as "stable" osu! does. Lazer's files 
 
 # Download/Usage
 
-Executables are available from the [Releases section here GitHub](https://github.com/kabiiQ/BeatmapExporter/releases), also found on the right of the main page (underneath About). 
+Executables are available from the [Releases section here on GitHub](https://github.com/kabiiQ/BeatmapExporter/releases), also found on the right of the main page (below About). 
 
-If your Lazer database is in the default location (%appdata%\osu), you should be able to simply run the application. If you changed the database location when installing osu! (Lazer), the program will be unable to locate it and will prompt you to enter it the first time.
+If your Lazer database is in the default location (%appdata%\osu), you should be able to simply run the application. If you changed the database location when installing osu! (Lazer), the program will prompt you to locate your database.
 
-The directory needed in the Lazer storage is the one containing another directory named "files". This folder can also be opened from in-game if you moved it and are unsure where it is located. 
-If you did not move it, you should not need to worry about this.
+The directory needed in the Lazer storage contains another directory named "files". This folder can also be opened from in-game if you moved it and are unsure where it is located. 
 
 ## Beatmap Export
 
@@ -29,7 +28,7 @@ This new storage format which osu! uses results in a better experience while pla
 
 This utility allows you to export beatmaps back into `.osz` files. 
 
-There is a beatmap filter system allowing you to select a portion of your library to only export certain maps (for example, above a certain star rating, specific artists/mappers, specific gamemodes, specific collections, etc). You can also simply export your entire library at once.
+BeatmapExporter includes a beatmap filter system allowing you to select a portion of your library to only export certain maps (for example, above a certain star rating, specific artists/mappers, specific gamemodes, specific collections, etc). You can also simply export your entire library at once.
 
 Alternative export modes, listed below, also follow the filter system.
 
@@ -68,7 +67,13 @@ While I experienced no scenario that would cause data loss in testing, any time 
 
 ### Skin Export
 
-As of version 2.7.0, there is an option to export your osu! skins. This was added by request to enable recovery of skins from a different Lazer install.
+As of version 2.7.0, there is an option to export your osu! skins. This was added by request to enable recovery of skins from a different Lazer install. Individual skins (and beatmaps) are exportable from the game itself.
+
+# Basic Export Task Screenshot
+
+Exporting beatmaps with a tag in the GUI:
+
+![](https://i.imgur.com/A6SFsR6.png)
 
 # Running on macOS/Linux
 
@@ -99,17 +104,10 @@ If you are not familiar with Terminal, you may need to look up how to open Termi
 > 
 > Then you can run the program with `./linux-BeatmapExporter` from the Terminal window.
 
-If your setup is so extreme that buttons are cut off, you may need to override the scaling settings for this program.
-
-# Basic Export Task Screenshot
-
-Exporting beatmaps with a tag in the GUI:
-
-![](https://i.imgur.com/A6SFsR6.png)
-
 ## Note on Windows DPI Scaling
 
 It has been observed that the GUI application does not look as intended when using Windows DPI scaling. 
 If you have a Windows laptop, especially a high resolution display, it is likely you are using Windows DPI scaling by default.
 
 While I have made some changes to improve this as well as handling low resolution environments, if the scale is high enough it is very likely the program will not look like the screenshot.
+If your setup is so extreme that buttons are cut off, you may need to override the scaling settings for this program.

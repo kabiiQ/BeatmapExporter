@@ -197,7 +197,7 @@ namespace BeatmapExporterCore.Exporters.Lazer
                 }
                 catch (Exception e)
                 {
-                    Logger.Error(e);
+                    Logger.Error(e, "Error opening export directory");
                 }
             }
         }

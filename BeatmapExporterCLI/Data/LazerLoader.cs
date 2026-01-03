@@ -89,7 +89,7 @@ namespace BeatmapExporterCLI.Data
             catch (Exception e)
             {
                 Console.WriteLine($"\nError opening database: {e.Message}");
-                Logger.Error("Error opening database", e);
+                Logger.Error(e, "Error opening database");
                 if (e is LazerVersionException version)
                 {
                     foreach (var message in version.Details)

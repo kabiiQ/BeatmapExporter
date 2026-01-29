@@ -325,16 +325,16 @@ namespace BeatmapExporterCore.Exporters.Lazer
             try
             {
                 var mp3 = TagLib.File.Create(outputFile);
-                if (string.IsNullOrEmpty(mp3.Tag.Title))
-                    mp3.Tag.Title = metadata.TitleUnicode;
-                if (mp3.Tag.Performers.Length == 0)
-                    mp3.Tag.Performers = new[] { metadata.ArtistUnicode };
-                if (string.IsNullOrEmpty(mp3.Tag.Description))
-                    mp3.Tag.Description = metadata.Tags;
-                mp3.Tag.Comment = $"{mapset.OnlineID} {metadata.Tags}";
+                
+                // Remove existing tags from mp3 file and use info from beatmap
+                mp3.Tag.Clear();
+                mp3.Tag.Title = metadata.Title;
+                mp3.Tag.Performers = [metadata.Artist];
+                mp3.Tag.Description = $"{mapset.OnlineID} {metadata.Tags}";
+                mp3.Tag.Comment = string.IsNullOrEmpty(metadata.Source) ? metadata.Tags : metadata.Source;
 
                 // set beatmap background as album cover 
-                if (mp3.Tag.Pictures.Length == 0 && metadata.BackgroundFile is not null)
+                if (metadata.BackgroundFile is not null)
                 {
                     using FileStream? bg = lazerDb.OpenNamedFile(mapset, metadata.BackgroundFile);
                     if (bg is not null)
@@ -350,7 +350,8 @@ namespace BeatmapExporterCore.Exporters.Lazer
                             MimeType = System.Net.Mime.MediaTypeNames.Image.Jpeg,
                             Data = image,
                         };
-                        mp3.Tag.Pictures = new[] { cover };
+                        mp3.Tag.Pictures = [cover];
+
                     }
                 }
 
@@ -396,8 +397,11 @@ namespace BeatmapExporterCore.Exporters.Lazer
         public void ExportBackground(BackgroundExportTask export)
         {
             var (mapset, metadata, outputFilename) = export;
+            
+            if (metadata.BackgroundFile is null) 
+                throw new InvalidOperationException($"Beatmap {mapset.ArchiveFilename()} has no background file.");
+            
             string outputFile = Path.Combine(Configuration.ExportPath, outputFilename);
-
             using FileStream? background = lazerDb.OpenNamedFile(mapset, metadata.BackgroundFile);
             if (background is null)
                 throw new IOException($"Background file {metadata.BackgroundFile} not found in beatmap {mapset.ArchiveFilename()}");

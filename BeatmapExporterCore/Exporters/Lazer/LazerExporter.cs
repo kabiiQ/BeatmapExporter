@@ -336,21 +336,25 @@ namespace BeatmapExporterCore.Exporters.Lazer
                 mp3.Tag.Comment = $"{mapset.OnlineID} {metadata.Tags}";
 
                 // set beatmap background as album cover 
-                using FileStream? bg = lazerDb.OpenNamedFile(mapset, metadata.BackgroundFile);
-                if (bg is not null)
+                if (metadata.BackgroundFile is not null)
                 {
-                    using MemoryStream ms = new();
-                    bg.CopyTo(ms);
-                    byte[] image = ms.ToArray();
-
-                    var cover = new TagLib.Id3v2.AttachmentFrame
+                    using FileStream? bg = lazerDb.OpenNamedFile(mapset, metadata.BackgroundFile);
+                    if (bg is not null)
                     {
-                        Type = TagLib.PictureType.FrontCover,
-                        Description = "Background",
-                        MimeType = System.Net.Mime.MediaTypeNames.Image.Jpeg,
-                        Data = image,
-                    };
-                    mp3.Tag.Pictures = new[] { cover };
+                        using MemoryStream ms = new();
+                        bg.CopyTo(ms);
+                        byte[] image = ms.ToArray();
+
+                        var cover = new TagLib.Id3v2.AttachmentFrame
+                        {
+                            Type = TagLib.PictureType.FrontCover,
+                            Description = "Background",
+                            MimeType = System.Net.Mime.MediaTypeNames.Image.Jpeg,
+                            Data = image,
+                        };
+                        mp3.Tag.Pictures = [cover];
+
+                    }
                 }
 
                 mp3.Save();

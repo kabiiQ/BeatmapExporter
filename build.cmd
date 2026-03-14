@@ -5,14 +5,14 @@ call dotnet publish -c Release --runtime osx-x64 --self-contained
 call dotnet publish -c Release --runtime osx-arm64 --self-contained 
 
 mkdir BuildOutput
-echo f | xcopy /Y "BeatmapExporterCLI\bin\Release\net9.0\win-x64\publish\BeatmapExporterCLI.exe" "BuildOutput\BeatmapExporterCLI.exe"
-echo f | xcopy /Y "BeatmapExporterCLI\bin\Release\net9.0\osx-x64\publish\BeatmapExporterCLI" "BuildOutput\mac-x86-BeatmapExporterCLI"
-echo f | xcopy /Y "BeatmapExporterCLI\bin\Release\net9.0\osx-arm64\publish\BeatmapExporterCLI" "BuildOutput\mac-arm64-BeatmapExporterCLI"
-echo f | xcopy /Y "BeatmapExporterCLI\bin\Release\net9.0\linux-x64\publish\BeatmapExporterCLI" "BuildOutput\linux-BeatmapExporterCLI"
-echo f | xcopy /Y "BeatmapExporterGUI.Desktop\bin\Release\net9.0\win-x64\publish\BeatmapExporterGUI.Desktop.exe" "BuildOutput\BeatmapExporter.exe"
-echo f | xcopy /Y "BeatmapExporterGUI.Desktop\bin\Release\net9.0\osx-x64\publish\BeatmapExporterGUI.Desktop" "BuildOutput\x86-BeatmapExporter.app"
-echo f | xcopy /Y "BeatmapExporterGUI.Desktop\bin\Release\net9.0\osx-arm64\publish\BeatmapExporterGUI.Desktop" "BuildOutput\arm64-BeatmapExporter.app"
-echo f | xcopy /Y "BeatmapExporterGUI.Desktop\bin\Release\net9.0\linux-x64\publish\BeatmapExporterGUI.Desktop" "BuildOutput\linux-BeatmapExporter"
+echo f | xcopy /Y "BeatmapExporterCLI\bin\Release\net10.0\win-x64\publish\BeatmapExporterCLI.exe" "BuildOutput\BeatmapExporterCLI.exe"
+echo f | xcopy /Y "BeatmapExporterCLI\bin\Release\net10.0\osx-x64\publish\BeatmapExporterCLI" "BuildOutput\mac-x86-BeatmapExporterCLI"
+echo f | xcopy /Y "BeatmapExporterCLI\bin\Release\net10.0\osx-arm64\publish\BeatmapExporterCLI" "BuildOutput\mac-arm64-BeatmapExporterCLI"
+echo f | xcopy /Y "BeatmapExporterCLI\bin\Release\net10.0\linux-x64\publish\BeatmapExporterCLI" "BuildOutput\linux-BeatmapExporterCLI"
+echo f | xcopy /Y "BeatmapExporterGUI.Desktop\bin\Release\net10.0\win-x64\publish\BeatmapExporterGUI.Desktop.exe" "BuildOutput\BeatmapExporter.exe"
+echo f | xcopy /Y "BeatmapExporterGUI.Desktop\bin\Release\net10.0\osx-x64\publish\BeatmapExporterGUI.Desktop" "BuildOutput\x86-BeatmapExporter.app"
+echo f | xcopy /Y "BeatmapExporterGUI.Desktop\bin\Release\net10.0\osx-arm64\publish\BeatmapExporterGUI.Desktop" "BuildOutput\arm64-BeatmapExporter.app"
+echo f | xcopy /Y "BeatmapExporterGUI.Desktop\bin\Release\net10.0\linux-x64\publish\BeatmapExporterGUI.Desktop" "BuildOutput\linux-BeatmapExporter"
 
 cd BuildOutput
 tar -avcf "mac-x86-BeatmapExporter.zip" "x86-BeatmapExporter.app" --transform 's/x86-//'

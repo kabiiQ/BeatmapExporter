@@ -4,6 +4,7 @@ using NLog;
 using System.Diagnostics.CodeAnalysis;
 using System.IO.Compression;
 using System.Runtime.InteropServices;
+using TagLib.Matroska;
 
 namespace BeatmapExporterCore.Exporters
 {

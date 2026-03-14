@@ -238,6 +238,19 @@ namespace BeatmapExporterCore.Exporters.Lazer
                 export?.Dispose();
             }
         }
+
+        public string AudioTranscodeInfo()
+        {
+            if (Configuration.ExportMp3)
+            {
+                return TranscodeAvailable ? "FFmpeg FOUND, audio will be transcoded to mp3. This operation will take longer if many selected beatmaps are not in .mp3 format." 
+                    : "FFmpeg runtime not found. Beatmaps that use other audio formats than .mp3 will be skipped.\nMake sure ffmpeg.exe is located on the system PATH or placed in the directory with this BeatmapExporter.exe to enable transcoding.";
+            }
+            else
+            {
+                return "All audio files will be exported in their original file format without conversion.";
+            }
+        }
         
         public record struct AudioExportTask(BeatmapSet OriginSet, BeatmapMetadata AudioFile, string? TranscodeFrom, string OutputFilename);
 
@@ -261,13 +274,13 @@ namespace BeatmapExporterCore.Exporters.Lazer
                 // transcode if audio is not in .mp3 format
                 string extension = Path.GetExtension(metadata.AudioFile);
                 string? transcodeFrom = null;
-                if (!extension.Equals(".mp3", StringComparison.OrdinalIgnoreCase))
+                if (Configuration.ExportMp3 && !extension.Equals(".mp3", StringComparison.OrdinalIgnoreCase))
                 {
                     transcodeFrom = extension;
                 }
 
                 // produce more meaningful filename than 'audio.mp3' 
-                string outputFilename = metadata.OutputAudioFilename(beatmapAudioCount);
+                string outputFilename = metadata.OutputAudioFilename(Configuration.ExportMp3, beatmapAudioCount);
 
                 beatmapAudioCount++;
                 yield return new AudioExportTask(mapset, metadata, transcodeFrom, outputFilename);

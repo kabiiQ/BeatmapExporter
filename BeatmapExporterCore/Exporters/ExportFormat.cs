@@ -13,7 +13,7 @@
         public static string UnitName(this ExportFormat format) => format switch
         {
             ExportFormat.Beatmap => "osu! beatmaps (.osz)",
-            ExportFormat.Audio => "audio (.mp3)",
+            ExportFormat.Audio => "audio (original/.mp3)",
             ExportFormat.Background => "beatmap backgrounds",
             ExportFormat.Replay => "score replays (.osr)",
             ExportFormat.Skins => "osu! skins (.osk)",
@@ -28,7 +28,7 @@
         public static string Descriptor(this ExportFormat format) => format switch
         {
             ExportFormat.Beatmap => "Beatmaps will be exported in osu! archive format (.osz).",
-            ExportFormat.Audio => "Beatmap audio files will be renamed, tagged and exported (.mp3 format).",
+            ExportFormat.Audio => "Beatmap audio files will be renamed, tagged and exported (original or .mp3 format).",
             ExportFormat.Background => "Only beatmap background images will be exported (original format).",
             ExportFormat.Replay => "Player score replays will be exported (.osr).",
             ExportFormat.Skins => "ALL skins will be exported (.osk). Filters will not be checked.",

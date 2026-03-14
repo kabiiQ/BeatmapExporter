@@ -48,6 +48,8 @@ namespace BeatmapExporterCore.Utilities
         public bool MergeCollections { get; set; } = true;
 
         public bool MergeCaseInsensitive { get; set; } = true;
+        
+        public bool ExportMp3 { get; set; } = true;
 
         public List<SerializedBeatmapFilter> AppliedFilters { get; set; } = [];
         #endregion
@@ -170,6 +172,15 @@ namespace BeatmapExporterCore.Utilities
         public void SaveExportFormat(ExportFormat format)
         {
             ExportFormat = format;
+            TrySave();
+        }
+
+        /// <summary>
+        /// Saves the preference for audio transcoding being used.
+        /// </summary>
+        public void SaveExportMp3(bool mp3)
+        {
+            ExportMp3 = mp3;
             TrySave();
         }
 

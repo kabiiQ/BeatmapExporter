@@ -18,6 +18,7 @@ namespace BeatmapExporterCore.Exporters
         private bool compressionEnabled;
         private bool mergeCollections;
         private bool caseInsensitiveMerge;
+        private bool exportMp3;
 
         public ExporterConfiguration(ClientSettings settings)
         {
@@ -46,6 +47,7 @@ namespace BeatmapExporterCore.Exporters
             compressionEnabled = settings.CompressionEnabled;
             mergeCollections = settings.MergeCollections;
             caseInsensitiveMerge = settings.MergeCaseInsensitive;
+            exportMp3 = settings.ExportMp3;
 
             Filters = settings.AppliedFilters
                 .Select(f => f.ToBeatmapFilter())
@@ -80,7 +82,7 @@ namespace BeatmapExporterCore.Exporters
                 return ExportFormat switch
                 {
                     ExportFormat.Beatmap => basePath,
-                    ExportFormat.Audio => Path.Combine(basePath, "mp3"),
+                    ExportFormat.Audio => Path.Combine(basePath, ExportMp3 ? "mp3" : "audio"),
                     ExportFormat.Background => Path.Combine(basePath, "bg"),
                     ExportFormat.Replay => Path.Combine(basePath, "replay"),
                     ExportFormat.Skins => Path.Combine(basePath, "skins"),
@@ -162,6 +164,19 @@ namespace BeatmapExporterCore.Exporters
             {
                 caseInsensitiveMerge = value;
                 settings.SaveCaseInsensitive(value);
+            }
+        }
+
+        /// <summary>
+        /// If audio export should only export .mp3 files (others are transcoded or skipped)
+        /// </summary>
+        public bool ExportMp3
+        {
+            get => exportMp3;
+            set
+            {
+                exportMp3 = value;
+                settings.SaveExportMp3(value);
             }
         }
 

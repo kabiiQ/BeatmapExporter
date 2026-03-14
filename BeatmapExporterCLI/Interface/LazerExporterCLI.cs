@@ -58,11 +58,8 @@ namespace BeatmapExporterCLI.Interface
         public void ExportAudioFiles()
         {
             Exporter.SetupExport();
-            Console.WriteLine($"Exporting audio from {Exporter.SelectedBeatmapSetCount} beatmap sets as .mp3 files.");
-            if (Exporter.TranscodeAvailable)
-                Console.WriteLine("This operation will take longer if many selected beatmaps are not in .mp3 format.");
-            else
-                Console.WriteLine("FFmpeg runtime not found. Beatmaps that use other audio formats than .mp3 will be skipped.\nMake sure ffmpeg.exe is located on the system PATH or placed in the directory with this BeatmapExporter.exe to enable transcoding.");
+            Console.WriteLine($"Exporting audio from {Exporter.SelectedBeatmapSetCount} beatmap sets as audio files.");
+            Console.WriteLine(Exporter.AudioTranscodeInfo());
 
             int attempted = 0, exportedAudio = 0;
             foreach (var mapset in Exporter.SelectedBeatmapSets)
@@ -267,11 +264,21 @@ namespace BeatmapExporterCLI.Interface
                         settings.Append("collection.db merging is case-sensitive (all collections are preserved)*");
                 }
 
+                var exportAudio = Configuration.ExportFormat == ExportFormat.Audio;
+                if (exportAudio)
+                {
+                    settings.Append("\n3. ");
+                    if (Configuration.ExportMp3)
+                        settings.Append("audio files will be exported as .mp3 ONLY. If FFmpeg is available, other formats will be transcoded. If not, other formats will be skipped");
+                    else 
+                        settings.Append("audio files will be exported in their original file format*");
+                }
+
                 settings.Append("\n\nEdit setting # (Blank to save settings): ");
 
                 Console.Write(settings.ToString());
                 string? input = Console.ReadLine();
-                if (string.IsNullOrEmpty(input) || !int.TryParse(input, out int op) || op < 1 || op > (exportBeatmaps || exportCollectionDb ? 4 : 2))
+                if (string.IsNullOrEmpty(input) || !int.TryParse(input, out int op) || op < 1 || op > (exportBeatmaps || exportCollectionDb || exportAudio ? 4 : 2))
                 {
                     Console.Write("\nInvalid operation selected.\n");
                     return;
@@ -313,6 +320,19 @@ namespace BeatmapExporterCLI.Interface
                             {
                                 Console.WriteLine("- CHANGED: collection.db merging has been enabled.");
                                 Configuration.MergeCollections = true;
+                            }
+                        }
+                        else if (exportAudio)
+                        {
+                            if (Configuration.ExportMp3)
+                            {
+                                Console.WriteLine("- CHANGED: all audio files will be exported as-is.");
+                                Configuration.ExportMp3 = false;
+                            }
+                            else
+                            {
+                                Console.WriteLine("- CHANGED: audio files will export as .mp3 ONLY.");
+                                Configuration.ExportMp3 = true;
                             }
                         }
                         break;

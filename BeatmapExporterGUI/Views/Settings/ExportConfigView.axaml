@@ -143,7 +143,22 @@
       
       </StackPanel>
       
-      <!-- Collection Export Merge setting -->
+      <!-- Audio export file format setting -->
+      <StackPanel Spacing="6"
+                  IsVisible="{Binding IsAudioExport}">
+      
+        <StackPanel Orientation="Horizontal"
+                    Spacing="12">
+          
+          <TextBlock VerticalAlignment="Center">Export .mp3 files only</TextBlock>
+          <CheckBox IsChecked="{Binding Mp3ExportEnabled}" />
+          
+        </StackPanel>
+        <TextBlock Text="{Binding AudioExportDescriptor}" />
+        
+      </StackPanel>
+      
+        <!-- Collection Export Merge setting -->
       <StackPanel Spacing="6"
                   IsVisible="{Binding IsCollectionDbExport}">
 

@@ -226,6 +226,29 @@ namespace BeatmapExporterGUI.ViewModels.Settings
         /// Description of the current <see cref="CompressionEnabled" /> setting, suitable for user display.
         /// </summary>
         public string CompressionDescriptor => CompressionEnabled ? "(slow export, smaller file sizes)" : "(fast export, no compression)";
+        
+        /// <summary>
+        /// If the export mode is currently set to export audio files.
+        /// </summary>
+        public bool IsAudioExport => Config.ExportFormat == ExportFormat.Audio;
+
+        /// <summary>
+        /// If audio export is currently set to only use .mp3 files.
+        /// </summary>
+        public bool Mp3ExportEnabled
+        {
+            get => Config.ExportMp3;
+            set
+            {
+                Config.ExportMp3 = value;
+                OnPropertyChanged(nameof(AudioExportDescriptor));
+            }
+        }
+
+        /// <summary>
+        /// Description of the current <see cref="Mp3ExportEnabled" /> setting, suitable for user display.
+        /// </summary>
+        public string AudioExportDescriptor => Lazer.AudioTranscodeInfo();
 
         /// <summary>
         /// If the export mode is currently set to export a collection.db file.

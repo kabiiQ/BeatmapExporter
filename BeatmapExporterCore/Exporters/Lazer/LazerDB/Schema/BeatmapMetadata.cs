@@ -29,9 +29,12 @@ namespace BeatmapExporterCore.Exporters.Lazer.LazerDB.Schema
         /// <summary>
         /// The full filename to be used for exporting audio files associated with this beatmap
         /// </summary>
-        public string OutputAudioFilename(int dupeCount = 0) =>
-            $"{OutputName()}{DupeString(dupeCount)}.mp3"
-            .RemoveFilenameCharacters();
+        public string OutputAudioFilename(bool forceMp3, int dupeCount = 0)
+        {
+            var extension = forceMp3 ? ".mp3" : Path.GetExtension(AudioFile);
+            return $"{OutputName()}{DupeString(dupeCount)}{extension}"
+                .RemoveFilenameCharacters();
+        }
 
         /// <summary>
         /// The full filename to be used for exporting background images associated with this beatmap

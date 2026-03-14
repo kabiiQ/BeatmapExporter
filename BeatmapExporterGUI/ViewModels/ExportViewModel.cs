@@ -159,9 +159,7 @@ namespace BeatmapExporterGUI.ViewModels
         {
             lazer.SetupExport();
             TotalCount = TotalSetCount;
-            var transcodeInfo = lazer.TranscodeAvailable ? "This operation will take longer if many selected beatmaps are not in .mp3 format."
-                : "FFmpeg runtime not found. Beatmaps that use other audio formats than .mp3 will be skipped.\nMake sure ffmpeg.exe is located on the system PATH or placed in the directory with this BeatmapExporter.exe to enable transcoding.";
-            Description = $"Exporting audio from {TotalSetCount} beatmap sets as .mp3 files.\n{transcodeInfo}";
+            Description = $"Exporting audio from {TotalSetCount} beatmap sets as .mp3 files.\n{lazer.AudioTranscodeInfo()}";
 
             int exportedAudio = 0, discovered = 0;
             foreach (var mapset in lazer.SelectedBeatmapSets)

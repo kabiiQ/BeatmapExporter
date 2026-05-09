@@ -4,7 +4,7 @@
 
 [![ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/E1E5AF13X)
 
-For issues or if an update is required, you can create an issue on GitHub. Alternatively, I can be found through Discord via by [my bot's support server](https://discord.com/invite/ucVhtnh). Though it is not for BeatmapExporter specifically, I do not mind it being used for my other utilities such as this one.
+For issues or if an update is required, you can create an issue or discussion on GitHub. Alternatively, I can be found through Discord via by [my bot's support server](https://discord.com/invite/ucVhtnh). Though it is not for BeatmapExporter specifically, I do not mind it being used for my other utilities such as this one.
 
 <hr />
 
@@ -18,7 +18,7 @@ osu! Lazer does not have a "Songs/" folder as "stable" osu! does. Lazer's files 
 
 Executables are available from the [Releases section here on GitHub](https://github.com/kabiiQ/BeatmapExporter/releases), also found on the right of the main page (below About). 
 
-If your Lazer database is in the default location (%appdata%\osu), you should be able to simply run the application. If you changed the database location when installing osu! (Lazer), the program will prompt you to locate your database.
+If your Lazer database is in the default location (%appdata%\osu), you should be able to simply run the application. If you changed the database location when installing osu! (Lazer), the program will allow you to locate your database.
 
 The directory needed in the Lazer storage contains another directory named "files". This folder can also be opened from in-game if you moved it and are unsure where it is located. 
 
@@ -63,7 +63,7 @@ Only beatmaps that are in an osu! collection (and also selected by the filters y
 This export mode is also capable of merging with an existing `collection.db` file, if you place it into the export location before running the export. 
 This allows you to add your osu! Lazer collections into an existing `collection.db` from osu! (stable).
 
-While I experienced no scenario that would cause data loss in testing, any time you are messing with a file like this you should definitely back up your original `collection.db` in a different location first.
+This feature is different from normal exporting in that it modifies your files. You should back up your original `collection.db` in a different location first.
 
 ### Skin Export
 
@@ -78,9 +78,7 @@ Exporting beatmaps with a tag in the GUI:
 # Running on macOS/Linux
 
 ### For macOS (especially 15), the best method seems to be:
-> - Download the latest macOS build from the Releases section. 
->    - `mac-BeatmapExporter-arm64.zip` for Apple processors (M1, M2 etc)
->    - `mac-BeatmapExporter-x86-64.zip` for Intel-based Macs.
+> - Download the latest macOS build from the Releases section (`mac-BeatmapExporter.zip`).
 > - Click on the downloaded zip to extract `BeatmapExporter` (.app file)
 > - Click on `BeatmapExporter`, the program will be blocked, close the security warning
 > - Go to System Settings -> Privacy & Security -> scroll to the bottom

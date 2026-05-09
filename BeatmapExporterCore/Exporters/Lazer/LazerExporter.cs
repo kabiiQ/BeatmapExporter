@@ -485,7 +485,7 @@ namespace BeatmapExporterCore.Exporters.Lazer
         /// Export a single BeatmapSet as a "folder" for use with osu! stable, with only the 'selected' diffs.
         /// </summary>
         /// <param name="mapset">The BeatmapSet to export.</param>
-        /// <param name="filename">The output directory that will be used. Will be set regardless of success of export and should be used for user feedback.</param>
+        /// <param name="dirName">The output directory that will be used. Will be set regardless of success of export and should be used for user feedback.</param>
         /// <exception cref="IOException">The BeatmapSet export was unsuccessful and an error should be noted to the user.</exception>
         public void ExportBeatmapFolder(BeatmapSet mapset, out string dirName)
         {

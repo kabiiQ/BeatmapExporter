@@ -166,6 +166,7 @@ namespace BeatmapExporterGUI.ViewModels.Settings
                 OnPropertyChanged(nameof(ExportUnit));
                 OnPropertyChanged(nameof(ExportPath));
                 OnPropertyChanged(nameof(CompressionAvailable));
+                OnPropertyChanged(nameof(IsAudioExport));
                 OnPropertyChanged(nameof(IsCollectionDbExport));
                 OnPropertyChanged(nameof(ShouldDisplayMergeOptions));
             }

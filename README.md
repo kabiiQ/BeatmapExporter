@@ -91,6 +91,17 @@ Some older versions of macOS may allow the program to run right away but instead
 
 The macOS build works and I am immediately able to get it working on macOS VMs (13/15), but I understand many users have issues getting it running. The different versions of macOS respond very differently to "unknown" programs like this and it is difficult to keep it all straight. I do not own any Mac systems and am unlikely to be able to help you troubleshoot beyond guessing. 
 
+### Troubleshooting for Apple Silicon (M-series Macs):
+If you are on a newer M-series Mac, the app fails to open silently, or says `killed` in the terminal, macOS may be confusing the single-file executable for a broken Mac application bundle due to the `.app` extension. Furthermore, the current macOS release is built for Intel (x86_64) and requires Rosetta to run.
+
+You can use the Terminal to fix the file extension and force it to run:
+> 1. Open **Terminal** and navigate to where you extracted the file: e.g. `cd ~/Downloads`
+> 2. Rename the file extension so macOS treats it as a raw executable: `mv BeatmapExporter.app BeatmapExporter.bin`
+> 3. Make the file executable: `chmod +x BeatmapExporter.bin`
+> 4. Run the program through Rosetta translation: `arch -x86_64 ./BeatmapExporter.bin`
+> 
+> *(Note: If you have never used Rosetta before, macOS may prompt you to install it when running the final command).*
+
 ### Linux/macOS Terminal:
 
 Modern Linux distros may allow you to simply click on the file and run it after a warning, otherwise you may need to use your system's Terminal to make the program executable and then run it. 

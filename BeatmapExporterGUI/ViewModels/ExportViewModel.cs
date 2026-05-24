@@ -81,6 +81,12 @@ namespace BeatmapExporterGUI.ViewModels
 
         private void AddExport(bool success, string description) => Exported.Insert(0, new(success, description));
 
+        // Mirror of LazerExporterCLI.OrderedSelectedSets — applies the configured export sort.
+        private IEnumerable<BeatmapSet> OrderedSelectedSets() =>
+            lazer.Configuration.SortByDateAdded
+                ? lazer.SelectedBeatmapSets.OrderBy(s => s.DateAdded).ThenBy(s => s.ID)
+                : lazer.SelectedBeatmapSets;
+
         /// <summary>
         /// Identifies the requested export format and begins the export operation represented by this ExportView. 
         /// </summary>
@@ -118,7 +124,9 @@ namespace BeatmapExporterGUI.ViewModels
             TotalCount = TotalSetCount;
             int exported = 0;
             Description = $"{TotalSetCount} beatmap sets ({lazer.SelectedBeatmapCount} diffs) are selected for export.";
-            foreach (var mapset in lazer.SelectedBeatmapSets)
+            // Materialize the sorted set list on the Realm scheduler thread — DateAdded is realm-managed.
+            var setsToExport = await Exporter.RealmScheduler.Schedule(() => OrderedSelectedSets().ToList());
+            foreach (var mapset in setsToExport)
             {
                 if (token.IsCancellationRequested)
                     break;
@@ -162,7 +170,8 @@ namespace BeatmapExporterGUI.ViewModels
             Description = $"Exporting audio from {TotalSetCount} beatmap sets as .mp3 files.\n{lazer.AudioTranscodeInfo()}";
 
             int exportedAudio = 0, discovered = 0;
-            foreach (var mapset in lazer.SelectedBeatmapSets)
+            var setsToExport = await Exporter.RealmScheduler.Schedule(() => OrderedSelectedSets().ToList());
+            foreach (var mapset in setsToExport)
             {
                 if (token.IsCancellationRequested)
                     break;
@@ -234,7 +243,8 @@ namespace BeatmapExporterGUI.ViewModels
             Description = $"Exporting beatmap background images from {TotalSetCount} beatmap sets.";
 
             int discovered = 0, exportedBackgrounds = 0;
-            foreach (var mapset in lazer.SelectedBeatmapSets)
+            var setsToExport = await Exporter.RealmScheduler.Schedule(() => OrderedSelectedSets().ToList());
+            foreach (var mapset in setsToExport)
             {
                 if (token.IsCancellationRequested)
                     break;
@@ -289,7 +299,11 @@ namespace BeatmapExporterGUI.ViewModels
         {
             lazer.SetupExport();
 
-            var selectedReplays = await Exporter.RealmScheduler.Schedule(() => lazer.GetSelectedReplays().ToList());
+            var selectedReplays = await Exporter.RealmScheduler.Schedule(() =>
+                OrderedSelectedSets()
+                    .SelectMany(s => s.SelectedBeatmaps)
+                    .SelectMany(b => b.Scores)
+                    .ToList());
             var replayCount = selectedReplays.Count();
             TotalCount = replayCount;
 

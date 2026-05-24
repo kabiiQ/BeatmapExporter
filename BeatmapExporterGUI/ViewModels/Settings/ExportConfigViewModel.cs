@@ -299,6 +299,26 @@ namespace BeatmapExporterGUI.ViewModels.Settings
         public string MergeCaseDescriptor => MergeCaseInsensitive ? "Collections with the same name with different capitalization will be merged." : "Collections will not be merged, all collections are preserved.";
 
         /// <summary>
+        /// If exported beatmap sets should be ordered by DateAdded instead of the default OnlineID order.
+        /// </summary>
+        public bool SortByDateAdded
+        {
+            get => Config.SortByDateAdded;
+            set
+            {
+                Config.SortByDateAdded = value;
+                OnPropertyChanged(nameof(SortByDateAddedDescriptor));
+            }
+        }
+
+        /// <summary>
+        /// Description of the current <see cref="SortByDateAdded" /> setting, suitable for user display.
+        /// </summary>
+        public string SortByDateAddedDescriptor => SortByDateAdded
+            ? "Exports will be ordered by date added (oldest first)."
+            : "Exports will use the default order (by online beatmap ID).";
+
+        /// <summary>
         /// String containing the current type of file that will be exported
         /// </summary>
         public string ExportUnit => Config.ExportFormat.UnitName();

@@ -1,5 +1,6 @@
 ﻿using BeatmapExporterCore.Exporters;
 using BeatmapExporterCore.Exporters.Lazer;
+using BeatmapExporterCore.Exporters.Lazer.LazerDB.Schema;
 using BeatmapExporterCore.Filters;
 using System.Text;
 
@@ -21,14 +22,21 @@ namespace BeatmapExporterCLI.Interface
         public LazerExporter Exporter { get; }
 
         public ExporterConfiguration Configuration => Exporter.Configuration;
-         
+
+        // When Configuration.SortByDateAdded is on, iterate selected sets by DateAdded ascending
+        // with the set ID as a stable tiebreaker. Otherwise preserve the LazerExporter default order.
+        private IEnumerable<BeatmapSet> OrderedSelectedSets() =>
+            Configuration.SortByDateAdded
+                ? Exporter.SelectedBeatmapSets.OrderBy(s => s.DateAdded).ThenBy(s => s.ID)
+                : Exporter.SelectedBeatmapSets;
+
         public void ExportBeatmaps()
         {
             Exporter.SetupExport();
             int attempted = 0, exported = 0;
             int count = Exporter.SelectedBeatmapSetCount;
             Console.WriteLine($"Selected {Exporter.SelectedBeatmapSetCount} beatmap sets for export.");
-            foreach (var mapset in Exporter.SelectedBeatmapSets)
+            foreach (var mapset in OrderedSelectedSets())
             {
                 string? filename = null;
                 attempted++;
@@ -62,7 +70,7 @@ namespace BeatmapExporterCLI.Interface
             Console.WriteLine(Exporter.AudioTranscodeInfo());
 
             int attempted = 0, exportedAudio = 0;
-            foreach (var mapset in Exporter.SelectedBeatmapSets)
+            foreach (var mapset in OrderedSelectedSets())
             {
                 var allAudio = Exporter.ExtractAudio(mapset);
                 
@@ -105,7 +113,7 @@ namespace BeatmapExporterCLI.Interface
             Console.WriteLine($"Exporting beatmap background images from {Exporter.SelectedBeatmapSetCount}.");
 
             int attempted = 0, exported = 0;
-            foreach (var mapset in Exporter.SelectedBeatmapSets)
+            foreach (var mapset in OrderedSelectedSets())
             {
                 var allImages = Exporter.ExtractBackgrounds(mapset);
 
@@ -135,7 +143,9 @@ namespace BeatmapExporterCLI.Interface
             Exporter.SetupExport();
             int exported = 0;
 
-            var selectedReplays = Exporter.GetSelectedReplays();
+            var selectedReplays = OrderedSelectedSets()
+                .SelectMany(s => s.SelectedBeatmaps)
+                .SelectMany(b => b.Scores);
             var replayCount = selectedReplays.Count();
 
             Console.WriteLine($"Exporting {replayCount} replays from {Exporter.SelectedBeatmapCount} selected beatmaps.");
@@ -203,7 +213,7 @@ namespace BeatmapExporterCLI.Interface
 
         public void DisplaySelectedBeatmaps()
         {
-            foreach (var map in Exporter.SelectedBeatmapSets)
+            foreach (var map in OrderedSelectedSets())
             {
                 Console.WriteLine(map.DiffSummary());
             }
@@ -274,11 +284,17 @@ namespace BeatmapExporterCLI.Interface
                         settings.Append("audio files will be exported in their original file format*");
                 }
 
+                settings.Append("\n5. ");
+                if (Configuration.SortByDateAdded)
+                    settings.Append("export sort: by date added (oldest first)*");
+                else
+                    settings.Append("export sort: default (by online beatmap ID)");
+
                 settings.Append("\n\nEdit setting # (Blank to save settings): ");
 
                 Console.Write(settings.ToString());
                 string? input = Console.ReadLine();
-                if (string.IsNullOrEmpty(input) || !int.TryParse(input, out int op) || op < 1 || op > (exportBeatmaps || exportCollectionDb || exportAudio ? 4 : 2))
+                if (string.IsNullOrEmpty(input) || !int.TryParse(input, out int op) || op < 1 || op > 5)
                 {
                     Console.Write("\nInvalid operation selected.\n");
                     return;
@@ -350,6 +366,12 @@ namespace BeatmapExporterCLI.Interface
                                 Configuration.MergeCaseInsensitive = true;
                             }
                         }
+                        break;
+                    case 5:
+                        Configuration.SortByDateAdded = !Configuration.SortByDateAdded;
+                        Console.WriteLine(Configuration.SortByDateAdded
+                            ? "- CHANGED: export will be sorted by date added (oldest first)."
+                            : "- CHANGED: export will use the default order (by online beatmap ID).");
                         break;
                 }
             }

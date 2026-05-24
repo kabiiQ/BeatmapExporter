@@ -284,17 +284,21 @@ namespace BeatmapExporterCLI.Interface
                         settings.Append("audio files will be exported in their original file format*");
                 }
 
-                settings.Append("\n5. ");
-                if (Configuration.SortByDateAdded)
-                    settings.Append("export sort: by date added (oldest first)*");
-                else
-                    settings.Append("export sort: default (by online beatmap ID)");
+                var sortApplicable = Configuration.ExportFormat is not (ExportFormat.Skins or ExportFormat.CollectionDb);
+                if (sortApplicable)
+                {
+                    settings.Append("\n5. ");
+                    if (Configuration.SortByDateAdded)
+                        settings.Append("export sort: by date added (oldest first)*");
+                    else
+                        settings.Append("export sort: default (by online beatmap ID)");
+                }
 
                 settings.Append("\n\nEdit setting # (Blank to save settings): ");
 
                 Console.Write(settings.ToString());
                 string? input = Console.ReadLine();
-                if (string.IsNullOrEmpty(input) || !int.TryParse(input, out int op) || op < 1 || op > 5)
+                if (string.IsNullOrEmpty(input) || !int.TryParse(input, out int op) || op < 1 || op > (sortApplicable ? 5 : 4))
                 {
                     Console.Write("\nInvalid operation selected.\n");
                     return;

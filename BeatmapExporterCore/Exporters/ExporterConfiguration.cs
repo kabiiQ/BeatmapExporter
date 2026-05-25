@@ -19,6 +19,7 @@ namespace BeatmapExporterCore.Exporters
         private bool mergeCollections;
         private bool caseInsensitiveMerge;
         private bool exportMp3;
+        private bool sortByDateAdded;
 
         public ExporterConfiguration(ClientSettings settings)
         {
@@ -48,6 +49,7 @@ namespace BeatmapExporterCore.Exporters
             mergeCollections = settings.MergeCollections;
             caseInsensitiveMerge = settings.MergeCaseInsensitive;
             exportMp3 = settings.ExportMp3;
+            sortByDateAdded = settings.SortByDateAdded;
 
             Filters = settings.AppliedFilters
                 .Select(f => f.ToBeatmapFilter())
@@ -177,6 +179,20 @@ namespace BeatmapExporterCore.Exporters
             {
                 exportMp3 = value;
                 settings.SaveExportMp3(value);
+            }
+        }
+
+        /// <summary>
+        /// If selected beatmap sets should be ordered by DateAdded (ascending) during export.
+        /// When false, export preserves the default LazerExporter ordering (by OnlineID).
+        /// </summary>
+        public bool SortByDateAdded
+        {
+            get => sortByDateAdded;
+            set
+            {
+                sortByDateAdded = value;
+                settings.SaveSortByDateAdded(value);
             }
         }
 

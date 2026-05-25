@@ -51,6 +51,8 @@ namespace BeatmapExporterCore.Utilities
         
         public bool ExportMp3 { get; set; } = true;
 
+        public bool SortByDateAdded { get; set; } = false;
+
         public List<SerializedBeatmapFilter> AppliedFilters { get; set; } = [];
         #endregion
 
@@ -181,6 +183,15 @@ namespace BeatmapExporterCore.Utilities
         public void SaveExportMp3(bool mp3)
         {
             ExportMp3 = mp3;
+            TrySave();
+        }
+
+        /// <summary>
+        /// Saves the preference for sorting exported beatmap sets by date added.
+        /// </summary>
+        public void SaveSortByDateAdded(bool sort)
+        {
+            SortByDateAdded = sort;
             TrySave();
         }
 

@@ -169,6 +169,7 @@ namespace BeatmapExporterGUI.ViewModels.Settings
                 OnPropertyChanged(nameof(IsAudioExport));
                 OnPropertyChanged(nameof(IsCollectionDbExport));
                 OnPropertyChanged(nameof(ShouldDisplayMergeOptions));
+                OnPropertyChanged(nameof(SortApplicable));
             }
         }
 
@@ -297,6 +298,32 @@ namespace BeatmapExporterGUI.ViewModels.Settings
         /// Description of the current <see cref="MergeCaseInsensitive" /> setting, suitable for user display.
         /// </summary>
         public string MergeCaseDescriptor => MergeCaseInsensitive ? "Collections with the same name with different capitalization will be merged." : "Collections will not be merged, all collections are preserved.";
+
+        /// <summary>
+        /// If the sort toggle is meaningful for the current export format.
+        /// Skins and CollectionDb don't iterate beatmap sets, so the sort has no effect there.
+        /// </summary>
+        public bool SortApplicable => Config.ExportFormat is not (ExportFormat.Skins or ExportFormat.CollectionDb);
+
+        /// <summary>
+        /// If exported beatmap sets should be ordered by DateAdded instead of the default OnlineID order.
+        /// </summary>
+        public bool SortByDateAdded
+        {
+            get => Config.SortByDateAdded;
+            set
+            {
+                Config.SortByDateAdded = value;
+                OnPropertyChanged(nameof(SortByDateAddedDescriptor));
+            }
+        }
+
+        /// <summary>
+        /// Description of the current <see cref="SortByDateAdded" /> setting, suitable for user display.
+        /// </summary>
+        public string SortByDateAddedDescriptor => SortByDateAdded
+            ? "Exports will be ordered by date added (oldest first)."
+            : "Exports will use the default order (by online beatmap ID).";
 
         /// <summary>
         /// String containing the current type of file that will be exported

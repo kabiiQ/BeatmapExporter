@@ -188,6 +188,21 @@
 
       </StackPanel>
 
+      <!-- Sort by Date Added toggle -->
+      <StackPanel Spacing="6"
+                  IsVisible="{Binding SortApplicable}">
+
+        <StackPanel Orientation="Horizontal"
+                    Spacing="12">
+
+          <TextBlock VerticalAlignment="Center">Sort export by date added</TextBlock>
+          <CheckBox IsChecked="{Binding SortByDateAdded}" />
+
+        </StackPanel>
+        <TextBlock Text="{Binding SortByDateAddedDescriptor}" />
+
+      </StackPanel>
+
       <Button Command="{Binding ExportBeatmapsCommand}"
               Classes="accent"
               FontSize="18"

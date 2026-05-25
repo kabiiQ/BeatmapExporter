@@ -14,6 +14,12 @@ BeatmapExporter is a program/tool that can mass-export your osu! beatmap library
 
 osu! Lazer does not have a "Songs/" folder as "stable" osu! does. Lazer's files are stored under hashed filenames and other information about the beatmap is contained in a local "Realm" database on your PC.
 
+# Basic Export Task Screenshot
+
+Exporting beatmaps with a tag in the GUI:
+
+![](https://i.imgur.com/A6SFsR6.png)
+
 # Download/Usage
 
 Executables are available from the [Releases section here on GitHub](https://github.com/kabiiQ/BeatmapExporter/releases), also found on the right of the main page (below About). 
@@ -26,13 +32,44 @@ The directory needed in the Lazer storage contains another directory named "file
 
 This new storage format which osu! uses results in a better experience while playing the game. However, a result of this system is that you can not easily export all or part of your songs library for sharing or moving back to osu! stable. 
 
-This utility allows you to export beatmaps back into `.osz` files. 
+This utility allows you to export beatmaps back into `.osz` files. There are additional export modes (`.mp3` files, background images, score replays, collections, skins), which can also be seen at the bottom of this README.
 
-BeatmapExporter includes a beatmap filter system allowing you to select a portion of your library to only export certain maps (for example, above a certain star rating, specific artists/mappers, specific gamemodes, specific collections, etc). You can also simply export your entire library at once.
+BeatmapExporter includes a beatmap filter system allowing you to select a portion of your library to only export certain maps (for example, above a certain star rating, specific artists/mappers, specific gamemodes, specific collections, etc). You can also simply export your entire library at once. The alternative export modes also follow this filter system.
 
-Alternative export modes, listed below, also follow the filter system.
+# Running on macOS/Linux
 
-## Alternative Export Modes
+## For Intel-based Macs, if the application is blocked:
+> - Download the latest macOS build from the Releases section (`mac-BeatmapExporter.zip`).
+> - Click on the downloaded zip to extract `BeatmapExporter` (.app file)
+> - Click on `BeatmapExporter`, the program will be blocked, close the security warning
+> - Go to System Settings -> Privacy & Security -> scroll to the bottom
+> - BeatmapExporter should appear as a blocked program with an "Open Anyway" button available. 
+> - Another prompt may come up allowing you to press "Open Anyway" again.
+
+Depending on your system, if the application is still blocked, you could attempt signing the application yourself. There is an [unverified user post (#50)](https://github.com/kabiiQ/BeatmapExporter/discussions/50) detailing this.
+
+If you are not able to do this (for example, you do not have administrator access to the computer), you may be out of luck. Other versions of macOS may have better luck following the Linux method instead. 
+
+Some older versions of macOS may allow the program to run right away but instead restrict its access to your osu! files or to creating exports. In this case, use the Linux method to launch via Terminal instead. 
+
+The macOS build works and I am immediately able to get it working on macOS VMs (13/15), but I understand many users have issues getting it running. The different versions of macOS respond very differently to "unknown" programs like this and it is difficult to keep it all straight. I do not own any Mac systems and am unlikely to be able to help you troubleshoot beyond guessing. 
+
+## For Apple Silicon (M-series chips):
+
+macOS running on the M-series chips may need to run the mac-BeatmapExporter build under Rosetta. See [post #52](https://github.com/kabiiQ/BeatmapExporter/discussions/52) for a guide.
+
+## Linux/macOS Terminal:
+
+Modern Linux distros may allow you to simply click on the file and run it after a warning, otherwise you may need to use your system's Terminal to make the program executable and then run it. 
+
+If you are not familiar with Terminal, you may need to look up how to open Terminal in the specific folder you have downloaded BeatmapExporter into. 
+
+> Run the following command:
+`chmod +x linux-BeatmapExporter`, which marks BeatmapExporter.app as executable so that you can run it.
+> 
+> Then you can run the program with `./linux-BeatmapExporter` from the Terminal window.
+
+# Alternative Export Modes
 
 ### Audio Export
 
@@ -68,39 +105,6 @@ This feature is different from normal exporting in that it modifies your files. 
 ### Skin Export
 
 As of version 2.7.0, there is an option to export your osu! skins. This was added by request to enable recovery of skins from a different Lazer install. Individual skins (and beatmaps) are exportable from the game itself.
-
-# Basic Export Task Screenshot
-
-Exporting beatmaps with a tag in the GUI:
-
-![](https://i.imgur.com/A6SFsR6.png)
-
-# Running on macOS/Linux
-
-### For macOS (especially 15), the best method seems to be:
-> - Download the latest macOS build from the Releases section (`mac-BeatmapExporter.zip`).
-> - Click on the downloaded zip to extract `BeatmapExporter` (.app file)
-> - Click on `BeatmapExporter`, the program will be blocked, close the security warning
-> - Go to System Settings -> Privacy & Security -> scroll to the bottom
-> - BeatmapExporter should appear as a blocked program with an "Open Anyway" button available. 
-> - Another prompt may come up allowing you to press "Open Anyway" again.
-
-If you are not able to do this (for example, you do not have administrator access to the computer), you may be out of luck. Other versions of macOS may have better luck following the Linux method instead. 
-
-Some older versions of macOS may allow the program to run right away but instead restrict its access to your osu! files or to creating exports. In this case, use the Linux method to launch via Terminal instead. 
-
-The macOS build works and I am immediately able to get it working on macOS VMs (13/15), but I understand many users have issues getting it running. The different versions of macOS respond very differently to "unknown" programs like this and it is difficult to keep it all straight. I do not own any Mac systems and am unlikely to be able to help you troubleshoot beyond guessing. 
-
-### Linux/macOS Terminal:
-
-Modern Linux distros may allow you to simply click on the file and run it after a warning, otherwise you may need to use your system's Terminal to make the program executable and then run it. 
-
-If you are not familiar with Terminal, you may need to look up how to open Terminal in the specific folder you have downloaded BeatmapExporter into. 
-
-> Run the following command:
-`chmod +x linux-BeatmapExporter` - this marks BeatmapExporter.app as executable so that you can run it.
-> 
-> Then you can run the program with `./linux-BeatmapExporter` from the Terminal window.
 
 ## Note on Windows DPI Scaling
 

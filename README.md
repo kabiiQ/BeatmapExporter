@@ -56,7 +56,7 @@ The macOS build works and I am immediately able to get it working on macOS VMs (
 
 ## For Apple Silicon (M-series chips):
 
-macOS running on the M-series chips may need to run the mac-BeatmapExporter build under Rosetta. See [post #52](https://github.com/kabiiQ/BeatmapExporter/discussions/52) for a guide.
+macOS running on the M-series chips may need to run the mac-BeatmapExporter build under Rosetta. See [post #55](https://github.com/kabiiQ/BeatmapExporter/discussions/55) for a guide.
 
 ## Linux/macOS Terminal:
 

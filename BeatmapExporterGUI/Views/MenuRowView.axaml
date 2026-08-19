@@ -18,14 +18,16 @@
       <MenuItem Header="_Exit BeatmapExporter"
                 Command="{Binding ExitCommand}"/>
     </MenuItem>
+      
+    <MenuItem Header="_View">
+        <MenuItem Header="Search _Beatmaps"
+                  Command="{Binding BeatmapsCommand}" />
+        <MenuItem Header="View _Collections"
+                  Command="{Binding CollectionsCommand}" />
+    </MenuItem>
     
     <MenuItem Header="_Export">
-      <MenuItem Header="Search _Beatmaps"
-                Command="{Binding BeatmapsCommand}" />
-      <MenuItem Header="View _Collections"
-                Command="{Binding CollectionsCommand}" />
-      <Separator />
-      <MenuItem Header="_Filter/Export Beatmaps" 
+      <MenuItem Header="_Filter and Export Beatmaps" 
                 Command="{Binding ConfigurationCommand}" />
       <MenuItem Header="Begin Export _Now"
                 Command="{Binding ExportCommand}" />

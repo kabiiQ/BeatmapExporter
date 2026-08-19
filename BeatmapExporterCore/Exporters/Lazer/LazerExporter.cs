@@ -219,10 +219,10 @@ namespace BeatmapExporterCore.Exporters.Lazer
             var excluded = mapset.ExcludedDiffHashes;
 
             Stream? export = null;
+            filename = mapset.ArchiveFilename();
+            string exportPath = Path.Combine(Configuration.ExportPath, filename);
             try
             {
-                filename = mapset.ArchiveFilename();
-                string exportPath = Path.Combine(Configuration.ExportPath, filename);
                 export = File.Open(exportPath, FileMode.CreateNew);
 
                 using ZipArchive osz = new(export, ZipArchiveMode.Create, true);
@@ -242,6 +242,7 @@ namespace BeatmapExporterCore.Exporters.Lazer
             {
                 export?.Dispose();
             }
+            File.SetLastWriteTimeUtc(exportPath, mapset.DateAdded.UtcDateTime);
         }
 
         public string AudioTranscodeInfo()
@@ -361,11 +362,11 @@ namespace BeatmapExporterCore.Exporters.Lazer
                         bg.CopyTo(ms);
                         byte[] image = ms.ToArray();
 
-                        var cover = new TagLib.Id3v2.AttachmentFrame
+                        var cover = new AttachmentFrame
                         {
-                            Type = TagLib.PictureType.FrontCover,
+                            Type = PictureType.FrontCover,
                             Description = "Background",
-                            MimeType = System.Net.Mime.MediaTypeNames.Image.Jpeg,
+                            MimeType = MediaTypeNames.Image.Jpeg,
                             Data = image,
                         };
                         mp3.Tag.Pictures = [cover];

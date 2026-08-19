@@ -1,5 +1,5 @@
-﻿using CommunityToolkit.Mvvm.Input;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
+using CommunityToolkit.Mvvm.Input;
 
 namespace BeatmapExporterGUI.ViewModels.HomePage
 {

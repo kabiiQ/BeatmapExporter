@@ -4,13 +4,14 @@ using BeatmapExporterCore.Exporters.Lazer;
 using BeatmapExporterCore.Exporters.Lazer.LazerDB;
 using BeatmapExporterCore.Exporters.Lazer.LazerDB.Schema;
 using BeatmapExporterCore.Utilities;
+using NLog;
 using Realms;
 
 namespace BeatmapExporterCLI.Data
 {
     public static class LazerLoader
     {
-        private static readonly NLog.Logger Logger = NLog.LogManager.GetCurrentClassLogger();
+        private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
 
         /// <summary>
         /// Attempt to locate and load the lazer database. May prompt user for the database path.

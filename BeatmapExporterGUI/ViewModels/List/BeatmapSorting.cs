@@ -1,7 +1,7 @@
-﻿using BeatmapExporterCore.Exporters.Lazer.LazerDB.Schema;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using BeatmapExporterCore.Exporters.Lazer.LazerDB.Schema;
 using static BeatmapExporterGUI.ViewModels.List.BeatmapSorting;
 
 namespace BeatmapExporterGUI.ViewModels.List

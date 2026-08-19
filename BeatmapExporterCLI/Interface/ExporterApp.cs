@@ -1,6 +1,6 @@
-﻿using BeatmapExporterCore.Exporters;
+﻿using System.Diagnostics.CodeAnalysis;
+using BeatmapExporterCore.Exporters;
 using BeatmapExporterCore.Exporters.Lazer;
-using System.Diagnostics.CodeAnalysis;
 
 namespace BeatmapExporterCLI.Interface
 {
@@ -66,7 +66,7 @@ namespace BeatmapExporterCLI.Interface
             string? input = Console.ReadLine();
             if (input is null)
             {
-                ExporterApp.Exit();
+                Exit();
             }
 
             if (!int.TryParse(input, out int op) || op is < 0 or > 5)

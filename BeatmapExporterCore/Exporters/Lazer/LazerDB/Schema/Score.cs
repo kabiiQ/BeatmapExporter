@@ -1,5 +1,9 @@
-﻿using BeatmapExporterCore.Utilities;
+﻿#region
+
+using BeatmapExporterCore.Utilities;
 using Realms;
+
+#endregion
 
 // Original schema source file Copyright (c) ppy Pty Ltd <contact@ppy.sh>. Licensed under the MIT Licence.
 namespace BeatmapExporterCore.Exporters.Lazer.LazerDB.Schema

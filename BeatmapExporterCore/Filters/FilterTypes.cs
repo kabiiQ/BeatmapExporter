@@ -1,5 +1,5 @@
-﻿using BeatmapExporterCore.Utilities;
-using System.Reflection;
+﻿using System.Reflection;
+using BeatmapExporterCore.Utilities;
 
 namespace BeatmapExporterCore.Filters
 {

@@ -1,10 +1,9 @@
-﻿using BeatmapExporterCore.Filters;
-using BeatmapExporterCore.Utilities;
-using NLog;
-using System.Diagnostics.CodeAnalysis;
+﻿using System.Diagnostics.CodeAnalysis;
 using System.IO.Compression;
 using System.Runtime.InteropServices;
-using TagLib.Matroska;
+using BeatmapExporterCore.Filters;
+using BeatmapExporterCore.Utilities;
+using NLog;
 
 namespace BeatmapExporterCore.Exporters
 {
@@ -27,7 +26,7 @@ namespace BeatmapExporterCore.Exporters
         
         static ExporterConfiguration()
         {
-            NLog.LogManager.Setup().LoadConfiguration(builder =>
+            LogManager.Setup().LoadConfiguration(builder =>
             {
                 builder.ForLogger().FilterMinLevel(LogLevel.Error).WriteToFile(Path.Combine(ClientSettings.APPDIR, "exporter.error.log"));
             });

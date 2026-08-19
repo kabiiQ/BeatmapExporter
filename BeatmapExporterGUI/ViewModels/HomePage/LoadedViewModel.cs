@@ -1,6 +1,6 @@
-﻿using BeatmapExporterCore.Exporters;
+﻿using System.Linq;
+using BeatmapExporterCore.Exporters;
 using BeatmapExporterCore.Exporters.Lazer;
-using System.Linq;
 
 namespace BeatmapExporterGUI.ViewModels.HomePage
 {

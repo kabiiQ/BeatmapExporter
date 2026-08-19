@@ -1,4 +1,6 @@
-﻿using Avalonia;
+﻿using System.Linq;
+using System.Threading.Tasks;
+using Avalonia;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Data.Core.Plugins;
 using Avalonia.Markup.Xaml;
@@ -6,8 +8,6 @@ using BeatmapExporterGUI.Exporter;
 using BeatmapExporterGUI.Utilities;
 using BeatmapExporterGUI.ViewModels;
 using BeatmapExporterGUI.Views;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace BeatmapExporterGUI;
 

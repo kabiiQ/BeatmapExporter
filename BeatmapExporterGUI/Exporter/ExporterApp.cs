@@ -1,4 +1,10 @@
-﻿using Avalonia;
+﻿using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.IO;
+using System.Linq;
+using System.Threading;
+using Avalonia;
 using Avalonia.Controls.ApplicationLifetimes;
 using BeatmapExporterCore.Exporters;
 using BeatmapExporterCore.Exporters.Lazer;
@@ -8,12 +14,6 @@ using BeatmapExporterCore.Utilities;
 using BeatmapExporterGUI.Utilities;
 using CommunityToolkit.Mvvm.ComponentModel;
 using Realms;
-using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.IO;
-using System.Linq;
-using System.Threading;
 
 namespace BeatmapExporterGUI.Exporter
 {

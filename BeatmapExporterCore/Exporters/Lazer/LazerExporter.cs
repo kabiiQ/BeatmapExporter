@@ -1,11 +1,16 @@
-﻿using BeatmapExporterCore.Exporters.Lazer.LazerDB;
+﻿using System.IO.Compression;
+using System.Net.Mime;
+using System.Text.RegularExpressions;
+using BeatmapExporterCore.Exporters.Lazer.LazerDB;
 using BeatmapExporterCore.Exporters.Lazer.LazerDB.Schema;
 using BeatmapExporterCore.Exporters.Stable.Collections;
 using BeatmapExporterCore.Filters;
 using BeatmapExporterCore.Utilities;
 using Nito.AsyncEx;
-using System.IO.Compression;
-using System.Text.RegularExpressions;
+using NLog;
+using TagLib;
+using TagLib.Id3v2;
+using File = System.IO.File;
 
 namespace BeatmapExporterCore.Exporters.Lazer
 {
@@ -19,7 +24,7 @@ namespace BeatmapExporterCore.Exporters.Lazer
 
     public class LazerExporter : IBeatmapExporter
     {
-        private static readonly NLog.Logger Logger = NLog.LogManager.GetCurrentClassLogger();
+        private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
         
         readonly LazerDatabase lazerDb;
         readonly Transcoder transcoder;

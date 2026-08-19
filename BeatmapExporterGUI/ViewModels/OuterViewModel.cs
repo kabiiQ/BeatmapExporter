@@ -1,9 +1,9 @@
-﻿using BeatmapExporterGUI.ViewModels.HomePage;
+﻿using System.Threading;
+using System.Threading.Tasks;
+using BeatmapExporterGUI.ViewModels.HomePage;
 using BeatmapExporterGUI.ViewModels.List;
 using BeatmapExporterGUI.ViewModels.Settings;
 using CommunityToolkit.Mvvm.ComponentModel;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace BeatmapExporterGUI.ViewModels;
 

@@ -1,9 +1,9 @@
-﻿using BeatmapExporterCore.Exporters.Lazer.LazerDB;
+﻿using System.Threading;
+using System.Threading.Tasks;
+using BeatmapExporterCore.Exporters.Lazer.LazerDB;
 using BeatmapExporterCore.Utilities;
 using BeatmapExporterGUI.Exporter;
 using CommunityToolkit.Mvvm.Input;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace BeatmapExporterGUI.ViewModels;
 

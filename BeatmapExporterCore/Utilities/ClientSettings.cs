@@ -1,7 +1,8 @@
-﻿using BeatmapExporterCore.Exporters;
-using BeatmapExporterCore.Filters;
-using System.Text.Json;
+﻿using System.Text.Json;
 using System.Text.Json.Serialization;
+using BeatmapExporterCore.Exporters;
+using BeatmapExporterCore.Filters;
+using NLog;
 
 namespace BeatmapExporterCore.Utilities
 {
@@ -31,7 +32,7 @@ namespace BeatmapExporterCore.Utilities
             WriteIndented = true
         };
 
-        private static readonly NLog.Logger Logger = NLog.LogManager.GetCurrentClassLogger();
+        private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
 
         #region Persisted Settings
         public string? DatabasePath { get; set; } = null;

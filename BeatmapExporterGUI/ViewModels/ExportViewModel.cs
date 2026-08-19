@@ -1,15 +1,15 @@
-﻿using BeatmapExporterCore.Exporters;
-using BeatmapExporterCore.Exporters.Lazer;
-using BeatmapExporterCore.Exporters.Lazer.LazerDB.Schema;
-using CommunityToolkit.Mvvm.ComponentModel;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Input;
-using MongoDB.Bson.Serialization.Serializers;
+using BeatmapExporterCore.Exporters;
+using BeatmapExporterCore.Exporters.Lazer;
+using BeatmapExporterCore.Exporters.Lazer.LazerDB.Schema;
+using CommunityToolkit.Mvvm.ComponentModel;
+using NLog;
 
 namespace BeatmapExporterGUI.ViewModels
 {
@@ -18,7 +18,7 @@ namespace BeatmapExporterGUI.ViewModels
     /// </summary>
     public partial class ExportViewModel : ViewModelBase
     {
-        private static readonly NLog.Logger Logger = NLog.LogManager.GetCurrentClassLogger();
+        private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
 
         private readonly LazerExporter lazer;
         private readonly OuterViewModel outer;

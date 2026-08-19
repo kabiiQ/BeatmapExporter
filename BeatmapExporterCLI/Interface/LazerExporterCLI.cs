@@ -1,7 +1,8 @@
-﻿using BeatmapExporterCore.Exporters;
+﻿using System.Text;
+using BeatmapExporterCore.Exporters;
 using BeatmapExporterCore.Exporters.Lazer;
 using BeatmapExporterCore.Filters;
-using System.Text;
+using NLog;
 
 namespace BeatmapExporterCLI.Interface
 {
@@ -11,7 +12,7 @@ namespace BeatmapExporterCLI.Interface
     /// </summary>
     public class LazerExporterCLI
     {
-        private static readonly NLog.Logger Logger = NLog.LogManager.GetCurrentClassLogger();
+        private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
 
         public LazerExporterCLI(LazerExporter exporter)
         {

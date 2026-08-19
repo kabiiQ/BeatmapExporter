@@ -1,11 +1,11 @@
-﻿using BeatmapExporterCore.Exporters;
+﻿using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using BeatmapExporterCore.Exporters;
 using BeatmapExporterCore.Exporters.Lazer;
 using BeatmapExporterCore.Filters;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace BeatmapExporterGUI.ViewModels.Settings
 {

@@ -3,15 +3,13 @@ using System.Text.RegularExpressions;
 using BeatmapExporterCore.Exporters.Lazer.LazerDB.Schema;
 using Realms;
 using Realms.Exceptions;
-using System.Runtime.InteropServices;
-using System.Text.RegularExpressions;
 
 namespace BeatmapExporterCore.Exporters.Lazer.LazerDB
 {
     public class LazerDatabase
     {
         public const int LazerSchemaVersion = 52;
-        public const string FirstLazerVersion = "2026.819.0-tachyon";
+        public const string FirstLazerVersion = "2026.920.0-lazer";
 
         readonly string database;
         readonly string filesDirectory;
